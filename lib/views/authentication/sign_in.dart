@@ -161,16 +161,16 @@ void showSuccessAlert(String message) {
                           hintText: 'Password',
                             errorText: passwordError,
 
-  border: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(12.0)), // Adjust the radius as needed
-  ),
-  focusedBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(12.0)), // Ensure the radius matches
-    borderSide: BorderSide(
-      color: kSecondaryColor, // Change this to your desired color
-      width: 2.0,
-    ),
-  ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(12.0)), // Adjust the radius as needed
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(12.0)), // Ensure the radius matches
+              borderSide: BorderSide(
+                color: kSecondaryColor, // Change this to your desired color
+                width: 2.0,
+              ),
+            ),
   labelStyle: TextStyle(
     color: Color.fromARGB(255, 187, 187, 187), // Color when the TextField is unfocused
   ),

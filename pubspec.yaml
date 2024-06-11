@@ -6,7 +6,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -16,7 +16,8 @@ dependencies:
   nb_utils: ^7.0.3
   http: ^1.2.1
   provider: ^6.0.5
-
+  shared_preferences: ^2.0.15
+  geolocator: ^8.0.0
   google_fonts: ^6.2.1
   country_code_picker: ^3.0.0
   font_awesome_flutter: ^10.7.0

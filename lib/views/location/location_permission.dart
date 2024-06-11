@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:hia/services/user_service.dart';
+import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/constant.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart';
 
 class LocationPermission extends StatefulWidget {
   const LocationPermission({Key? key}) : super(key: key);
@@ -11,6 +15,42 @@ class LocationPermission extends StatefulWidget {
 }
 
 class _LocationPermissionState extends State<LocationPermission> {
+   final UserService userService = UserService();
+
+
+ String? userId ;
+ Position? position ; 
+ 
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
+ Future<void> saveUserLocation() async {
+    try {
+    
+       final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+       userViewModel.initSession() ; 
+
+       
+     
+   
+         position = await userViewModel.determinePosition();
+     
+       userService.updateUserLocation(userViewModel.userId!, 'address', position!.longitude, position!.latitude) ; 
+
+     
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Location updated successfully!'),
+      ));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to update location: $e'),
+      ));
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -88,7 +128,10 @@ class _LocationPermissionState extends State<LocationPermission> {
                           buttonDecoration:
                           kButtonDecoration.copyWith(color: kMainColor),
                           onPressed: (){
-                            //const LocationAccess().launch(context);
+                        
+
+                            saveUserLocation() ; 
+                            
                           },
                         ),
                         Padding(

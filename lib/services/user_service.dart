@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 class UserService extends ChangeNotifier {
 
-  final String baseUrl = 'http://10.0.2.2:3030';
+  final String baseUrl = 'http://192.168.1.19:3030';
 
 
 Future<bool> verifyEmail(String email) async {
@@ -74,6 +74,32 @@ Future<Map<String, dynamic>> login(String email, String password) async {
     } else {
       final responseData = jsonDecode(response.body);
       return {'success': false, 'message': responseData['message']};
+    }
+  }
+
+   Future<void> updateUserLocation(String id, String address, double longitude, double latitude) async {
+    try {
+      final response = await http.put(
+      Uri.parse(baseUrl + '/user/updatelocation'), 
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'id': id,
+          'address': address,
+          'langitude': longitude,
+          'latitude': latitude,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print('Location updated successfully');
+      } else {
+        throw Exception('Failed to update location: ${response.body}');
+      }
+    } catch (error) {
+      print('Error updating location: $error');
+      throw error;
     }
   }
 

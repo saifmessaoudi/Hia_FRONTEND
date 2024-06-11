@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:geolocator/geolocator.dart';
+
 
 class UserViewModel with ChangeNotifier {
   final UserService userService = UserService();
@@ -22,7 +24,8 @@ class UserViewModel with ChangeNotifier {
         final parts = _token!.split('.');
         final payload = json.decode(utf8.decode(base64.decode(base64.normalize(parts[1]))));
         _userId = payload['userId'];
-         print(_userId) ;
+
+print (userId);
         // Save token and user ID to shared preferences
         await _saveSession();
         
@@ -39,7 +42,6 @@ class UserViewModel with ChangeNotifier {
   }
 
   Future<void> logout() async {
-    // Clear token and user ID from shared preferences
     await _clearSession();
     _token = null;
     _userId = null;
@@ -50,6 +52,7 @@ class UserViewModel with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', _token!);
     await prefs.setString('userId', _userId!);
+    initSession();
   }
 
   Future<void> _clearSession() async {
@@ -59,10 +62,46 @@ class UserViewModel with ChangeNotifier {
   }
 
   // Initialize session from shared preferences
-  Future<void> initSession() async {
+  Future initSession() async {
     final prefs = await SharedPreferences.getInstance();
     _token = prefs.getString('token');
     _userId = prefs.getString('userId');
     notifyListeners();
   }
+
+
+Future<Position> determinePosition() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    return Future.error('Location services are disabled.');
+  }
+
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      // Permissions are denied, next time you could try
+      // requesting permissions again (this also prompts the
+      // user to go to the settings and enable permissions).
+      return Future.error('Location permissions are denied');
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    // Permissions are denied forever, handle appropriately.
+    return Future.error(
+        'Location permissions are permanently denied, we cannot request permissions.');
+  }
+
+  // When we reach here, permissions are granted and we can
+  // continue accessing the position of the device.
+  return await Geolocator.getCurrentPosition();
+}
+
+
+
+
 }

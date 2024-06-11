@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/Authentication/sign_up.dart';
 import 'package:hia/views/authentication/sign_in.dart';
+import 'package:hia/views/location/location_permission.dart';
 import 'package:provider/provider.dart';
 
 
