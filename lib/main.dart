@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/Authentication/sign_up.dart';
 import 'package:hia/views/authentication/sign_in.dart';
+import 'package:provider/provider.dart';
 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserViewModel()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -22,7 +31,7 @@ class MyApp extends StatelessWidget {
       title: 'Maan LMS',
       initialRoute: '/',
       routes: {
-        '/': (context) => const SignUp(),
+        '/': (context) => const SignIn(),
       },
     );
   }

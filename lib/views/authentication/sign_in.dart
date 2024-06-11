@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/services/user_service.dart';
+import 'package:hia/viewmodels/user_viewmodel.dart';
+import 'package:hia/views/authentication/sign_up.dart';
 import 'package:hia/views/global_components/button_global.dart';
+import 'package:hia/views/location/location_permission.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -27,6 +31,43 @@ class _SignInState extends State<SignIn> {
   String? firstNameError;
   String? lastNameError;
   String? passwordError;
+
+
+void showSuccessAlert(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(
+              Icons.done,
+              color: Colors.green, // Customize the color if needed
+            ),
+            SizedBox(width: 8), // Add some space between the icon and text
+            Text('Success'),
+          ],
+        ),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+             // Navigator.push(
+               // context,
+              //  //MaterialPageRoute(builder: (context) => LoginPage()),
+            //  );
+             Navigator.of(context).pop(); // Dismiss the dialog
+            },
+            child: Text('OK'),
+             style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all<Color>(kMainColor), // Customize the text color
+          ),          ),
+        ],
+      ),
+    );
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -112,9 +153,9 @@ class _SignInState extends State<SignIn> {
                           Padding(
                           padding: const EdgeInsets.only(left: 20.0, right: 20.0,top: 20.0,bottom: 20.0),
                           child: AppTextField(
-                            controller: emailController,
+                            controller: passwordController,
                             cursorColor: kMainColor,
-                            textFieldType: TextFieldType.EMAIL,
+                            textFieldType: TextFieldType.PASSWORD,
                         decoration:  InputDecoration(
                          labelText: 'Password',
                           hintText: 'Password',
@@ -150,7 +191,7 @@ class _SignInState extends State<SignIn> {
                           buttontext: 'Log In',
                           buttonDecoration:
                           kButtonDecoration.copyWith(color: kMainColor),
-                         onPressed: () {
+                         onPressed: () async {
             
                           
   setState(() {
@@ -171,8 +212,34 @@ passwordError = passwordController.text.isEmpty
     // Add similar logic for other fields
   });
 
-  if (emailError == null && firstNameError == null && lastNameError == null && passwordError == null) {
+  if (emailError == null && passwordError == null) {
     //createUserAccount() ; 
+    final authViewModel = Provider.of<UserViewModel>(context, listen: false);
+                bool success = await authViewModel.login(
+                  emailController.text,
+                  passwordController.text,
+                );
+
+                if (success) {
+                  
+ Navigator.push(
+  context,
+  MaterialPageRoute(builder: (context) => LocationPermission()),
+);                  // Navigate to the next screen
+                } else {
+                   setState(() {
+emailError = 'Invalid email or password';
+    
+passwordError = 'Invalid email or password';
+
+
+    // Add similar logic for other fields
+  });
+  
+
+                
+
+                }
 
     
   }
@@ -181,6 +248,45 @@ passwordError = passwordController.text.isEmpty
                             //const PhoneVerification().launch(context);
                           
                         ),
+                        
+           const SizedBox(height: 10),
+              Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 20),
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(
+        'Or create your account here   ',
+        style: TextStyle(
+          fontSize: 15.0,
+          color: kTitleColor,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      GestureDetector(
+        onTap: () {
+          // Navigate to Sign Up Page
+        Navigator.push(
+  context,
+  MaterialPageRoute(builder: (context) => SignUp()),
+);
+
+        },
+        child: Text(
+          'SignUp',
+          style: TextStyle(
+            fontSize: 15.0,
+            color: kMainColor, // You can change the color as needed
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ],
+  ),
+),
+
+             
+             
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -200,7 +306,7 @@ passwordError = passwordController.text.isEmpty
                         ),
                        Padding(
                           padding:
-                              const EdgeInsets.only(left: 20.0, right: 20.0,bottom: 10.0,top: 60.0),
+                              const EdgeInsets.only(left: 20.0, right: 20.0,bottom: 10.0,top: 15.0),
                           child: Container(
                             width: context.width(),
                             height: 60.0,

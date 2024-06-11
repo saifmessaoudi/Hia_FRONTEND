@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
+import 'package:hia/views/authentication/sign_in.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -105,6 +106,8 @@ void showSuccessAlert(String message) {
       
       child: Scaffold(
          resizeToAvoidBottomInset: false,
+          
+        
         body: Stack(
           children: [
             Container(
@@ -118,13 +121,18 @@ void showSuccessAlert(String message) {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: kTitleColor,
-                  ),
-                ),
+                Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+          color: kTitleColor,
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+    ),
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Image.asset('images/messageicon.png'),
@@ -347,6 +355,41 @@ passwordError = passwordController.text.isEmpty
                             //const PhoneVerification().launch(context);
                           
                         ),
+                                 const SizedBox(height: 10),
+              Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 20),
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(
+        'Or Log with your account here   ',
+        style: TextStyle(
+          fontSize: 15.0,
+          color: kTitleColor,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      GestureDetector(
+        onTap: () {
+          // Navigate to Sign Up Page
+        Navigator.push(
+  context,
+  MaterialPageRoute(builder: (context) => SignIn()),
+);
+
+        },
+        child: Text(
+          'LogIn',
+          style: TextStyle(
+            fontSize: 15.0,
+            color: kMainColor, // You can change the color as needed
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ],
+  ),
+),
                       ],
                     ),
                   ),
