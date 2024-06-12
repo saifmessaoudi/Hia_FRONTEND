@@ -3,11 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 // const kMainColor = Color(0xFF3F8CFF);
 const kMainColor = Color(0xFF00643C);
-const kSecondaryColor = Color(0xFF25BA7E);
+const kSecondaryColor = Color.fromARGB(255, 30, 174, 116);
 const kGreyTextColor = Color(0xFF707070);
 const kBorderColorTextField = Color(0xFFC2C2C2);
 const kDarkWhite = Color(0xFFF1F7F7);
-const kTitleColor = Color(0xFF333333);
+const kTitleColor = Color.fromARGB(255, 35, 35, 35);
 final kTextStyle = GoogleFonts.notoSans(
   color: Colors.white,
 );

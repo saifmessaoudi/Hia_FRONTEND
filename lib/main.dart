@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
-import 'package:hia/views/Authentication/sign_up.dart';
+import 'package:hia/views/authentication/phone_verification.dart';
 import 'package:hia/views/authentication/sign_in.dart';
 import 'package:hia/views/location/location_permission.dart';
 import 'package:provider/provider.dart';
@@ -8,12 +8,13 @@ import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserViewModel()),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
@@ -23,10 +24,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-                          debugShowCheckedModeBanner: false,
-
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // Add the line below to get horizontal sliding transitions for routes.
         pageTransitionsTheme: const PageTransitionsTheme(builders: {TargetPlatform.android: CupertinoPageTransitionsBuilder(),}),
       ),
       title: 'Maan LMS',

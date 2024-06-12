@@ -1,10 +1,8 @@
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 //import 'package:maan_food/GlobalComponents/button_global.dart';
 //import 'package:maan_food/Screens/Authentication/phone_verification.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/services/user_service.dart';
-import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/authentication/sign_in.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -106,14 +104,12 @@ void showSuccessAlert(String message) {
       
       child: Scaffold(
          resizeToAvoidBottomInset: false,
-          
-        
         body: Stack(
           children: [
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("images/authbg.png"),
+                  image: AssetImage("images/hiaauthbgg.png"),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -124,7 +120,7 @@ void showSuccessAlert(String message) {
                 Padding(
       padding: const EdgeInsets.all(20.0),
       child: IconButton(
-        icon: Icon(
+        icon: const Icon(
           Icons.arrow_back,
           color: kTitleColor,
         ),
@@ -133,13 +129,10 @@ void showSuccessAlert(String message) {
         },
       ),
     ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Image.asset('images/messageicon.png'),
-                ),
+               
                 Padding(
                   padding:
-                  const EdgeInsets.only(left: 20.0, top: 10.0, right: 10.0),
+                  const EdgeInsets.only(left: 20.0, right: 10.0),
                   child: SizedBox(
                       width: context.width(),
                       child: Column(
@@ -148,14 +141,14 @@ void showSuccessAlert(String message) {
                           Text(
                             'Let’s get you started',
                             style: kTextStyle.copyWith(
-                                color: kTitleColor,
-                                fontSize: 18.0,
+                            color: kTitleColor,                                
+                            fontSize: 22.0,
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
                             'First, Create your Hia account',
                             style: kTextStyle.copyWith(
-                              color: kGreyTextColor,
+                              color: white,
                             ),
                           ),
                         ],
@@ -171,7 +164,7 @@ void showSuccessAlert(String message) {
                     
                   child: Container(
                     width: context.width(),
-                    height: context.height(),
+                    height: context.height()-200,
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30.0),
@@ -196,12 +189,12 @@ void showSuccessAlert(String message) {
                             errorText: emailError,
 
   border: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(12.0)), // Adjust the radius as needed
+    borderRadius: BorderRadius.all(Radius.circular(12.0)), 
   ),
   focusedBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(12.0)), // Ensure the radius matches
+    borderRadius: BorderRadius.all(Radius.circular(12.0)), 
     borderSide: BorderSide(
-      color: kSecondaryColor, // Change this to your desired color
+      color: kSecondaryColor, 
       width: 2.0,
     ),
   ),
@@ -280,8 +273,7 @@ void showSuccessAlert(String message) {
     color: kMainColor, // Color when the TextField is focused
   ),
 ),
-                            
-
+                          
                           ),
                         ),
 
@@ -312,7 +304,7 @@ void showSuccessAlert(String message) {
     color: Color.fromARGB(255, 187, 187, 187), // Color when the TextField is unfocused
   ),
   floatingLabelStyle: TextStyle(
-    color: kMainColor, // Color when the TextField is focused
+    color: kTitleColor, // Color when the TextField is focused
   ),
 ),
                           ),
@@ -340,19 +332,12 @@ passwordError = passwordController.text.isEmpty
     : passwordController.text.length < 6
         ? 'Password must be at least 6 characters long'
         : null;
-
-
-    // Add similar logic for other fields
   });
 
   if (emailError == null && firstNameError == null && lastNameError == null && passwordError == null) {
-    createUserAccount() ; 
-
-    
+    createUserAccount() ;  
   }
 },
-
-                            //const PhoneVerification().launch(context);
                           
                         ),
                                  const SizedBox(height: 10),
@@ -361,7 +346,7 @@ passwordError = passwordController.text.isEmpty
   child: Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Text(
+      const Text(
         'Or Log with your account here   ',
         style: TextStyle(
           fontSize: 15.0,
@@ -371,18 +356,16 @@ passwordError = passwordController.text.isEmpty
       ),
       GestureDetector(
         onTap: () {
-          // Navigate to Sign Up Page
         Navigator.push(
   context,
   MaterialPageRoute(builder: (context) => SignIn()),
 );
-
         },
-        child: Text(
+        child:const Text(
           'LogIn',
           style: TextStyle(
             fontSize: 15.0,
-            color: kMainColor, // You can change the color as needed
+            color: kSecondaryColor,
             fontWeight: FontWeight.bold,
           ),
         ),

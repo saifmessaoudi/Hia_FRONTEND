@@ -104,4 +104,29 @@ Future<Position> determinePosition() async {
 
 
 
+  Future <bool> loginWithFacebook(String token) async {
+    try {
+      final response = null;
+
+      if (response['token'] != null) {
+        _token = response['token'];
+
+        // Extract user ID from the token
+        final parts = _token!.split('.');
+        final payload = json.decode(utf8.decode(base64.decode(base64.normalize(parts[1]))));
+        _userId = payload['userId'];
+
+        // Save token and user ID to shared preferences
+        await _saveSession();
+
+        notifyListeners();
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      print('Error: $error');
+      return false;
+    }
+  }
 }
