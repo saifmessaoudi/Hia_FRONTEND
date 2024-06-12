@@ -55,24 +55,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             height: 60.0,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10.0),
-                          
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'images/google.png',
-                                  height: 30.0,
-                                  width: 30.0,
-                                ),
-                                const SizedBox(
-                                  width: 5.0,
-                                ),
-                                const Text(
-                                  'Continue With Google',
-                                ),
-                              ],
-                            ),
+                           
                           ),
                         ),
                         Padding(

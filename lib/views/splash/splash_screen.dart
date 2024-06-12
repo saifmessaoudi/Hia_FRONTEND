@@ -10,7 +10,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   late SplashViewModel viewModel;
 
   @override
@@ -21,17 +20,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-     return ChangeNotifierProvider(
+    return ChangeNotifierProvider(
       create: (_) => viewModel,
       child: const Scaffold(
         body: Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children:  <Widget>[
-              CircularProgressIndicator(),
-              SizedBox(height: 20),
-              Text('Loading...'),
-            ],
+          child: Image(
+            image: AssetImage('images/logo-color-8.png'),
           ),
         ),
       ),
