@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class UserService extends ChangeNotifier {
-  final String baseUrl = 'http://10.0.2.2:3000';
+  final String baseUrl = 'http://10.0.2.2:3030';
 
   Future<bool> verifyEmail(String email) async {
     final response = await http.get(
