@@ -1,6 +1,7 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
+import 'package:hia/views/authentication/phone_verification.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -86,12 +87,12 @@ class _PhoneAuthState extends State<PhoneAuth> {
                             height: 60.0,
                             child: AppTextField(
                               textFieldType: TextFieldType.PHONE,
-                              controller: phoneController ,
+                              controller: phoneController,
                               enabled: true,
                               onChanged: (value) {
                                 setState(() {});
                               },
-                              decoration:  InputDecoration(
+                              decoration: InputDecoration(
                                 labelText: 'Phone Number',
                                 hintText: '1767 432556',
                                 border: const OutlineInputBorder(),
@@ -113,8 +114,13 @@ class _PhoneAuthState extends State<PhoneAuth> {
                           buttontext: 'Continue',
                           buttonDecoration:
                               kButtonDecoration.copyWith(color: kMainColor),
-                          onPressed: (){
-                            
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PhoneVerification(
+                                          phone: phoneController.text,
+                                        )));
                           },
                         ),
                       ],

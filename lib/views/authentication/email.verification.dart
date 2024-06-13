@@ -1,20 +1,35 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
+import 'package:hia/services/user_service.dart';
+import 'package:hia/views/authentication/change_password.dart';
 import 'package:hia/views/authentication/otp_form.dart';
 import 'package:hia/views/authentication/sign_in.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-class PhoneVerification extends StatefulWidget {
-  final String phone;
-  const PhoneVerification({super.key, required this.phone});
+class EmailOtpVerification extends StatefulWidget {
+  final String email;
+  const EmailOtpVerification({super.key, required this.email});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _PhoneVerificationState createState() => _PhoneVerificationState();
+  State<EmailOtpVerification> createState() => _EmailOtpVerificationState();
 }
 
-class _PhoneVerificationState extends State<PhoneVerification> {
+class _EmailOtpVerificationState extends State<EmailOtpVerification> {
+  final TextEditingController emailController = TextEditingController();
+
+  late String otp = ''; // Stores the OTP entered by the user
+
+  bool isLoading = false;
+  @override
+  void initState() {
+    super.initState();
+    emailController.text = widget.email;
+  }
+
+  final UserService _userService = UserService();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -41,20 +56,20 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Verify your mobile number',
+                            'Verify your email',
                             style: kTextStyle.copyWith(
                                 color: kTitleColor,
                                 fontSize: 22.0,
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            'Enter 4-digit code sent to your mobile number',
+                            'Enter 4-digit code sent to your email',
                             style: kTextStyle.copyWith(
                               color: white,
                             ),
                           ),
                           Text(
-                            '${widget.phone}',
+                            'saif.messaoudi@esprit.tn',
                             style: kTextStyle.copyWith(
                               color: kTitleColor,
                             ),
@@ -80,25 +95,24 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                           height: 40.0,
                         ),
                         OtpForm(
-                          onOtpEntered: (String otp) {
-                            print("The OTP is $otp");
+                          onOtpEntered: (value) {
+                            setState(() {
+                              otp = value;
+                            });
                           },
                         ),
                         const SizedBox(
                           height: 20.0,
                         ),
                         const SizedBox(
-                          height: 30.0,
+                          height: 20.0,
                         ),
                         ButtonGlobal(
                           buttontext: 'Verify',
                           buttonDecoration:
                               kButtonDecoration.copyWith(color: kMainColor),
                           onPressed: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const SignIn()));
+                            verifyEmail(widget.email, otp);
                           },
                         ),
                       ],
@@ -111,5 +125,37 @@ class _PhoneVerificationState extends State<PhoneVerification> {
         ),
       ),
     );
+  }
+
+  void verifyEmail(String email, String otp) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      // Await the response from the asynchronous function
+      var response = await _userService.verifyOtpEmail(email, otp);
+
+      if (response['success']) {
+        toast(response['message']);
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ChangePassword(email: email)),
+        );
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        toast(response['message']);
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      toast('An error occurred. Please try again later');
+    }
   }
 }

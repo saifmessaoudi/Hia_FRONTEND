@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
 
-
-
-
 class OtpForm extends StatefulWidget {
- const OtpForm({
-    super.key
-  });
+  final void Function(String) onOtpEntered;
+
+  const OtpForm({
+    Key? key,
+    required this.onOtpEntered,
+  }) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _OtpFormState createState() => _OtpFormState();
 }
 
@@ -18,7 +17,8 @@ class _OtpFormState extends State<OtpForm> {
   late FocusNode pin2FocusNode;
   late FocusNode pin3FocusNode;
   late FocusNode pin4FocusNode;
-
+  final List<TextEditingController> controllers =
+      List.generate(4, (_) => TextEditingController());
 
   @override
   void initState() {
@@ -30,11 +30,11 @@ class _OtpFormState extends State<OtpForm> {
 
   @override
   void dispose() {
-    super.dispose();
     pin2FocusNode.dispose();
     pin3FocusNode.dispose();
     pin4FocusNode.dispose();
-
+    controllers.forEach((controller) => controller.dispose());
+    super.dispose();
   }
 
   void nextField(String value, FocusNode focusNode) {
@@ -52,64 +52,34 @@ class _OtpFormState extends State<OtpForm> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SizedBox(
+              children: List.generate(4, (index) {
+                return SizedBox(
                   width: 50.0,
                   child: TextFormField(
-                    autofocus: true,
+                    controller: controllers[index],
+                    autofocus: index == 0,
                     obscureText: true,
                     style: const TextStyle(fontSize: 24),
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
                     decoration: otpInputDecoration,
+                    focusNode: index == 0
+                        ? null
+                        : index == 1
+                            ? pin2FocusNode
+                            : index == 2
+                                ? pin3FocusNode
+                                : pin4FocusNode,
                     onChanged: (value) {
-                      nextField(value, pin2FocusNode);
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 50.0,
-                  child: TextFormField(
-                    focusNode: pin2FocusNode,
-                    obscureText: true,
-                    style: const TextStyle(fontSize: 24),
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    decoration: otpInputDecoration,
-                    onChanged: (value) => nextField(value, pin3FocusNode),
-                  ),
-                ),
-                SizedBox(
-                  width: 50.0,
-                  child: TextFormField(
-                    focusNode: pin3FocusNode,
-                    obscureText: true,
-                    style: const TextStyle(fontSize: 24),
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    decoration: otpInputDecoration,
-                    onChanged: (value) => nextField(value, pin4FocusNode),
-                  ),
-                ),
-                SizedBox(
-                  width: 50.0,
-                  child: TextFormField(
-                    focusNode: pin4FocusNode,
-                    obscureText: true,
-                    style: const TextStyle(fontSize: 24),
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    decoration: otpInputDecoration,
-                    onChanged: (value) {
-                      if (value.length == 1) {
-                        pin4FocusNode.unfocus();
+                      widget
+                          .onOtpEntered(controllers.map((e) => e.text).join());
+                      if (value.length == 1 && index < 3) {
+                        FocusScope.of(context).nextFocus();
                       }
                     },
                   ),
-                ),
-               
-               
-              ],
+                );
+              }),
             ),
           ],
         ),

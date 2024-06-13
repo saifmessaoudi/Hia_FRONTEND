@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
+import 'package:hia/views/authentication/change_password.dart';
+import 'package:hia/views/authentication/forget_password_screen.dart';
 import 'package:hia/views/authentication/phone_verification.dart';
 import 'package:hia/views/authentication/sign_in.dart';
+import 'package:hia/views/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,12 +27,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        pageTransitionsTheme: const PageTransitionsTheme(builders: {TargetPlatform.android: CupertinoPageTransitionsBuilder(),}),
+        pageTransitionsTheme: const PageTransitionsTheme(builders: {
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        }),
       ),
       title: 'Maan LMS',
       initialRoute: '/',
       routes: {
-        '/': (context) => const SignIn(),
+        '/': (context) => const SplashScreen(),
       },
     );
   }

@@ -9,6 +9,9 @@ import 'package:hia/constant.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
+import 'package:hia/views/authentication/email.verification.dart';
+import 'package:hia/views/authentication/forget_password_screen.dart';
+import 'package:hia/views/authentication/phone_auth.dart';
 import 'package:hia/views/authentication/sign_up.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/views/location/location_permission.dart';
@@ -30,7 +33,6 @@ class _SignInState extends State<SignIn> {
   final TextEditingController passwordController = TextEditingController();
   final UserService userService = UserService();
 
-
   String? emailError;
   String? firstNameError;
   String? lastNameError;
@@ -42,7 +44,7 @@ class _SignInState extends State<SignIn> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Row(
+        title: const Row(
           children: [
             Icon(
               Icons.done,
@@ -135,7 +137,7 @@ class _SignInState extends State<SignIn> {
                                 borderRadius: BorderRadius.all(Radius.circular(
                                     12.0)), // Adjust the radius as needed
                               ),
-                              focusedBorder:  const OutlineInputBorder(
+                              focusedBorder: const OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(
                                     12.0)), // Ensure the radius matches
                                 borderSide: BorderSide(
@@ -148,7 +150,7 @@ class _SignInState extends State<SignIn> {
                                 color: Color.fromARGB(255, 187, 187,
                                     187), // Color when the TextField is unfocused
                               ),
-                              floatingLabelStyle:const TextStyle(
+                              floatingLabelStyle: const TextStyle(
                                 color:
                                     kMainColor, // Color when the TextField is focused
                               ),
@@ -187,6 +189,42 @@ class _SignInState extends State<SignIn> {
                             ),
                           ),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Forgot your password?  ',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  color: kTitleColor,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  // Navigate to Sign Up Page
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ForgetPassword()),
+                                  );
+                                },
+                                child: const Text(
+                                  'Here',
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                    color: kSecondaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
                         ButtonGlobal(
                           buttontext: 'Log In',
                           buttonDecoration:
@@ -229,7 +267,7 @@ class _SignInState extends State<SignIn> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                         const LocationPermission()),
+                                          const LocationPermission()),
                                 );
                               } else {
                                 setState(() {
@@ -308,7 +346,6 @@ class _SignInState extends State<SignIn> {
                           ],
                         ),
                         GestureDetector(
-                          
                           onTap: () {
                             signInWithFacebook();
                           },
@@ -321,39 +358,41 @@ class _SignInState extends State<SignIn> {
                             child: Container(
                               width: context.width(),
                               height: 60.0,
-                              decoration:  BoxDecoration(
+                              decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10.0),
                                 color: const Color.fromARGB(255, 14, 85, 177),
                               ),
-                              child: 
-                              isLoading ? const Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                 LoadingWidget(
-                                  color: white,
-                                  size: 10.0,
-                                  spacing: 10.0,
-                                ),
-                              ],
-                            ) :
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    FontAwesomeIcons.facebookF,
-                                    size: 30.0,
-                                    color: Colors.white,
-                                  ),
-                                  const SizedBox(
-                                    width: 5.0,
-                                  ),
-                                  Text(
-                                    'Continue With Facebook',
-                                    style: kTextStyle.copyWith(
-                                        color: Colors.white),
-                                  ),
-                                ],
-                              ),
+                              child: isLoading
+                                  ? const Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        LoadingWidget(
+                                          color: white,
+                                          size: 10.0,
+                                          spacing: 10.0,
+                                        ),
+                                      ],
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(
+                                          FontAwesomeIcons.facebookF,
+                                          size: 30.0,
+                                          color: Colors.white,
+                                        ),
+                                        const SizedBox(
+                                          width: 5.0,
+                                        ),
+                                        Text(
+                                          'Continue With Facebook',
+                                          style: kTextStyle.copyWith(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
                             ),
                           ),
                         ),
@@ -398,15 +437,14 @@ class _SignInState extends State<SignIn> {
   }
 
   Future<void> signInWithFacebook() async {
-
+    String _token;
+    String _userId;
+    final authViewModel = Provider.of<UserViewModel>(context, listen: false);
     setState(() {
       isLoading = true;
     });
     try {
-
       final LoginResult result = await FacebookAuth.instance.login();
-
-
 
       if (result.status == LoginStatus.success) {
         final AccessToken accessToken = result.accessToken!;
@@ -414,22 +452,43 @@ class _SignInState extends State<SignIn> {
         final accesToken = accessToken.tokenString;
         print('Access Token: $accesToken');
 
-            final response = await http.post(
-        Uri.parse('http://10.0.2.2:3000/token'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          'accessToken': accesToken,
-        }),
-   );
+        final response = await http.post(
+          Uri.parse('http://10.0.2.2:3000/user/facebook-login'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(<String, String>{
+            'accessToken': accesToken,
+          }),
+        );
 
-      print ('Response: ${response.body}');
-    setState(() {
-      isLoading = false;
-    });
+        final Map<String, dynamic>? responseData = jsonDecode(response.body);
+
+        if (responseData != null && responseData.containsKey('token')) {
+          _token = responseData['token'];
+
+          await authViewModel.loginWithFacebook(_token);
+          setState(() {
+            isLoading = false;
+          });
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LocationPermission(),
+            ),
+          );
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const PhoneAuth(),
+            ),
+          );
+        }
       } else {
-        print('Login failed: ${result.status}');
         print('Message: ${result.message}');
         setState(() {
           isLoading = false;

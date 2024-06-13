@@ -20,12 +20,12 @@ class UserViewModel with ChangeNotifier {
 
         // Extract user ID from the token
         final parts = _token!.split('.');
-        final payload = json.decode(utf8.decode(base64.decode(base64.normalize(parts[1]))));
+        final payload =
+            json.decode(utf8.decode(base64.decode(base64.normalize(parts[1]))));
         _userId = payload['userId'];
-         print(_userId) ;
+        print(_userId);
         // Save token and user ID to shared preferences
         await _saveSession();
-        
 
         notifyListeners();
         return true;
@@ -66,18 +66,17 @@ class UserViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future <bool> loginWithFacebook(String token) async {
+  Future<bool> loginWithFacebook(String token) async {
     try {
-      final response = null;
-
-      if (response['token'] != null) {
-        _token = response['token'];
+      if (token != null) {
+        _token = token;
 
         // Extract user ID from the token
         final parts = _token!.split('.');
-        final payload = json.decode(utf8.decode(base64.decode(base64.normalize(parts[1]))));
+        final payload =
+            json.decode(utf8.decode(base64.decode(base64.normalize(parts[1]))));
         _userId = payload['userId'];
-
+        print(_userId);
         // Save token and user ID to shared preferences
         await _saveSession();
 
