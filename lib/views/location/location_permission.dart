@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:hia/services/user_service.dart';
+import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/constant.dart';
+import 'package:hia/views/home/home.dart';
+import 'package:hia/views/home/home_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart';
 
 class LocationPermission extends StatefulWidget {
   const LocationPermission({Key? key}) : super(key: key);
@@ -11,16 +17,57 @@ class LocationPermission extends StatefulWidget {
 }
 
 class _LocationPermissionState extends State<LocationPermission> {
+   final UserService userService = UserService();
+
+
+ String? userId ;
+ Position? position ; 
+ 
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
+ Future<void> saveUserLocation() async {
+    try {
+    
+       final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+       userViewModel.initSession() ; 
+
+       
+     
+   
+         position = await userViewModel.determinePosition();
+         String? addresse = await userViewModel.getAddressFromCoordinates(position!.latitude, position!.longitude);
+     
+       userService.updateUserLocation(userViewModel.userId!, addresse!, position!.longitude, position!.latitude) ; 
+Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Home()),
+      );
+     
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Location updated successfully!'),
+      ));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to update location: $e'),
+      ));
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+         resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("images/authbg.png"),
+                  image: AssetImage("images/hiaauthbgg.png"),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -88,7 +135,10 @@ class _LocationPermissionState extends State<LocationPermission> {
                           buttonDecoration:
                           kButtonDecoration.copyWith(color: kMainColor),
                           onPressed: (){
-                            //const LocationAccess().launch(context);
+                        
+
+                            saveUserLocation() ; 
+                            
                           },
                         ),
                         Padding(
