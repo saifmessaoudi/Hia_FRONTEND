@@ -26,29 +26,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("images/hiaauthbgg.png"),
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                 ),
               ),
             ),
             SingleChildScrollView(
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                        ).onTap(() {
-                          //Navigator.pop(context);
-                        }),
-                      ),
-                      
-                    ],
-                  ),
                   const SizedBox(
-                    height: 40.0,
+                    height: 90.0,
                   ),
                   Container(
                     width: context.width(),
@@ -67,7 +53,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           radius: 20.0,
                           child: Image(
                             image: AssetImage('images/h_logo.png'),
-                           
                           ),
                         ),
                         const SizedBox(
@@ -106,11 +91,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       padding: const EdgeInsets.all(10.0),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                           color: Colors.white,
                                         ),
                                         child: ListTile(
-                                          onTap: (){
+                                          onTap: () {
                                             const EditProfile().launch(context);
                                           },
                                           leading: const CircleAvatar(
@@ -122,10 +108,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                           title: Text(
                                             'My Profile',
-                                            style:
-                                            kTextStyle.copyWith(color: kGreyTextColor),
+                                            style: kTextStyle.copyWith(
+                                                color: kGreyTextColor),
                                           ),
-                                          trailing: const Icon(Icons.arrow_forward_ios,color: kGreyTextColor,),
+                                          trailing: const Icon(
+                                            Icons.arrow_forward_ios,
+                                            color: kGreyTextColor,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -133,7 +122,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       padding: const EdgeInsets.all(10.0),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                           color: Colors.white,
                                         ),
                                         child: ListTile(
@@ -146,10 +136,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                           title: Text(
                                             'Payment Settings',
-                                            style:
-                                            kTextStyle.copyWith(color: kGreyTextColor),
+                                            style: kTextStyle.copyWith(
+                                                color: kGreyTextColor),
                                           ),
-                                          trailing: const Icon(Icons.arrow_forward_ios,color: kGreyTextColor,),
+                                          trailing: const Icon(
+                                            Icons.arrow_forward_ios,
+                                            color: kGreyTextColor,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -157,12 +150,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       padding: const EdgeInsets.all(10.0),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                           color: Colors.white,
                                         ),
                                         child: ListTile(
-                                          onTap: (){
-                                           // const NotificationScreen().launch(context);
+                                          onTap: () {
+                                            // const NotificationScreen().launch(context);
                                           },
                                           leading: const CircleAvatar(
                                             backgroundColor: Color(0xFFF5F5F5),
@@ -173,10 +167,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                           title: Text(
                                             'Notification',
-                                            style:
-                                            kTextStyle.copyWith(color: kGreyTextColor),
+                                            style: kTextStyle.copyWith(
+                                                color: kGreyTextColor),
                                           ),
-                                          trailing: const Icon(Icons.arrow_forward_ios,color: kGreyTextColor,),
+                                          trailing: const Icon(
+                                            Icons.arrow_forward_ios,
+                                            color: kGreyTextColor,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -184,12 +181,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       padding: const EdgeInsets.all(10.0),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                           color: Colors.white,
                                         ),
                                         child: ListTile(
-                                          onTap: (){
-                                           // const WishList().launch(context);
+                                          onTap: () {
+                                            // const WishList().launch(context);
                                           },
                                           leading: const CircleAvatar(
                                             backgroundColor: Color(0xFFF5F5F5),
@@ -200,10 +198,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                           title: Text(
                                             'Wishlist',
-                                            style:
-                                            kTextStyle.copyWith(color: kGreyTextColor),
+                                            style: kTextStyle.copyWith(
+                                                color: kGreyTextColor),
                                           ),
-                                          trailing: const Icon(Icons.arrow_forward_ios,color: kGreyTextColor,),
+                                          trailing: const Icon(
+                                            Icons.arrow_forward_ios,
+                                            color: kGreyTextColor,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -211,7 +212,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       padding: const EdgeInsets.all(10.0),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                           color: Colors.white,
                                         ),
                                         child: ListTile(
@@ -224,10 +226,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                           title: Text(
                                             'Order Tracking',
-                                            style:
-                                            kTextStyle.copyWith(color: kGreyTextColor),
+                                            style: kTextStyle.copyWith(
+                                                color: kGreyTextColor),
                                           ),
-                                          trailing: const Icon(Icons.arrow_forward_ios,color: kGreyTextColor,),
+                                          trailing: const Icon(
+                                            Icons.arrow_forward_ios,
+                                            color: kGreyTextColor,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -235,76 +240,90 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       padding: const EdgeInsets.all(10.0),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10.0),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
                                           color: Colors.white,
                                         ),
-                                     child: ListTile(
-  onTap: () {
-    // Show dialog when ListTile is tapped
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Are you sure you want to logout ?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false); // Dismiss dialog and return false
-              },
-          child: Text(
-                'Cancel',
-                style: TextStyle(color: kMainColor), // Text color set to kMainColor
-              ),
-            ),
-            TextButton(
-              onPressed: () async {
-                    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-                    await userViewModel.logout() ; 
-                    Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                         const SignIn()),
-                                );
+                                        child: ListTile(
+                                          onTap: () {
+                                            // Show dialog when ListTile is tapped
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                      'Are you sure you want to logout ?'),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop(
+                                                            false); // Dismiss dialog and return false
+                                                      },
+                                                      child: Text(
+                                                        'Cancel',
+                                                        style: TextStyle(
+                                                            color:
+                                                                kMainColor), // Text color set to kMainColor
+                                                      ),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () async {
+                                                        final userViewModel =
+                                                            Provider.of<
+                                                                    UserViewModel>(
+                                                                context,
+                                                                listen: false);
+                                                        await userViewModel
+                                                            .logout();
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  const SignIn()),
+                                                        );
 
-
-                // Perform logout action here
-                // For example, navigate to login screen or clear session
-                 // Dismiss dialog and return true
-              },
-              child: Text(
-                'Logout',
-                style: TextStyle(color: kMainColor), // Text color set to kMainColor
-              ),
-            ),
-          ],
-        );
-      },
-    ).then((value) {
-      // This code executes after the dialog is dismissed
-      if (value == true) {
-        // Perform logout action here
-        // For example, navigate to login screen or clear session
-        // You can call your logout function or navigate to another page
-        // Example: Navigator.pushReplacementNamed(context, '/login');
-        print('Performing logout action...');
-      }
-    });
-  },
-  leading: const CircleAvatar(
-    backgroundColor: Color(0xFFF5F5F5),
-    child: Icon(
-      Icons.logout,
-      color: kMainColor,
-    ),
-  ),
-  title: Text(
-    'Logout',
-    style: kTextStyle.copyWith(color: kGreyTextColor),
-  ),
-  trailing: const Icon(Icons.arrow_forward_ios, color: kGreyTextColor),
-),
-
+                                                        // Perform logout action here
+                                                        // For example, navigate to login screen or clear session
+                                                        // Dismiss dialog and return true
+                                                      },
+                                                      child: Text(
+                                                        'Logout',
+                                                        style: TextStyle(
+                                                            color:
+                                                                kMainColor), // Text color set to kMainColor
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ).then((value) {
+                                              // This code executes after the dialog is dismissed
+                                              if (value == true) {
+                                                // Perform logout action here
+                                                // For example, navigate to login screen or clear session
+                                                // You can call your logout function or navigate to another page
+                                                // Example: Navigator.pushReplacementNamed(context, '/login');
+                                                print(
+                                                    'Performing logout action...');
+                                              }
+                                            });
+                                          },
+                                          leading: const CircleAvatar(
+                                            backgroundColor: Color(0xFFF5F5F5),
+                                            child: Icon(
+                                              Icons.logout,
+                                              color: kMainColor,
+                                            ),
+                                          ),
+                                          title: Text(
+                                            'Logout',
+                                            style: kTextStyle.copyWith(
+                                                color: kGreyTextColor),
+                                          ),
+                                          trailing: const Icon(
+                                              Icons.arrow_forward_ios,
+                                              color: kGreyTextColor),
+                                        ),
                                       ),
                                     ),
                                   ],

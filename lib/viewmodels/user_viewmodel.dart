@@ -17,8 +17,8 @@ class UserViewModel with ChangeNotifier {
   User? _userData;
   User? get userData => _userData;
 
-  Future<void> fetchUserById() async {
-    _userData = await userService.getUserById(_userId!);
+  Future<void> fetchUserById(String userId) async {
+    _userData = await userService.getUserById(userId);
     notifyListeners();
   }
 
@@ -39,10 +39,10 @@ class UserViewModel with ChangeNotifier {
         // Save token and user ID to shared preferences
         await _saveSession();
         notifyListeners();
-        await fetchUserById();
+        await fetchUserById(userId!);
 
         notifyListeners();
-        print(_userData);
+        
         return true;
       } else {
         return false;

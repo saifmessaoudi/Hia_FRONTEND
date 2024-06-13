@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-//import 'package:maan_food/GlobalComponents/category_data.dart';
-//import 'package:maan_food/GlobalComponents/product_data.dart';
-//import 'package:maan_food/GlobalComponents/restaurant_data.dart';
-//import 'package:maan_food/Screens/Home/category_screen.dart';
-//import 'package:maan_food/Screens/Home/product_screen.dart';
-//import 'package:maan_food/Screens/Home/table_booking.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/views/global_components/category_data.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -43,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       decoration: const BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage(
-                              'images/homeheader.png',
+                              'images/hiahomehead.png',
                             ),
                             fit: BoxFit.cover),
                       ),
@@ -62,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       'Hia Tunisia',
                                       style: kTextStyle.copyWith(
                                           color: kTitleColor,
-                                          fontSize: 18.0,
+                                          fontSize: 22.0,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     RichText(
@@ -77,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           TextSpan(
                                             text: "Dhaka, Bangladesh",
                                             style: kTextStyle.copyWith(
-                                                color: Colors.white),
+                                                color: white),
                                           ),
                                         ],
                                       ),
@@ -87,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               const Spacer(),
                               const CircleAvatar(
-                                backgroundColor: Color(0xFFFED6A9),
+                                backgroundColor: Colors.white,
                                 radius: 20.0,
                                 child: Icon(
                                   Icons.notifications_none_outlined,
@@ -192,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
-            /*  Padding(
+              /*  Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                 child: Text(
                   'Book Your Restaurant',
@@ -231,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-             /* Padding(
+              /* Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: HorizontalList(
                   spacing: 10,
@@ -258,18 +252,17 @@ class _HomeScreenState extends State<HomeScreen> {
 class BookTableCard extends StatelessWidget {
   const BookTableCard({
     Key? key,
-   // required this.restaurantData
+    // required this.restaurantData
   }) : super(key: key);
 //final RestaurantData restaurantData;
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10.0, right: 10.0,bottom: 10.0),
+      padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
       child: Material(
         elevation: 2.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0)
-        ),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SizedBox(
@@ -278,7 +271,7 @@ class BookTableCard extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                 // child: Image(image: AssetImage(restaurantData.restaurantImage),fit: BoxFit.cover,),
+                  // child: Image(image: AssetImage(restaurantData.restaurantImage),fit: BoxFit.cover,),
                 ),
                 Row(
                   children: [
@@ -287,7 +280,7 @@ class BookTableCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                         // Text(restaurantData.restaurantName, style: kTextStyle.copyWith(color: kTitleColor, fontWeight: FontWeight.bold),),
+                          // Text(restaurantData.restaurantName, style: kTextStyle.copyWith(color: kTitleColor, fontWeight: FontWeight.bold),),
                           RichText(
                             text: TextSpan(
                               children: [
@@ -299,7 +292,7 @@ class BookTableCard extends StatelessWidget {
                                   ),
                                 ),
                                 TextSpan(
-                                 // text: restaurantData.restaurantLocation,
+                                  // text: restaurantData.restaurantLocation,
                                   style: kTextStyle.copyWith(
                                       color: kGreyTextColor),
                                 ),
@@ -319,17 +312,19 @@ class BookTableCard extends StatelessWidget {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                //  text: restaurantData.restaurantRatingCount,
+                                  //  text: restaurantData.restaurantRatingCount,
                                   style: kTextStyle.copyWith(
                                       color: kGreyTextColor),
                                 ),
                                 const WidgetSpan(
-                                  child: SizedBox(width: 2.0,),
+                                  child: SizedBox(
+                                    width: 2.0,
+                                  ),
                                 ),
                                 TextSpan(
                                   //text: restaurantData.restaurantRating,
-                                  style: kTextStyle.copyWith(
-                                      color: kTitleColor),
+                                  style:
+                                      kTextStyle.copyWith(color: kTitleColor),
                                 ),
                                 const WidgetSpan(
                                   child: Icon(
@@ -343,16 +338,20 @@ class BookTableCard extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(right: 4.0,bottom: 4.0),
+                          padding:
+                              const EdgeInsets.only(right: 4.0, bottom: 4.0),
                           child: Container(
                             padding: const EdgeInsets.all(5.0),
                             decoration: BoxDecoration(
                               color: kMainColor,
                               borderRadius: BorderRadius.circular(20.0),
                             ),
-                            child: Text('Book Now',style: kTextStyle.copyWith(color: Colors.white),),
-                          ).onTap((){
-                           // const TableBooking().launch(context);
+                            child: Text(
+                              'Book Now',
+                              style: kTextStyle.copyWith(color: Colors.white),
+                            ),
+                          ).onTap(() {
+                            // const TableBooking().launch(context);
                           }),
                         ),
                       ],
@@ -371,7 +370,7 @@ class BookTableCard extends StatelessWidget {
 class FoodCard extends StatelessWidget {
   const FoodCard({
     Key? key,
-  //  required this.productData
+    //  required this.productData
   }) : super(key: key);
   //final ProductData productData;
 
@@ -398,7 +397,7 @@ class FoodCard extends StatelessWidget {
                       height: 100.0,
                     ),
                   ),*/
-                /*  Row(
+                  /*  Row(
                     children: [
                       Text(
                       //  productData.productTitle,
@@ -409,7 +408,7 @@ class FoodCard extends StatelessWidget {
                   Row(
                     children: [
                       RatingBarIndicator(
-                      //  rating: productData.productRating.toDouble(),
+                        //  rating: productData.productRating.toDouble(),
                         itemBuilder: (context, index) => const Icon(
                           Icons.star,
                           color: Colors.amber,
@@ -417,8 +416,10 @@ class FoodCard extends StatelessWidget {
                         itemCount: 5,
                         itemSize: 10.0,
                       ),
-                      const SizedBox(width: 5.0,),
-                    /*  Text(
+                      const SizedBox(
+                        width: 5.0,
+                      ),
+                      /*  Text(
                      //   productData.productRating,
                       //  style: kTextStyle.copyWith(color: kGreyTextColor),
                       ),*/
@@ -440,11 +441,9 @@ class FoodCard extends StatelessWidget {
                               ),
                             ),
                             TextSpan(
-                             // text: productData.productPrice,
+                              // text: productData.productPrice,
                               style: kTextStyle.copyWith(
-                                  color: kTitleColor,
-                                fontSize: 16.0
-                              ),
+                                  color: kTitleColor, fontSize: 16.0),
                             ),
                           ],
                         ),
