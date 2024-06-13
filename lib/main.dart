@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/authentication/phone_verification.dart';
 import 'package:hia/views/authentication/sign_in.dart';
+import 'package:hia/views/home/home.dart';
 import 'package:hia/views/location/location_permission.dart';
+import 'package:hia/views/profile/edit_profile.dart';
+import 'package:hia/views/profile/profile_screen.dart';
 import 'package:provider/provider.dart';
 
 
@@ -31,7 +34,7 @@ class MyApp extends StatelessWidget {
       title: 'Maan LMS',
       initialRoute: '/',
       routes: {
-        '/': (context) => const SignIn(),
+        '/': (context) => const Home(),
       },
     );
   }

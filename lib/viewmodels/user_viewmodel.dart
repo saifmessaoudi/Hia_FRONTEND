@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:hia/models/user.model.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:geolocator/geolocator.dart';
@@ -12,6 +14,16 @@ class UserViewModel with ChangeNotifier {
 
   String? _userId;
   String? get userId => _userId;
+
+
+  User? _userData;
+  User?  get userData => _userData;
+
+  Future<void> fetchUserById() async {
+    _userData = await userService.getUserById(_userId!);
+    notifyListeners();
+  }
+
 
   Future<bool> login(String email, String password) async {
     try {
@@ -28,9 +40,11 @@ class UserViewModel with ChangeNotifier {
 print (userId);
         // Save token and user ID to shared preferences
         await _saveSession();
-        
+          notifyListeners();
+        await fetchUserById() ; 
 
         notifyListeners();
+        print(_userData) ; 
         return true;
       } else {
         return false;
@@ -129,4 +143,24 @@ Future<Position> determinePosition() async {
       return false;
     }
   }
+
+
+Future<String?> getAddressFromCoordinates(double latitude, double longitude) async {
+  try {
+    List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+    if (placemarks != null && placemarks.isNotEmpty) {
+      Placemark placemark = placemarks.first;
+      String address = '${placemark.street}, ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
+      return address;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    print('Error getting address from coordinates: $error');
+    return null;
+  }
+}
+
+
+
 }

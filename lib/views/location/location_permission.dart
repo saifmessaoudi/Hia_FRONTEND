@@ -4,6 +4,8 @@ import 'package:hia/services/user_service.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/constant.dart';
+import 'package:hia/views/home/home.dart';
+import 'package:hia/views/home/home_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
@@ -37,9 +39,13 @@ class _LocationPermissionState extends State<LocationPermission> {
      
    
          position = await userViewModel.determinePosition();
+         String? addresse = await userViewModel.getAddressFromCoordinates(position!.latitude, position!.longitude);
      
-       userService.updateUserLocation(userViewModel.userId!, 'address', position!.longitude, position!.latitude) ; 
-
+       userService.updateUserLocation(userViewModel.userId!, addresse!, position!.longitude, position!.latitude) ; 
+Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Home()),
+      );
      
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -55,12 +61,13 @@ class _LocationPermissionState extends State<LocationPermission> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+         resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("images/authbg.png"),
+                  image: AssetImage("images/hiaauthbgg.png"),
                   fit: BoxFit.cover,
                 ),
               ),
