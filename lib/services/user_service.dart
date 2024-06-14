@@ -165,13 +165,17 @@ class UserService extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> sendPhoneOtp(String email) async {
+  Future<Map<String, dynamic>> sendPhoneOtp(String phone, String email) async {
     try {
       final response = await http.post(
         Uri.parse(baseUrl + '/user/send-phone-otp'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
+        body: jsonEncode(<String, String>{
+          'email': email,
+          'phone': phone,
+        }),
       );
 
       if (response.statusCode == 200) {
@@ -267,7 +271,6 @@ class UserService extends ChangeNotifier {
         return {'success': false, 'message': responseData['message']};
       }
     } catch (error) {
-     
       return {
         'success': false,
         'message': 'Failed to verify OTP. Please try again later.'

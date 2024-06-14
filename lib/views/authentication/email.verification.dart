@@ -69,7 +69,7 @@ class _EmailOtpVerificationState extends State<EmailOtpVerification> {
                             ),
                           ),
                           Text(
-                            'saif.messaoudi@esprit.tn',
+                            widget.email,
                             style: kTextStyle.copyWith(
                               color: kTitleColor,
                             ),

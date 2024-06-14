@@ -1,22 +1,20 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
-import 'package:hia/models/user.model.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/views/authentication/phone_verification.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-class PhoneAuth extends StatefulWidget {
+class SignUpPhoneOtp extends StatefulWidget {
   final String email;
-
-  const PhoneAuth({Key? key, required this.email}) : super(key: key);
+  const SignUpPhoneOtp({super.key, required this.email});
 
   @override
-  _PhoneAuthState createState() => _PhoneAuthState();
+  State<SignUpPhoneOtp> createState() => _SignUpPhoneOtpState();
 }
 
-class _PhoneAuthState extends State<PhoneAuth> {
+class _SignUpPhoneOtpState extends State<SignUpPhoneOtp> {
   TextEditingController phoneController = TextEditingController();
   final UserService _userService = UserService();
   String countryCode = '+216';

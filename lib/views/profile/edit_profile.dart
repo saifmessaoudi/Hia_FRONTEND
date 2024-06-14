@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hia/services/user_service.dart';
+import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/home/home.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -30,6 +31,8 @@ class _EditProfileState extends State<EditProfile> {
   String? passwordError;
 
   Position? position;
+  bool isLoading = false;
+  bool isLoadingPosition = false;
 
   @override
   void initState() {
@@ -94,6 +97,9 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Future<void> saveUserLocation() async {
+    setState(() {
+      isLoadingPosition = true;
+    });
     try {
       final userViewModel = Provider.of<UserViewModel>(context, listen: false);
       userViewModel.initSession();
@@ -104,6 +110,10 @@ class _EditProfileState extends State<EditProfile> {
 
       userService.updateUserLocation(userViewModel.userId!, addresse!,
           position!.longitude, position!.latitude);
+      
+      setState(() {
+        isLoadingPosition = false;
+      });
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Home()),
@@ -144,7 +154,9 @@ class _EditProfileState extends State<EditProfile> {
                       final userViewModel =
                           Provider.of<UserViewModel>(context, listen: false);
                       userViewModel.initSession();
-
+                      setState(() {
+                        isLoading = true;
+                      });
                       bool success = await userService.updateUserProfile(
                         userViewModel.userId!,
                         firstNameController.text,
@@ -153,12 +165,16 @@ class _EditProfileState extends State<EditProfile> {
                         passwordController.text,
                       );
                       if (success) {
+                        setState(() {
+                          isLoading = false;
+                        });
                         showSuccessAlert('Profile updated successfully!');
                         userViewModel.fetchUserById(userViewModel.userId!);
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('check your data !'),
-                        ));
+                        setState(() {
+                          isLoading = false;
+                        });
+                        
                       }
                     },
                     child: Padding(
@@ -172,6 +188,13 @@ class _EditProfileState extends State<EditProfile> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            isLoading
+                                ? const LoadingWidget(
+                                    color: Colors.white,
+                                    size: 10.0,
+                                    spacing: 10.0,
+                                )
+                                :
                             Text(
                               'Update Profile',
                               style: kTextStyle.copyWith(
@@ -435,12 +458,18 @@ class _EditProfileState extends State<EditProfile> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.location_on,
+                                    const Icon(Icons.location_on,
                                         color: kMainColor), // Location icon
-                                    SizedBox(
+                                    const SizedBox(
                                         width:
                                             8.0), // Space between icon and text
-                                    Text(
+                                    isLoadingPosition
+                                          ? const LoadingWidget(
+                                              color: kMainColor,
+                                              size: 10.0,
+                                              spacing: 10.0,
+                                          )
+                                          :Text(
                                       'Update Position',
                                       style: kTextStyle.copyWith(
                                         color: kMainColor,

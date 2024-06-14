@@ -1,18 +1,15 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
-import 'package:hia/views/authentication/email.verification.dart';
 import 'package:hia/views/authentication/forget_password_screen.dart';
 import 'package:hia/views/authentication/phone_auth.dart';
-import 'package:hia/views/authentication/sign_up.dart';
+import 'package:hia/views/authentication/registration/sign_up.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/views/location/location_permission.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -439,6 +436,7 @@ class _SignInState extends State<SignIn> {
   Future<void> signInWithFacebook() async {
     String _token;
     String _userId;
+    String email = '';
     final authViewModel = Provider.of<UserViewModel>(context, listen: false);
     setState(() {
       isLoading = true;
@@ -466,6 +464,7 @@ class _SignInState extends State<SignIn> {
 
         if (responseData != null && responseData.containsKey('token')) {
           _token = responseData['token'];
+          email = responseData['user']["email"];
 
           await authViewModel.loginWithFacebook(_token);
           setState(() {
@@ -484,7 +483,7 @@ class _SignInState extends State<SignIn> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const PhoneAuth(),
+              builder: (context) => PhoneAuth(email: email),
             ),
           );
         }

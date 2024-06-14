@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 //import 'package:maan_food/Screens/Authentication/phone_verification.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/services/user_service.dart';
+import 'package:hia/utils/loading_widget.dart';
+import 'package:hia/views/authentication/registration/registration_otp_phone.dart';
 import 'package:hia/views/authentication/sign_in.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -22,6 +24,7 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final UserService userService = UserService();
+  bool isLoading = false;
   
 
 
@@ -36,7 +39,7 @@ void showSuccessAlert(String message) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Row(
+        title: const Row(
           children: [
             Icon(
               Icons.done,
@@ -50,10 +53,7 @@ void showSuccessAlert(String message) {
         actions: [
           TextButton(
             onPressed: () {
-             // Navigator.push(
-               // context,
-              //  //MaterialPageRoute(builder: (context) => LoginPage()),
-            //  );
+             
              Navigator.of(context).pop(); // Dismiss the dialog
             },
             child: Text('OK'),
@@ -66,26 +66,32 @@ void showSuccessAlert(String message) {
   }
 
     Future<void> createUserAccount() async {
+      setState(() {
+        isLoading = true;
+      });
     
       try {
         final response = await userService.signUp(
           firstNameController.text,
           lastNameController.text,
           emailController.text,
-          passwordController.text,
-          
+          passwordController.text,  
         );
 
-        print(response);
         if (!response['success']) {
-      // Email is already used, show error message
       setState(() {
         emailError = 'Email is already used' ; 
-
+        isLoading = false;
        });
     } else {
-      // Account created successfully, show success message
-      showSuccessAlert('Account created successfully');
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => SignUpPhoneOtp(email: emailController.text)),
+      );
+      setState(() {
+        isLoading = false;
+      });
+     
     }
         // Navigator.pop(context); // Optional: Navigate to the next screen
       } catch (error) {
@@ -312,13 +318,19 @@ void showSuccessAlert(String message) {
                          const SizedBox(
                           height: 20.0,
                         ),
+                        isLoading
+                            ? const LoadingWidget(
+                                color: kMainColor,
+                                size: 10.0,
+                                spacing: 10.0,
+                              )
+                            
+                            :
                         ButtonGlobal(
                           buttontext: 'Continue',
                           buttonDecoration:
                           kButtonDecoration.copyWith(color: kMainColor),
-                         onPressed: () {
-            
-                          
+                         onPressed: () {         
   setState(() {
 emailError = emailController.text.isEmpty
     ? 'Please enter your email'

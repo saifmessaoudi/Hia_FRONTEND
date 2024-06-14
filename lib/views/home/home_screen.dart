@@ -79,18 +79,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                           const WidgetSpan(
                                             child: Icon(
                                               Icons.location_on_outlined,
-                                              color: Colors.white,
+                                              color: white,
+                                              size: 15.0,
                                             ),
                                           ),
                                           TextSpan(
                                             text: address,
                                             style: kTextStyle.copyWith(
-                                                color: white),
+                                                color: white,
+                                                fontSize: 15.0),
                                           ),
                                         ],
                                       ),
-                                    ),
+                                    )
                                   ],
+                                  //richtext
                                 ),
                               ),
                               const Spacer(),
@@ -105,6 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SizedBox(
                                 width: 20.0,
                               ),
+                              //richtext
                             ],
                           ),
                           Padding(

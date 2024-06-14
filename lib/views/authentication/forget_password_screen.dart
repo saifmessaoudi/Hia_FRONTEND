@@ -146,30 +146,51 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     );
   }
 
+  Future<bool> verifyEmail(String email) async {
+    final response = _userService.verifyEmail(email);
+
+    if (await response) {
+      return true;
+    } else {
+      throw Exception('Failed to verify email');
+    }
+  }
+
   void sendOtpToEmail(String email) async {
     try {
-      var response = await _userService.forgetPassword(email);
-      if (response['success']) {
-        toast(response['message']);
-        setState(() {
-          isLoading = false;
-        });
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EmailOtpVerification(
-              email: email,
+      bool emailExists = await verifyEmail(email);
+      if (emailExists) {
+        var response = await _userService.forgetPassword(email);
+        if (response['success']) {
+          toast(response['message']);
+          setState(() {
+            isLoading = false;
+          });
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EmailOtpVerification(
+                email: email,
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          toast('Failed to send OTP: ${response['message']}');
+          setState(() {
+            isLoading = false;
+          });
+        }
       } else {
-        toast('Failed to send OTP: ${response['message']}');
+        toast('Email does not exist.');
         setState(() {
           isLoading = false;
         });
       }
     } catch (error) {
-      toast('Failed to send OTP. Please try again later.');
+      toast('Email does not exist.');
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 }
