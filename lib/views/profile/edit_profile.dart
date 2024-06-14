@@ -20,12 +20,15 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+
   final UserService userService = UserService();
 
   String? firstNameError;
   String? lastNameError;
   String? emailError;
   String? passwordError;
+
   Position? position;
 
   @override
@@ -44,10 +47,9 @@ class _EditProfileState extends State<EditProfile> {
     emailController =
         TextEditingController(text: userViewModel.userData?.email ?? '');
     print(emailController.text);
-
-    passwordController = TextEditingController(
-        text: userViewModel.userData?.password ??
-            ''); // Consider security implications
+    phoneController =
+        TextEditingController(text: userViewModel.userData?.phone ?? '');
+    print(emailController.text);
   }
 
   @override
@@ -351,11 +353,11 @@ class _EditProfileState extends State<EditProfile> {
                               labelText: 'Email',
                               hintText: 'Email',
                               errorText: emailError,
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(12.0)),
                               ),
-                              focusedBorder: OutlineInputBorder(
+                              focusedBorder: const OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(12.0)),
                                 borderSide: BorderSide(
@@ -363,7 +365,7 @@ class _EditProfileState extends State<EditProfile> {
                                   width: 2.0,
                                 ),
                               ),
-                              labelStyle: TextStyle(
+                              labelStyle: const TextStyle(
                                 color: Color.fromARGB(255, 187, 187,
                                     187), // Color when the TextField is unfocused
                               ),
@@ -381,32 +383,30 @@ class _EditProfileState extends State<EditProfile> {
                           padding:
                               const EdgeInsets.only(left: 20.0, right: 20.0),
                           child: AppTextField(
-                            controller: passwordController,
+                            enabled: false,
+                            controller: phoneController,
                             cursorColor: kMainColor,
-                            textFieldType: TextFieldType.PASSWORD,
+                            textFieldType: TextFieldType.PHONE,
                             decoration: InputDecoration(
-                              labelText: 'Password',
+                              labelText: 'Phone',
                               errorText: passwordError,
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(
                                     12.0)), // Adjust the radius as needed
                               ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                    12.0)), // Ensure the radius matches
+                              focusedBorder: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12.0)),
                                 borderSide: BorderSide(
-                                  color:
-                                      kSecondaryColor, // Change this to your desired color
+                                  color: kSecondaryColor,
                                   width: 2.0,
                                 ),
                               ),
-                              labelStyle: TextStyle(
-                                color: Color.fromARGB(255, 187, 187,
-                                    187), // Color when the TextField is unfocused
+                              labelStyle: const TextStyle(
+                                color: Color.fromARGB(255, 187, 187, 187),
                               ),
-                              floatingLabelStyle: TextStyle(
-                                color:
-                                    kTitleColor, // Color when the TextField is focused
+                              floatingLabelStyle: const TextStyle(
+                                color: kTitleColor,
                               ),
                             ),
                           ),

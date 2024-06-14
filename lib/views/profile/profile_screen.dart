@@ -130,12 +130,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           leading: const CircleAvatar(
                                             backgroundColor: Color(0xFFF5F5F5),
                                             child: Icon(
-                                              Icons.payment_rounded,
+                                              Icons.security_outlined,
                                               color: kMainColor,
                                             ),
                                           ),
                                           title: Text(
-                                            'Payment Settings',
+                                            'Privacy Settings',
                                             style: kTextStyle.copyWith(
                                                 color: kGreyTextColor),
                                           ),
@@ -259,7 +259,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         Navigator.of(context).pop(
                                                             false); // Dismiss dialog and return false
                                                       },
-                                                      child: Text(
+                                                      child: const Text(
                                                         'Cancel',
                                                         style: TextStyle(
                                                             color:
