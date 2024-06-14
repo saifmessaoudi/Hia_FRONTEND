@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
+import 'package:hia/views/authentication/phone_auth.dart';
+import 'package:hia/views/authentication/phone_verification.dart';
 import 'package:hia/views/home/home.dart';
 import 'package:hia/views/home/home_screen.dart';
 import 'package:hia/views/splash/splash_screen.dart';

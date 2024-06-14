@@ -165,6 +165,31 @@ class UserService extends ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>> sendPhoneOtp(String email) async {
+    try {
+      final response = await http.post(
+        Uri.parse(baseUrl + '/user/send-phone-otp'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        return {'success': true, 'message': responseData['message']};
+      } else {
+        final responseData = jsonDecode(response.body);
+        return {'success': false, 'message': responseData['message']};
+      }
+    } catch (error) {
+      print('Error: $error');
+      return {
+        'success': false,
+        'message': 'Failed to send OTP. Please try again later.'
+      };
+    }
+  }
+
   Future<User?> getUserById(String id) async {
     final url = '$baseUrl/user/getuserbyid';
 
@@ -214,6 +239,35 @@ class UserService extends ChangeNotifier {
       }
     } catch (error) {
       print('Error: $error');
+      return {
+        'success': false,
+        'message': 'Failed to verify OTP. Please try again later.'
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> verifyOtpPhone(String phone, String otp) async {
+    try {
+      final response = await http.post(
+        Uri.parse(baseUrl + '/user/verify-otp-phone'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'phone': phone,
+          'otp': otp,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        return {'success': true, 'message': responseData['message']};
+      } else {
+        final responseData = jsonDecode(response.body);
+        return {'success': false, 'message': responseData['message']};
+      }
+    } catch (error) {
+     
       return {
         'success': false,
         'message': 'Failed to verify OTP. Please try again later.'

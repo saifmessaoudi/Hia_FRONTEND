@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hia/constant.dart';
+import 'package:hia/services/user_service.dart';
+import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/global_components/category_data.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart';
 
 //import 'product_details.dart';
 
@@ -16,6 +19,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<String> banner = ['images/banner1.png', 'images/banner2.png'];
+  String? address = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch the user data from the provider
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    setState(() {
+      address = userViewModel.userData!.address;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                           TextSpan(
-                                            text: "Dhaka, Bangladesh",
+                                            text: address,
                                             style: kTextStyle.copyWith(
                                                 color: white),
                                           ),

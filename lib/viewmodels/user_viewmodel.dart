@@ -42,7 +42,7 @@ class UserViewModel with ChangeNotifier {
         await fetchUserById(userId!);
 
         notifyListeners();
-        
+
         return true;
       } else {
         return false;
@@ -124,7 +124,8 @@ class UserViewModel with ChangeNotifier {
         _userId = payload['userId'];
         print(_userId);
         // Save token and user ID to shared preferences
-        await _saveSession();
+        notifyListeners();
+        await fetchUserById(userId!);
 
         notifyListeners();
         return true;
@@ -145,7 +146,7 @@ class UserViewModel with ChangeNotifier {
       if (placemarks != null && placemarks.isNotEmpty) {
         Placemark placemark = placemarks.first;
         String address =
-            '${placemark.street}, ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
+            ' ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
         return address;
       } else {
         return null;

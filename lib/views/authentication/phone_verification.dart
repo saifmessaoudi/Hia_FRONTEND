@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
+import 'package:hia/services/user_service.dart';
 import 'package:hia/views/authentication/otp_form.dart';
 import 'package:hia/views/authentication/sign_in.dart';
 import 'package:hia/views/global_components/button_global.dart';
@@ -15,6 +16,9 @@ class PhoneVerification extends StatefulWidget {
 }
 
 class _PhoneVerificationState extends State<PhoneVerification> {
+  bool isLoading = false;
+  final UserService _userService = UserService();
+  late String otp = ''; // Stores the OTP entered by the user
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -80,8 +84,10 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                           height: 40.0,
                         ),
                         OtpForm(
-                          onOtpEntered: (String otp) {
-                            print("The OTP is $otp");
+                          onOtpEntered: (value) {
+                            setState(() {
+                              otp = value;
+                            });
                           },
                         ),
                         const SizedBox(
@@ -95,10 +101,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                           buttonDecoration:
                               kButtonDecoration.copyWith(color: kMainColor),
                           onPressed: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const SignIn()));
+                            verifyPhone(widget.phone, otp);
                           },
                         ),
                       ],
@@ -111,5 +114,37 @@ class _PhoneVerificationState extends State<PhoneVerification> {
         ),
       ),
     );
+  }
+
+  void verifyPhone(String phone, String otp) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      // Await the response from the asynchronous function
+      var response = await _userService.verifyOtpPhone("96887940", otp);
+
+      if (response['success']) {
+        toast(response['message']);
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SignIn()),
+        );
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        toast(response['message']);
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      toast('An error occurred. Please try again later');
+    }
   }
 }

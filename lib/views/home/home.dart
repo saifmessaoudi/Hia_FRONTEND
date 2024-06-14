@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hia/constant.dart';
+import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/profile/profile_screen.dart';
 
 import 'home_screen.dart';
@@ -29,6 +30,7 @@ class _HomeState extends State<Home> {
     //OfferScreen(),
     ProfileScreen()
   ];
+  UserViewModel userViewModel = UserViewModel();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

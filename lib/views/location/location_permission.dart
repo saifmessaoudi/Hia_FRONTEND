@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hia/services/user_service.dart';
+import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/constant.dart';
@@ -17,6 +18,7 @@ class LocationPermission extends StatefulWidget {
 
 class _LocationPermissionState extends State<LocationPermission> {
   final UserService userService = UserService();
+  bool isLoading = false;
 
   String? userId;
   Position? position;
@@ -27,6 +29,9 @@ class _LocationPermissionState extends State<LocationPermission> {
   }
 
   Future<void> saveUserLocation() async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       final userViewModel = Provider.of<UserViewModel>(context, listen: false);
       userViewModel.initSession();
@@ -37,6 +42,9 @@ class _LocationPermissionState extends State<LocationPermission> {
 
       userService.updateUserLocation(userViewModel.userId!, addresse!,
           position!.longitude, position!.latitude);
+      setState(() {
+        isLoading = false;
+      });
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const Home()),
@@ -73,7 +81,7 @@ class _LocationPermissionState extends State<LocationPermission> {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.arrow_back,
                       color: kTitleColor,
                     ),
@@ -126,14 +134,19 @@ class _LocationPermissionState extends State<LocationPermission> {
                         const SizedBox(
                           height: 20.0,
                         ),
-                        ButtonGlobal(
-                          buttontext: 'Allow Location Access',
-                          buttonDecoration:
-                              kButtonDecoration.copyWith(color: kMainColor),
-                          onPressed: () {
-                            saveUserLocation();
-                          },
-                        ),
+                        isLoading
+                            ? const LoadingWidget(
+                                color: kMainColor,
+                                spacing: 10.0,
+                              )
+                            : ButtonGlobal(
+                                buttontext: 'Allow Location Access',
+                                buttonDecoration: kButtonDecoration.copyWith(
+                                    color: kMainColor),
+                                onPressed: () {
+                                  saveUserLocation();
+                                },
+                              ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(

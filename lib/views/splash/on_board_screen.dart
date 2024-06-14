@@ -18,13 +18,13 @@ class _OnBoardState extends State<OnBoard> {
 
   List<Map<String, dynamic>> sliderList = [
     {
-      "icon": 'images/onboard1.png',
+      "icon": 'images/hiaonboard1-8.png',
       "title": 'Welcome to Hia Application!',
       "description":
           'Hia helps you find your favorite food from your preferred establishments.',
     },
     {
-      "icon": 'images/onboard2.png',
+      "icon": 'images/Fichier 6-8.png',
       "title": 'Choose your favourite Food!',
       "description":
           'Hia helps you find your preferred establishments to enjoy delicious food. You can easily make a reservation and receive a confirmation ID for your booking.',

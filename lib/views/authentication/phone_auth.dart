@@ -1,6 +1,8 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
+import 'package:hia/models/user.model.dart';
+import 'package:hia/services/user_service.dart';
 import 'package:hia/views/authentication/phone_verification.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -14,7 +16,9 @@ class PhoneAuth extends StatefulWidget {
 
 class _PhoneAuthState extends State<PhoneAuth> {
   TextEditingController phoneController = TextEditingController();
-  String countryCode = '+880';
+  final UserService _userService = UserService();
+  String countryCode = '+216';
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +98,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                               },
                               decoration: InputDecoration(
                                 labelText: 'Phone Number',
-                                hintText: '1767 432556',
+                                hintText: '00 123 456 789',
                                 border: const OutlineInputBorder(),
                                 prefix: CountryCodePicker(
                                   padding: EdgeInsets.zero,
@@ -115,12 +119,10 @@ class _PhoneAuthState extends State<PhoneAuth> {
                           buttonDecoration:
                               kButtonDecoration.copyWith(color: kMainColor),
                           onPressed: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PhoneVerification(
-                                          phone: phoneController.text,
-                                        )));
+                            setState(() {
+                              isLoading = true;
+                            });
+                            sendOtpToPhone(phoneController.text);
                           },
                         ),
                       ],
@@ -133,5 +135,32 @@ class _PhoneAuthState extends State<PhoneAuth> {
         ),
       ),
     );
+  }
+
+  void sendOtpToPhone(String phone) async {
+    try {
+      var response = await _userService.sendPhoneOtp(phone);
+      if (response['success']) {
+        toast(response['message']);
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PhoneVerification(
+              phone: phoneController.text,
+            ),
+          ),
+        );
+      } else {
+        toast('Failed to send OTP: ${response['message']}');
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (error) {
+      toast('Failed to send OTP. Please try again later.');
+    }
   }
 }
