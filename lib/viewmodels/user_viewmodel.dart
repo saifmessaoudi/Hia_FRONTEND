@@ -114,25 +114,19 @@ class UserViewModel with ChangeNotifier {
 
   Future<bool> loginWithFacebook(String token) async {
     try {
-      if (token != null) {
-        _token = token;
+      _token = token;
 
-        // Extract user ID from the token
-        final parts = _token!.split('.');
-        final payload =
-            json.decode(utf8.decode(base64.decode(base64.normalize(parts[1]))));
-        _userId = payload['userId'];
-        print(_userId);
-        // Save token and user ID to shared preferences
-        notifyListeners();
-        await fetchUserById(userId!);
+      final parts = _token!.split('.');
+      final payload =
+          json.decode(utf8.decode(base64.decode(base64.normalize(parts[1]))));
+      _userId = payload['userId'];
+      await _saveSession();
+      notifyListeners();
+      await fetchUserById(userId!);
 
-        notifyListeners();
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error) {
+      notifyListeners();
+      return true;
+        } catch (error) {
       print('Error: $error');
       return false;
     }

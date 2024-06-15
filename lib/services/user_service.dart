@@ -8,7 +8,7 @@ class UserService extends ChangeNotifier {
 
   Future<bool> verifyEmail(String email) async {
     final response = await http.get(
-      Uri.parse(baseUrl + '/user/verifEmail?email=$email'),
+      Uri.parse('$baseUrl/user/verifEmail?email=$email'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

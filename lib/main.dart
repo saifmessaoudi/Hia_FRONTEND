@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
-import 'package:hia/views/authentication/phone_auth.dart';
-import 'package:hia/views/authentication/phone_verification.dart';
-import 'package:hia/views/home/home.dart';
-import 'package:hia/views/home/home_screen.dart';
 import 'package:hia/views/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +27,7 @@ class MyApp extends StatelessWidget {
           TargetPlatform.android: CupertinoPageTransitionsBuilder(),
         }),
       ),
-      title: 'Maan LMS',
+      title: 'Hia Tunisia',
       initialRoute: '/',
       routes: {
         '/': (context) => const SplashScreen(),

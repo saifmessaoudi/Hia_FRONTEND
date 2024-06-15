@@ -434,6 +434,8 @@ class _SignInState extends State<SignIn> {
   }
 
   Future<void> signInWithFacebook() async {
+    
+
     String _token;
     String _userId;
     String email = '';
@@ -497,4 +499,5 @@ class _SignInState extends State<SignIn> {
       print('Error during Facebook login: $e');
     }
   }
+   
 }

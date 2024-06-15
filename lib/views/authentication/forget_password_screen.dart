@@ -1,9 +1,13 @@
+
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/views/authentication/email.verification.dart';
 import 'package:hia/views/global_components/button_global.dart';
+import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class ForgetPassword extends StatefulWidget {
@@ -187,7 +191,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         });
       }
     } catch (error) {
-      toast('Email does not exist.');
+      showCustomToast(context, 'Email does not exist !' , isError: true);
       setState(() {
         isLoading = false;
       });

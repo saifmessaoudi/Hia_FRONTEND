@@ -1,16 +1,18 @@
-import 'package:country_code_picker/country_code_picker.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/home/home.dart';
+import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import '../../constant.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({Key? key}) : super(key: key);
+  const EditProfile({super.key});
 
   @override
   _EditProfileState createState() => _EditProfileState();
@@ -43,16 +45,12 @@ class _EditProfileState extends State<EditProfile> {
     // Initialize controllers with initial values
     firstNameController =
         TextEditingController(text: userViewModel.userData?.firstName ?? '');
-    print(firstNameController.text);
     lastNameController =
         TextEditingController(text: userViewModel.userData?.lastName ?? '');
-    print(lastNameController.text);
     emailController =
         TextEditingController(text: userViewModel.userData?.email ?? '');
-    print(emailController.text);
     phoneController =
         TextEditingController(text: userViewModel.userData?.phone ?? '');
-    print(emailController.text);
   }
 
   @override
@@ -85,11 +83,11 @@ class _EditProfileState extends State<EditProfile> {
               Navigator.of(context).pop();
               Navigator.of(context).pop();
             },
-            child: Text('OK'),
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all<Color>(
                   kMainColor), // Customize the text color
             ),
+            child:   const Text('OK'),
           ),
         ],
       ),
@@ -116,16 +114,15 @@ class _EditProfileState extends State<EditProfile> {
       });
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Home()),
+        MaterialPageRoute(builder: (context) => const Home()),
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Location updated successfully!'),
-      ));
+        showCustomToast(context, 'Location updated successfully');
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to update location: $e'),
-      ));
+      setState(() {
+        isLoadingPosition = false;
+      });
+      showCustomToast(context, 'Failed to update location' , isError: true);
     }
   }
 
@@ -168,7 +165,7 @@ class _EditProfileState extends State<EditProfile> {
                         setState(() {
                           isLoading = false;
                         });
-                        showSuccessAlert('Profile updated successfully!');
+                        showCustomToast(context, 'Profile updated successfully');
                         userViewModel.fetchUserById(userViewModel.userId!);
                       } else {
                         setState(() {
@@ -235,15 +232,11 @@ class _EditProfileState extends State<EditProfile> {
                         Navigator.pop(context);
                       }),
                     ),
-                    Text(
-                      'Edit Profile',
-                      style: kTextStyle.copyWith(
-                          color: Colors.white, fontSize: 18.0),
-                    ),
+                   
                   ],
                 ),
                 const SizedBox(
-                  height: 40.0,
+                  height: 30.0,
                 ),
                 Expanded(
                   child: Container(
@@ -264,7 +257,7 @@ class _EditProfileState extends State<EditProfile> {
                             Container(
                               width: 90.0,
                               height: 90.0,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: Colors.transparent,
                               ),
@@ -300,11 +293,11 @@ class _EditProfileState extends State<EditProfile> {
                               labelText: 'FirstName',
                               hintText: 'FirstName',
                               errorText: firstNameError,
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(
                                     12.0)), // Adjust the radius as needed
                               ),
-                              focusedBorder: OutlineInputBorder(
+                              focusedBorder: const OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(
                                     12.0)), // Ensure the radius matches
                                 borderSide: BorderSide(
@@ -313,11 +306,11 @@ class _EditProfileState extends State<EditProfile> {
                                   width: 2.0,
                                 ),
                               ),
-                              labelStyle: TextStyle(
+                              labelStyle: const TextStyle(
                                 color: Color.fromARGB(255, 187, 187,
-                                    187), // Color when the TextField is unfocused
+                                    187), 
                               ),
-                              floatingLabelStyle: TextStyle(
+                              floatingLabelStyle:const TextStyle(
                                 color:
                                     kMainColor, // Color when the TextField is focused
                               ),
@@ -338,11 +331,11 @@ class _EditProfileState extends State<EditProfile> {
                               labelText: 'LastName',
                               hintText: 'LastName',
                               errorText: lastNameError,
-                              border: OutlineInputBorder(
+                              border:const OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(
                                     12.0)), // Adjust the radius as needed
                               ),
-                              focusedBorder: OutlineInputBorder(
+                              focusedBorder:const OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(
                                     12.0)), // Ensure the radius matches
                                 borderSide: BorderSide(
@@ -351,11 +344,11 @@ class _EditProfileState extends State<EditProfile> {
                                   width: 2.0,
                                 ),
                               ),
-                              labelStyle: TextStyle(
+                              labelStyle: const TextStyle(
                                 color: Color.fromARGB(255, 187, 187,
                                     187), // Color when the TextField is unfocused
                               ),
-                              floatingLabelStyle: TextStyle(
+                              floatingLabelStyle: const TextStyle(
                                 color:
                                     kMainColor, // Color when the TextField is focused
                               ),
@@ -392,7 +385,7 @@ class _EditProfileState extends State<EditProfile> {
                                 color: Color.fromARGB(255, 187, 187,
                                     187), // Color when the TextField is unfocused
                               ),
-                              floatingLabelStyle: TextStyle(
+                              floatingLabelStyle:const TextStyle(
                                 color:
                                     kMainColor, // Color when the TextField is focused
                               ),

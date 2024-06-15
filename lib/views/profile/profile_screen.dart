@@ -9,9 +9,10 @@ import 'package:provider/provider.dart';
 import '../../constant.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
@@ -61,14 +62,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Text(
                           'Hia Team',
                           style: kTextStyle.copyWith(
-                              color: kTitleColor, fontWeight: FontWeight.bold),
+                              color: kTitleColor, 
+                              fontWeight: FontWeight.bold,
+                              fontSize:  20.0
+                              ),
                         ),
                         Text(
-                          '++21696885412',
+                          '+21696885412',
                           style: kTextStyle.copyWith(color: kGreyTextColor),
                         ),
                         const SizedBox(
-                          height: 40.0,
+                          height: 50.0,
                         ),
                         Align(
                           alignment: Alignment.bottomCenter,
@@ -251,7 +255,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               context: context,
                                               builder: (BuildContext context) {
                                                 return AlertDialog(
-                                                  title: Text(
+                                                  title: const Text(
                                                       'Are you sure you want to logout ?'),
                                                   actions: <Widget>[
                                                     TextButton(
@@ -286,7 +290,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         // For example, navigate to login screen or clear session
                                                         // Dismiss dialog and return true
                                                       },
-                                                      child: Text(
+                                                      child: const Text(
                                                         'Logout',
                                                         style: TextStyle(
                                                             color:
@@ -303,8 +307,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 // For example, navigate to login screen or clear session
                                                 // You can call your logout function or navigate to another page
                                                 // Example: Navigator.pushReplacementNamed(context, '/login');
-                                                print(
-                                                    'Performing logout action...');
+                                               
                                               }
                                             });
                                           },
