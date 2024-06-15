@@ -4,7 +4,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:hia/models/user.model.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart';  
 
 class UserViewModel with ChangeNotifier {
   final UserService userService = UserService();
@@ -17,6 +17,15 @@ class UserViewModel with ChangeNotifier {
   User? _userData;
   User? get userData => _userData;
 
+  
+
+   UserViewModel() {
+    // Initialize session on app startup
+    initSession();
+  }
+bool isAuthenticated() {
+    return _token != null;
+  }
   Future<void> fetchUserById(String userId) async {
     _userData = await userService.getUserById(userId);
     notifyListeners();
@@ -35,7 +44,6 @@ class UserViewModel with ChangeNotifier {
             json.decode(utf8.decode(base64.decode(base64.normalize(parts[1]))));
         _userId = payload['userId'];
 
-        print(userId);
         // Save token and user ID to shared preferences
         await _saveSession();
         notifyListeners();
@@ -57,6 +65,7 @@ class UserViewModel with ChangeNotifier {
     await _clearSession();
     _token = null;
     _userId = null;
+    _userData = null;
     notifyListeners();
   }
 
@@ -64,7 +73,7 @@ class UserViewModel with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', _token!);
     await prefs.setString('userId', _userId!);
-    initSession();
+    await initSession();
   }
 
   Future<void> _clearSession() async {
@@ -75,9 +84,13 @@ class UserViewModel with ChangeNotifier {
 
   // Initialize session from shared preferences
   Future initSession() async {
+   
     final prefs = await SharedPreferences.getInstance();
     _token = prefs.getString('token');
     _userId = prefs.getString('userId');
+    if (_token != null && isAuthenticated()) {
+      await fetchUserById(userId!);
+    }
     notifyListeners();
   }
 
@@ -126,7 +139,7 @@ class UserViewModel with ChangeNotifier {
 
       notifyListeners();
       return true;
-        } catch (error) {
+    } catch (error) {
       print('Error: $error');
       return false;
     }

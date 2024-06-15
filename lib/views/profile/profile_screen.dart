@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/authentication/sign_in.dart';
 import 'package:hia/views/profile/edit_profile.dart';
+import 'package:hia/widgets/custom_dialog.dart';
 
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
@@ -62,10 +63,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Text(
                           'Hia Team',
                           style: kTextStyle.copyWith(
-                              color: kTitleColor, 
+                              color: kTitleColor,
                               fontWeight: FontWeight.bold,
-                              fontSize:  20.0
-                              ),
+                              fontSize: 20.0),
                         ),
                         Text(
                           '+21696885412',
@@ -254,62 +254,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             showDialog(
                                               context: context,
                                               builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: const Text(
-                                                      'Are you sure you want to logout ?'),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context).pop(
-                                                            false); // Dismiss dialog and return false
-                                                      },
-                                                      child: const Text(
-                                                        'Cancel',
-                                                        style: TextStyle(
-                                                            color:
-                                                                kMainColor), // Text color set to kMainColor
-                                                      ),
-                                                    ),
-                                                    TextButton(
-                                                      onPressed: () async {
-                                                        final userViewModel =
-                                                            Provider.of<
-                                                                    UserViewModel>(
-                                                                context,
-                                                                listen: false);
-                                                        await userViewModel
-                                                            .logout();
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  const SignIn()),
-                                                        );
-
-                                                        // Perform logout action here
-                                                        // For example, navigate to login screen or clear session
-                                                        // Dismiss dialog and return true
-                                                      },
-                                                      child: const Text(
-                                                        'Logout',
-                                                        style: TextStyle(
-                                                            color:
-                                                                kMainColor), // Text color set to kMainColor
-                                                      ),
-                                                    ),
-                                                  ],
+                                                return CustomDialog(
+                                                  title:
+                                                      'Are you sure you want to logout?',
+                                                  content: '',
+                                                  onCancel: () {
+                                                    Navigator.of(context).pop(
+                                                        false); // Dismiss dialog
+                                                  },
+                                                  onConfirm: () async {
+                                                    final userViewModel =
+                                                        Provider.of<
+                                                                UserViewModel>(
+                                                            context,
+                                                            listen: false);
+                                                    await userViewModel
+                                                        .logout();
+                                                    Navigator.of(context)
+                                                        .pushAndRemoveUntil(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const SignIn()),
+                                                      (Route<dynamic> route) =>
+                                                          false, // Remove all routes
+                                                    );
+                                                  },
                                                 );
                                               },
-                                            ).then((value) {
-                                              // This code executes after the dialog is dismissed
-                                              if (value == true) {
-                                                // Perform logout action here
-                                                // For example, navigate to login screen or clear session
-                                                // You can call your logout function or navigate to another page
-                                                // Example: Navigator.pushReplacementNamed(context, '/login');
-                                               
-                                              }
-                                            });
+                                            );
                                           },
                                           leading: const CircleAvatar(
                                             backgroundColor: Color(0xFFF5F5F5),

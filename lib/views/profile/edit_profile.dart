@@ -62,37 +62,7 @@ class _EditProfileState extends State<EditProfile> {
     super.dispose();
   }
 
-  void showSuccessAlert(String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Row(
-          children: [
-            Icon(
-              Icons.done,
-              color: Colors.green, // Customize the color if needed
-            ),
-            SizedBox(width: 8), // Add some space between the icon and text
-            Text('Success'),
-          ],
-        ),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-            },
-            style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(
-                  kMainColor), // Customize the text color
-            ),
-            child:   const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
+ 
 
   Future<void> saveUserLocation() async {
     setState(() {
@@ -162,11 +132,13 @@ class _EditProfileState extends State<EditProfile> {
                         passwordController.text,
                       );
                       if (success) {
-                        setState(() {
+                       
+                        showCustomToast(context, 'Profile updated successfully');
+                         setState(() {
                           isLoading = false;
                         });
-                        showCustomToast(context, 'Profile updated successfully');
                         userViewModel.fetchUserById(userViewModel.userId!);
+                        Navigator.pop(context);
                       } else {
                         setState(() {
                           isLoading = false;

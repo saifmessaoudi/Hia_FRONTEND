@@ -1,18 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:hia/views/authentication/sign_in.dart';
-import 'package:hia/views/splash/on_board_screen.dart';
+import 'package:hia/utils/navigation_service.dart';
+import 'package:hia/viewmodels/user_viewmodel.dart';
+
+
 
 class SplashViewModel extends ChangeNotifier {
-  final BuildContext context;
+  final UserViewModel _userViewModel; // Declare UserViewModel variable
+    final NavigationService _navigationService = NavigationService(); // Initialize navigation service
 
-  SplashViewModel(this.context) {
-    _initialize();
+  bool _isLoading = true;
+  bool get isLoading => _isLoading;
+
+
+  SplashViewModel(this._userViewModel) {
+    initialize();
   }
-
-  Future<void> _initialize() async {
+  Future<void> initialize() async {
+    print (_userViewModel.isAuthenticated());
     await Future.delayed(const Duration(seconds: 2));
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const OnBoard()),
-    );
+    _isLoading = false;
+    notifyListeners();
+
+    // Example: navigate to '/home' or '/onboard' based on some condition
+    if (_userViewModel.isAuthenticated()) {
+      await _navigationService.navigateToHomeScreen();
+    } else {
+      await _navigationService.navigateToOnBoardScreen();
+    }
   }
+
 }
+
+
