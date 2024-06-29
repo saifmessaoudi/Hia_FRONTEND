@@ -8,7 +8,7 @@ class User {
   final bool isVerified;
   final String? profileImage;
   final String? address;
-  final String? longitude;
+  final String? langitude;
   final String? latitude;
   final List<String> favoriteFood;
   final List<String> foodPreference;
@@ -23,7 +23,7 @@ class User {
     required this.isVerified,
     this.profileImage,
     this.address,
-    this.longitude,
+    this.langitude,
     this.latitude,
     required this.favoriteFood,
     required this.foodPreference,
@@ -40,7 +40,7 @@ class User {
       isVerified: json['isVerified'] ?? false,
       profileImage: json['profileImage'],
       address: json['address'],
-      longitude: json['longitude'],
+      langitude: json['langitude'],
       latitude: json['latitude'],
       favoriteFood: List<String>.from(json['favoriteFood'] ?? []),
       foodPreference: List<String>.from(json['foodPreference'] ?? []),
@@ -58,7 +58,7 @@ class User {
       'isVerified': isVerified,
       'profileImage': profileImage,
       'address': address,
-      'longitude': longitude,
+      'langitude': langitude,
       'latitude': latitude,
       'favoriteFood': favoriteFood,
       'foodPreference': foodPreference,

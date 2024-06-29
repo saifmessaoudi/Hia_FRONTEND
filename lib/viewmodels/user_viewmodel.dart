@@ -17,6 +17,9 @@ class UserViewModel with ChangeNotifier {
   User? _userData;
   User? get userData => _userData;
 
+  String? _address;
+  String? get address => _address;
+
   
 
    UserViewModel() {
@@ -150,11 +153,14 @@ bool isAuthenticated() {
     try {
       List<Placemark> placemarks =
           await placemarkFromCoordinates(latitude, longitude);
-      if (placemarks != null && placemarks.isNotEmpty) {
+      if (placemarks.isNotEmpty) {
         Placemark placemark = placemarks.first;
         String address =
-            ' ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
+            '  ${placemark.administrativeArea}, ${placemark.country}';
+           _address = address ;
+           notifyListeners() ;
         return address;
+        
       } else {
         return null;
       }

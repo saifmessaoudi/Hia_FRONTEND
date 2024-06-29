@@ -2,11 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hia/constant.dart';
-import 'package:hia/services/user_service.dart';
+import 'package:hia/models/establishement.model.dart';
+
+
+import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/global_components/category_data.dart';
+import 'package:hia/views/home/BookTableCard.dart';
+import 'package:hia/views/home/establishment_details.dart';
+import 'package:hia/views/home/establishment_screen.dart';
+import 'package:hia/views/home/establishment_search_delegate.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
+
+
+
 
 //import 'product_details.dart';
 
@@ -18,112 +28,131 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<String> banner = ['images/banner1.png', 'images/banner2.png'];
   String? address = '';
-
+  int? lengthestablishmentListByPoisition  ;
+ List<Establishment>? establishmentsByPosition;
+ double? distancebetweenuserandestablishment ; 
   @override
   void initState() {
     super.initState();
     // Fetch the user data from the provider
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+      final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
+
+       //  userViewModel.fetchUserById(userViewModel.userId!);
+
     setState(() {
-      address = userViewModel.userData!.address;
+      address = userViewModel.address;
+      lengthestablishmentListByPoisition = establishmentViewModel.lengthEstablishments ;
+      establishmentsByPosition = establishmentViewModel.establishments ;
+      distancebetweenuserandestablishment = establishmentViewModel.distance ; 
     });
+
+    // Fetch establishments data from the provider
+    establishmentViewModel.establishments; // Assuming this method fetches establishments
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Container(
-                      padding: EdgeInsets.zero,
-                      width: MediaQuery.of(context).size.width,
-                      height: 240.0,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(
-                              'images/hiahomehead.png',
-                            ),
-                            fit: BoxFit.cover),
+ @override
+Widget build(BuildContext context) {
+  final establishmentViewModel = Provider.of<EstablishmentViewModel>(context);
+
+  return SafeArea(
+    child: Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Container(
+                    padding: EdgeInsets.zero,
+                    width: MediaQuery.of(context).size.width,
+                    height: 240.0,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('images/hiahomehead.png'),
+                        fit: BoxFit.cover,
                       ),
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 20.0,
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      'Hia Tunisia',
-                                      style: kTextStyle.copyWith(
-                                          color: kTitleColor,
-                                          fontSize: 22.0,
-                                          fontWeight: FontWeight.bold),
+                    ),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20.0),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Hia Tunisia',
+                                    style: kTextStyle.copyWith(
+                                      color: kTitleColor,
+                                      fontSize: 22.0,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          const WidgetSpan(
-                                            child: Icon(
-                                              Icons.location_on_outlined,
-                                              color: white,
-                                              size: 15.0,
-                                            ),
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        const WidgetSpan(
+                                          child: Icon(
+                                            Icons.location_on_outlined,
+                                            color: Color.fromARGB(255, 216, 248, 210),
+                                            size: 15.0,
                                           ),
-                                          TextSpan(
-                                            text: address,
-                                            style: kTextStyle.copyWith(
-                                                color: white,
-                                                fontSize: 15.0),
+                                        ),
+                                        TextSpan(
+                                         text: address ?? '',
+                                          style: kTextStyle.copyWith(
+                                            color: Colors.white,
+                                            fontSize: 15.0,
                                           ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                  //richtext
-                                ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const Spacer(),
-                              const CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: 20.0,
-                                child: Icon(
-                                  Icons.notifications_none_outlined,
-                                  color: kMainColor,
-                                ),
+                            ),
+                            const Spacer(),
+                            const CircleAvatar(
+                              backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                              radius: 20.0,
+                              child: Icon(
+                                Icons.notifications_none_outlined,
+                                color: kMainColor,
                               ),
-                              const SizedBox(
-                                width: 20.0,
-                              ),
-                              //richtext
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 4,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: const Color(0xFFF7F5F2),
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
+                            ),
+                            const SizedBox(width: 20.0),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 4,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF7F5F2),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showSearch(
+                                        context: context,
+                                        delegate: EstablishmentSearchDelegate(
+                                          Provider.of<EstablishmentViewModel>(context, listen: false),
+                                        ),
+                                      );
+                                    },
                                     child: AppTextField(
                                       textFieldType: TextFieldType.NAME,
+                                      enabled: false,
                                       decoration: const InputDecoration(
                                         prefixIcon: Icon(
                                           Icons.search,
@@ -137,393 +166,102 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                                const Expanded(
-                                    flex: 1,
-                                    child: Image(
-                                        image:
-                                            AssetImage('images/filter.png'))),
-                              ],
-                            ),
+                              ),
+                              const Expanded(
+                                flex: 1,
+                                child: Image(image: AssetImage('images/filter.png')),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 220,
-                    left: 30.0,
-                    right: 30.0,
-                    child: Row(
-                      children: [
-                        Text(
-                          'Categories',
-                          style: kTextStyle.copyWith(
-                              color: kTitleColor, fontSize: 18.0),
                         ),
-                        const Spacer(),
-                        Text(
-                          'See all',
-                          style: kTextStyle.copyWith(color: kGreyTextColor),
-                        ).onTap(() {
-                          //const CategoryScreen().launch(context);
-                        }),
                       ],
                     ),
                   ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: HorizontalList(
-                  spacing: 10,
-                  itemCount: catData.length,
-                  itemBuilder: (_, i) {
-                    return CatCard(catList: catData[i]).onTap(
-                      () {
-                        // const CourseDetails().launch(context);
-                      },
-                      highlightColor: context.cardColor,
-                    );
-                  },
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: HorizontalList(
-                  spacing: 10,
-                  itemCount: banner.length,
-                  itemBuilder: (_, i) {
-                    return Image(
-                      image: AssetImage(banner[i]),
-                    ).onTap(
-                      () {
-                        // const CourseDetails().launch(context);
-                      },
-                      highlightColor: context.cardColor,
-                    );
-                  },
-                ),
-              ),
-              /*  Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                child: Text(
-                  'Book Your Restaurant',
-                  style: kTextStyle.copyWith(
-                      color: kTitleColor, fontSize: 18.0),
-                ),
-              ),
-              HorizontalList(
-                spacing: 10,
-                itemCount: restaurantList.length,
-                itemBuilder: (_, i) {
-                  return BookTableCard(restaurantData: restaurantList[i]).onTap(
-                        () {
-                      // const CourseDetails().launch(context);
-                    },
-                    highlightColor: context.cardColor,
-                  );
-                },
-              ),*/
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                child: Row(
-                  children: [
-                    Text(
-                      'Popular Deals',
-                      style: kTextStyle.copyWith(
-                          color: kTitleColor, fontSize: 18.0),
-                    ),
-                    const Spacer(),
-                    Text(
-                      'See all',
-                      style: kTextStyle.copyWith(color: kGreyTextColor),
-                    ).onTap(() {
-                      //const ProductScreen().launch(context);
-                    }),
-                  ],
-                ),
-              ),
-              /* Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: HorizontalList(
-                  spacing: 10,
-                  itemCount: productList.length,
-                  itemBuilder: (_, i) {
-                    return FoodCard(productData: productList[i]).onTap(
-                          () {
-                            ProductDetails(product: productList[i])
-                                .launch(context);
-                      },
-                      highlightColor: context.cardColor,
-                    );
-                  },
-                ),
-              ),*/
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class BookTableCard extends StatelessWidget {
-  const BookTableCard({
-    Key? key,
-    // required this.restaurantData
-  }) : super(key: key);
-//final RestaurantData restaurantData;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
-      child: Material(
-        elevation: 2.0,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            width: 300.0,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  // child: Image(image: AssetImage(restaurantData.restaurantImage),fit: BoxFit.cover,),
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Text(restaurantData.restaurantName, style: kTextStyle.copyWith(color: kTitleColor, fontWeight: FontWeight.bold),),
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                const WidgetSpan(
-                                  child: Icon(
-                                    Icons.location_on_outlined,
-                                    color: kGreyTextColor,
-                                    size: 15.0,
-                                  ),
-                                ),
-                                TextSpan(
-                                  // text: restaurantData.restaurantLocation,
-                                  style: kTextStyle.copyWith(
-                                      color: kGreyTextColor),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  //  text: restaurantData.restaurantRatingCount,
-                                  style: kTextStyle.copyWith(
-                                      color: kGreyTextColor),
-                                ),
-                                const WidgetSpan(
-                                  child: SizedBox(
-                                    width: 2.0,
-                                  ),
-                                ),
-                                TextSpan(
-                                  //text: restaurantData.restaurantRating,
-                                  style:
-                                      kTextStyle.copyWith(color: kTitleColor),
-                                ),
-                                const WidgetSpan(
-                                  child: Icon(
-                                    Icons.star_border,
-                                    color: kMainColor,
-                                    size: 15.0,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(right: 4.0, bottom: 4.0),
-                          child: Container(
-                            padding: const EdgeInsets.all(5.0),
-                            decoration: BoxDecoration(
-                              color: kMainColor,
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            child: Text(
-                              'Book Now',
-                              style: kTextStyle.copyWith(color: Colors.white),
-                            ),
-                          ).onTap(() {
-                            // const TableBooking().launch(context);
-                          }),
-                        ),
-                      ],
-                    ),
-                  ],
-                )
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class FoodCard extends StatelessWidget {
-  const FoodCard({
-    Key? key,
-    //  required this.productData
-  }) : super(key: key);
-  //final ProductData productData;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SizedBox(
-          width: 160.0,
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  /*Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Image(
-                     // image: AssetImage(productData.productImage),
-                      width: 100.0,
-                      height: 100.0,
+                  Text(
+                    'Nearly establishments:',
+                    style: kTextStyle.copyWith(
+                      color: kTitleColor,
+                      fontSize: 16.0,
                     ),
-                  ),*/
-                  /*  Row(
-                    children: [
-                      Text(
-                      //  productData.productTitle,
-                       // style: kTextStyle.copyWith(color: kTitleColor),
-                      ),
-                    ],
-                  ),*/
-                  Row(
-                    children: [
-                      RatingBarIndicator(
-                        //  rating: productData.productRating.toDouble(),
-                        itemBuilder: (context, index) => const Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        ),
-                        itemCount: 5,
-                        itemSize: 10.0,
-                      ),
-                      const SizedBox(
-                        width: 5.0,
-                      ),
-                      /*  Text(
-                     //   productData.productRating,
-                      //  style: kTextStyle.copyWith(color: kGreyTextColor),
-                      ),*/
-                    ],
                   ),
-                  Row(
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            const WidgetSpan(
-                              child: Padding(
-                                padding: EdgeInsets.only(bottom: 12.0),
-                                child: Icon(
-                                  Icons.attach_money,
-                                  color: kMainColor,
-                                  size: 7.0,
-                                ),
-                              ),
+                  GestureDetector(
+                    onTap: () {
+Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ProductScreen(
+                              
                             ),
-                            TextSpan(
-                              // text: productData.productPrice,
-                              style: kTextStyle.copyWith(
-                                  color: kTitleColor, fontSize: 16.0),
-                            ),
-                          ],
-                        ),
+                          ),
+                        );                    },
+                    child: Text(
+                      'See All',
+                      style: kTextStyle.copyWith(
+                        color: kMainColor,
+                        fontSize: 16.0,
                       ),
-                      const Spacer(),
-                      const CircleAvatar(
-                        backgroundColor: kSecondaryColor,
-                        radius: 16.0,
-                        child: Icon(
-                          Icons.shopping_cart_outlined,
-                          color: kMainColor,
-                          size: 16.0,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ),
-        ),
-        Positioned(
-          top: 10.0,
-          right: 10.0,
-          child: CircleAvatar(
-            backgroundColor: const Color(0xFFE51000).withOpacity(0.1),
-            radius: 16.0,
-            child: const Icon(
-              Icons.favorite,
-              color: Color(0xFFE51000),
-              size: 16.0,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class CatCard extends StatelessWidget {
-  const CatCard({Key? key, required this.catList}) : super(key: key);
-  final CategoryData catList;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CircleAvatar(
-            backgroundColor: Colors.white,
-            radius: 30.0,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image(
-                image: AssetImage(catList.catIcon),
+             Consumer<EstablishmentViewModel>(
+    builder: (context, establishmentViewModel, child) {
+      return establishmentViewModel.isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: kMainColor,
               ),
-            )),
-        Text(
-          catList.catTitle,
-          style: kTextStyle.copyWith(color: kTitleColor),
+            )
+          : establishmentViewModel.establishments != null && establishmentViewModel.establishments!.isNotEmpty
+              ? HorizontalList(
+                  spacing: 10,
+                  itemCount: establishmentViewModel.establishments!.length,
+                  itemBuilder: (_, i) {
+                    establishmentViewModel.calculateDistance(i);
+                    return BookTableCard(
+                      restaurantData: establishmentViewModel.establishments![i],
+                      index: i,
+                    ).onTap(
+                      () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ProductDetails(
+                              product: establishmentViewModel.establishments![i],
+                              index: i,
+                            ),
+                          ),
+                        );
+                      },
+                      highlightColor: context.cardColor,
+                    );
+                  },
+                )
+              : const Center(
+                  child: Text(
+                    'There is no available data',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                    ),
+                  ),
+                );
+    },
+  ),
+          ],
         ),
-      ],
-    );
-  }
+      ),
+    ),
+  );
 }
+
+
+}
+
