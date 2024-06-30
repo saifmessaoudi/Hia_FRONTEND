@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
+import 'package:hia/views/foodPreference/food_preferences_screen.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/views/home/home.dart';
@@ -10,7 +11,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
 class LocationPermission extends StatefulWidget {
-  const LocationPermission({Key? key}) : super(key: key);
+  const LocationPermission({super.key});
 
   @override
   _LocationPermissionState createState() => _LocationPermissionState();
@@ -47,7 +48,7 @@ class _LocationPermissionState extends State<LocationPermission> {
       });
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Home()),
+        MaterialPageRoute(builder: (context) => const FoodPreferencePage()),
       );
 
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

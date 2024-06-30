@@ -2,21 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:hia/utils/navigation_service.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 
-
-
 class SplashViewModel extends ChangeNotifier {
   final UserViewModel _userViewModel; // Declare UserViewModel variable
-    final NavigationService _navigationService = NavigationService(); // Initialize navigation service
+  final NavigationService _navigationService =
+      NavigationService(); // Initialize navigation service
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
-
 
   SplashViewModel(this._userViewModel) {
     initialize();
   }
   Future<void> initialize() async {
-    print (_userViewModel.isAuthenticated());
     await Future.delayed(const Duration(seconds: 2));
     _isLoading = false;
     notifyListeners();
@@ -28,7 +25,4 @@ class SplashViewModel extends ChangeNotifier {
       await _navigationService.navigateToOnBoardScreen();
     }
   }
-
 }
-
-

@@ -62,8 +62,6 @@ class _EditProfileState extends State<EditProfile> {
     super.dispose();
   }
 
- 
-
   Future<void> saveUserLocation() async {
     setState(() {
       isLoadingPosition = true;
@@ -78,7 +76,7 @@ class _EditProfileState extends State<EditProfile> {
 
       userService.updateUserLocation(userViewModel.userId!, addresse!,
           position!.longitude, position!.latitude);
-      
+
       setState(() {
         isLoadingPosition = false;
       });
@@ -87,12 +85,12 @@ class _EditProfileState extends State<EditProfile> {
         MaterialPageRoute(builder: (context) => const Home()),
       );
 
-        showCustomToast(context, 'Location updated successfully');
+      showCustomToast(context, 'Location updated successfully');
     } catch (e) {
       setState(() {
         isLoadingPosition = false;
       });
-      showCustomToast(context, 'Failed to update location' , isError: true);
+      showCustomToast(context, 'Failed to update location', isError: true);
     }
   }
 
@@ -132,9 +130,9 @@ class _EditProfileState extends State<EditProfile> {
                         passwordController.text,
                       );
                       if (success) {
-                       
-                        showCustomToast(context, 'Profile updated successfully');
-                         setState(() {
+                        showCustomToast(
+                            context, 'Profile updated successfully');
+                        setState(() {
                           isLoading = false;
                         });
                         userViewModel.fetchUserById(userViewModel.userId!);
@@ -143,7 +141,6 @@ class _EditProfileState extends State<EditProfile> {
                         setState(() {
                           isLoading = false;
                         });
-                        
                       }
                     },
                     child: Padding(
@@ -162,15 +159,14 @@ class _EditProfileState extends State<EditProfile> {
                                     color: Colors.white,
                                     size: 10.0,
                                     spacing: 10.0,
-                                )
-                                :
-                            Text(
-                              'Update Profile',
-                              style: kTextStyle.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18.0),
-                            ),
+                                  )
+                                : Text(
+                                    'Update Profile',
+                                    style: kTextStyle.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18.0),
+                                  ),
                           ],
                         ),
                       ),
@@ -204,7 +200,6 @@ class _EditProfileState extends State<EditProfile> {
                         Navigator.pop(context);
                       }),
                     ),
-                   
                   ],
                 ),
                 const SizedBox(
@@ -279,10 +274,9 @@ class _EditProfileState extends State<EditProfile> {
                                 ),
                               ),
                               labelStyle: const TextStyle(
-                                color: Color.fromARGB(255, 187, 187,
-                                    187), 
+                                color: Color.fromARGB(255, 187, 187, 187),
                               ),
-                              floatingLabelStyle:const TextStyle(
+                              floatingLabelStyle: const TextStyle(
                                 color:
                                     kMainColor, // Color when the TextField is focused
                               ),
@@ -303,11 +297,11 @@ class _EditProfileState extends State<EditProfile> {
                               labelText: 'LastName',
                               hintText: 'LastName',
                               errorText: lastNameError,
-                              border:const OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(
                                     12.0)), // Adjust the radius as needed
                               ),
-                              focusedBorder:const OutlineInputBorder(
+                              focusedBorder: const OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(
                                     12.0)), // Ensure the radius matches
                                 borderSide: BorderSide(
@@ -357,7 +351,7 @@ class _EditProfileState extends State<EditProfile> {
                                 color: Color.fromARGB(255, 187, 187,
                                     187), // Color when the TextField is unfocused
                               ),
-                              floatingLabelStyle:const TextStyle(
+                              floatingLabelStyle: const TextStyle(
                                 color:
                                     kMainColor, // Color when the TextField is focused
                               ),
@@ -429,19 +423,19 @@ class _EditProfileState extends State<EditProfile> {
                                         width:
                                             8.0), // Space between icon and text
                                     isLoadingPosition
-                                          ? const LoadingWidget(
-                                              color: kMainColor,
-                                              size: 10.0,
-                                              spacing: 10.0,
+                                        ? const LoadingWidget(
+                                            color: kMainColor,
+                                            size: 10.0,
+                                            spacing: 10.0,
                                           )
-                                          :Text(
-                                      'Update Position',
-                                      style: kTextStyle.copyWith(
-                                        color: kMainColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18.0,
-                                      ),
-                                    ),
+                                        : Text(
+                                            'Update Position',
+                                            style: kTextStyle.copyWith(
+                                              color: kMainColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18.0,
+                                            ),
+                                          ),
                                   ],
                                 ),
                               ),
