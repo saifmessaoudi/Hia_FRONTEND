@@ -68,14 +68,15 @@ class _EditProfileState extends State<EditProfile> {
     });
     try {
       final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-      userViewModel.initSession();
+                      userViewModel.initSession();
 
       position = await userViewModel.determinePosition();
       String? addresse = await userViewModel.getAddressFromCoordinates(
           position!.latitude, position!.longitude);
-
+     
       userService.updateUserLocation(userViewModel.userId!, addresse!,
           position!.longitude, position!.latitude);
+       userViewModel.fetchUserById(userViewModel.userId!);
 
       setState(() {
         isLoadingPosition = false;

@@ -36,7 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 children: [
                   const SizedBox(
-                    height: 90.0,
+                    height: 100.0,
                   ),
                   Container(
                     width: context.width(),

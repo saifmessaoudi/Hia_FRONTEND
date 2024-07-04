@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hia/constant.dart';
-import 'package:hia/services/user_service.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/global_components/category_data.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -19,17 +17,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<String> banner = ['images/banner1.png', 'images/banner2.png'];
-  String? address = '';
 
-  @override
-  void initState() {
-    super.initState();
-    // Fetch the user data from the provider
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-    setState(() {
-      address = userViewModel.userData!.address;
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -71,27 +60,34 @@ class _HomeScreenState extends State<HomeScreen> {
                                       style: kTextStyle.copyWith(
                                           color: kTitleColor,
                                           fontSize: 22.0,
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold
+                                          ),
                                     ),
-                                    RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          const WidgetSpan(
-                                            child: Icon(
-                                              Icons.location_on_outlined,
-                                              color: white,
-                                              size: 15.0,
-                                            ),
+                                    Consumer<UserViewModel>(
+                                      builder: (context, userViewModel, child) {
+                                        return RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              const WidgetSpan(
+                                                child: Icon(
+                                                  Icons.location_on_outlined,
+                                                  color: white,
+                                                  size: 15.0,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: userViewModel.userData?.address ?? '',
+                                                style: kTextStyle.copyWith(
+                                                  color: white,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          TextSpan(
-                                            text: address,
-                                            style: kTextStyle.copyWith(
-                                                color: white,
-                                                fontSize: 15.0),
-                                          ),
-                                        ],
-                                      ),
-                                    )
+                                        );
+                                      },
+                                    ),
+                                    
                                   ],
                                   //richtext
                                 ),

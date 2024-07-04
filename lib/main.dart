@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hia/utils/navigation_service.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_pref_provider.dart';
-import 'package:hia/views/foodPreference/food_preferences_screen.dart';
+import 'package:hia/views/home/home.dart';
 import 'package:hia/views/splash/on_board_screen.dart';
 import 'package:hia/views/splash/splash_screen.dart';
 import 'package:hia/views/splash/splash_view.dart';
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const SplashScreen(),
         '/onboard': (context) => const OnBoard(),
-        '/home': (context) => const FoodPreferencePage(),
+        '/home': (context) => const Home(),
       },
     );
   }

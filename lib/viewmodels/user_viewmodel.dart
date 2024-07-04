@@ -154,10 +154,13 @@ bool isAuthenticated() {
         Placemark placemark = placemarks.first;
         String address =
             ' ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
+            notifyListeners();
         return address;
+
       } else {
         return null;
       }
+      
     } catch (error) {
       print('Error getting address from coordinates: $error');
       return null;
