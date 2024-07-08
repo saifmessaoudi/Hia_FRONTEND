@@ -55,7 +55,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         style: kTextStyle.copyWith(
                             color: Colors.white, fontSize: 18.0),
                       ),
-                       
+                       const SizedBox(width: 150,),
             IconButton(
               icon: const Icon(Icons.search,color: Colors.white,),
               onPressed: () async {

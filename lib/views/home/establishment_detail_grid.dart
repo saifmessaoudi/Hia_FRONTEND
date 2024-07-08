@@ -23,14 +23,17 @@ class BookTableCardGrid extends StatelessWidget {
       padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
       child: Material(
         elevation: 2.0,
+        color: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
+          
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SizedBox(
-            width: 230.0,
-            height: 220.0,
+            
+            width: 250.0,
+            height: 250.0,
             child :Column(
   children: [
     Flexible(
@@ -49,7 +52,7 @@ class BookTableCardGrid extends StatelessWidget {
       children: [
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(left: 8.0),
+            padding: const EdgeInsets.only(left: 0.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -58,7 +61,30 @@ class BookTableCardGrid extends StatelessWidget {
                   style: kTextStyle.copyWith(
                     color: kTitleColor,
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 12,
+                  ),
+                ),
+                const SizedBox(height: 10,),
+                 RichText(
+                  text: TextSpan(
+                    children: [
+                      const WidgetSpan(
+                        child: SizedBox(width: 5.0),
+                      ),
+                      TextSpan(
+                        text: restaurantData.averageRating.toString(),
+                        style: kTextStyle.copyWith(
+                          color: kTitleColor,
+                        ),
+                      ),
+                      const WidgetSpan(
+                        child: Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                          size: 18.0,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 10,),
@@ -81,39 +107,29 @@ class BookTableCardGrid extends StatelessWidget {
                     ],
                   ),
                 ),
+               
               ],
             ),
           ),
         ),
         Expanded(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 5.0),
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      const WidgetSpan(
-                        child: SizedBox(width: 5.0),
-                      ),
-                      TextSpan(
-                        text: restaurantData.averageRating.toString(),
-                        style: kTextStyle.copyWith(
-                          color: kTitleColor,
-                        ),
-                      ),
-                      const WidgetSpan(
-                        child: Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                          size: 18.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+                padding: const EdgeInsets.only(left: 60.0, ),
+                child :Row(
+      children: [
+        Icon(
+          Icons.access_time,
+          color: restaurantData.isOpened ? Colors.green : Colors.red,
+          size: 16,
+        ),
+        const SizedBox(width: 5),
+       
+      ],
+    ),
+    ),
               const SizedBox(height: 5,),
               Padding(
                 padding: const EdgeInsets.only(left: 60.0, bottom: 4.0,),
@@ -125,14 +141,16 @@ class BookTableCardGrid extends StatelessWidget {
                   ),
                   child: Image.asset(
                     'images/maps.png',
-                    width: 30,
-                    height: 30,
+                    width: 40,
+                    height: 40,
                   ),
                 ).onTap(() {
                   establishmentViewModel.launchMaps(restaurantData.latitude, restaurantData.langitude);
                 }),
               ),
+              
             ],
+            
           ),
         ),
       ],

@@ -58,11 +58,13 @@ class EstablishmentSearchDelegate extends SearchDelegate<Establishment> {
   }
 
   Widget _buildEstablishmentList() {
+    
     List<Establishment> filteredEstablishments = establishmentViewModel.establishments?.where((establishment) {
       return establishment.name.toLowerCase().contains(query.toLowerCase());
     }).toList() ?? [];
 
    return ListView.builder(
+    
   itemCount: filteredEstablishments.length,
   itemBuilder: (context, index) {
     final establishment = filteredEstablishments[index];

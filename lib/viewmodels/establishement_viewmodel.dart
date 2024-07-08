@@ -173,4 +173,6 @@ class EstablishmentViewModel with ChangeNotifier {
       print('Error launching maps: $e');
     }
   }
+ 
+
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/models/establishement.model.dart';
 
@@ -28,6 +29,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  
   String? address = '';
   int? lengthestablishmentListByPoisition  ;
  List<Establishment>? establishmentsByPosition;
@@ -52,9 +54,12 @@ class _HomeScreenState extends State<HomeScreen> {
     establishmentViewModel.establishments; // Assuming this method fetches establishments
   }
 
+
+  
+  
+
  @override
 Widget build(BuildContext context) {
-  final establishmentViewModel = Provider.of<EstablishmentViewModel>(context);
 
   return SafeArea(
     child: Scaffold(
@@ -95,26 +100,33 @@ Widget build(BuildContext context) {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        const WidgetSpan(
-                                          child: Icon(
-                                            Icons.location_on_outlined,
-                                            color: Color.fromARGB(255, 216, 248, 210),
-                                            size: 15.0,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                         text: address ?? '',
-                                          style: kTextStyle.copyWith(
-                                            color: Colors.white,
-                                            fontSize: 15.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                  GestureDetector(
+  onTap: () {
+    
+    
+  },
+  child: RichText(
+    text: TextSpan(
+      children: [
+        WidgetSpan(
+          child: Icon(
+            Icons.location_on_outlined,
+            color: Color.fromARGB(255, 216, 248, 210),
+            size: 15.0,
+          ),
+        ),
+        TextSpan(
+          text: address ?? '',
+          style: kTextStyle.copyWith(
+            color: Colors.white,
+            fontSize: 15.0,
+          ),
+        ),
+      ],
+    ),
+  ),
+),
+
                                 ],
                               ),
                             ),

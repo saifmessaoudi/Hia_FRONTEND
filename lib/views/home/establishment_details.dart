@@ -176,6 +176,26 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20.0),
                                   ),
+                                   Row(
+      children: [
+        
+        const SizedBox(width: 15),
+        Text(
+          widget.product.isOpened ? 'Opened' : 'Closed',
+          style: kTextStyle.copyWith(
+            color: widget.product.isOpened ? kMainColor : Colors.red,
+             fontWeight: FontWeight.bold,
+            
+          ),
+        ),
+        const SizedBox(width: 7),
+        Icon(
+          Icons.access_time,
+          color: widget.product.isOpened ? kMainColor : const Color.fromARGB(255, 114, 26, 19),
+          size: 16,
+        ),
+      ],
+    ),
                                 ],
                               ),
                             ),
