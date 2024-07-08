@@ -13,7 +13,7 @@ class EstablishmentSearchDelegate extends SearchDelegate<Establishment> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
         },

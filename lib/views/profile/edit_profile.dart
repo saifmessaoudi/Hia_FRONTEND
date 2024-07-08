@@ -1,52 +1,56 @@
-import 'package:country_code_picker/country_code_picker.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hia/services/user_service.dart';
+import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/home/home.dart';
+import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import '../../constant.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({Key? key}) : super(key: key);
+  const EditProfile({super.key});
 
   @override
   _EditProfileState createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
-
-
-
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
-   TextEditingController emailController = TextEditingController();
-      TextEditingController passwordController = TextEditingController();
-         final UserService userService = UserService();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
 
+  final UserService userService = UserService();
 
   String? firstNameError;
-   String? lastNameError;
-   String? emailError;
-   String? passwordError ; 
-    Position? position ; 
+  String? lastNameError;
+  String? emailError;
+  String? passwordError;
 
-    @override
+  Position? position;
+  bool isLoading = false;
+  bool isLoadingPosition = false;
+
+  @override
   void initState() {
     super.initState();
     // Fetch the user data from the provider
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
 
     // Initialize controllers with initial values
-    firstNameController = TextEditingController(text: userViewModel.userData?.firstName ?? '');
-    print(firstNameController.text) ;
-    lastNameController = TextEditingController(text: userViewModel.userData?.lastName ?? '');
-    print(lastNameController.text) ;
-    emailController = TextEditingController(text: userViewModel.userData?.email ?? '');
-        print(emailController.text) ;
-
-    passwordController = TextEditingController(text: userViewModel.userData?.password ?? ''); // Consider security implications
+    firstNameController =
+        TextEditingController(text: userViewModel.userData?.firstName ?? '');
+    lastNameController =
+        TextEditingController(text: userViewModel.userData?.lastName ?? '');
+    emailController =
+        TextEditingController(text: userViewModel.userData?.email ?? '');
+    phoneController =
+        TextEditingController(text: userViewModel.userData?.phone ?? '');
   }
 
   @override
@@ -58,68 +62,39 @@ class _EditProfileState extends State<EditProfile> {
     super.dispose();
   }
 
-void showSuccessAlert(String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Row(
-          children: [
-            Icon(
-              Icons.done,
-              color: Colors.green, // Customize the color if needed
-            ),
-            SizedBox(width: 8), // Add some space between the icon and text
-            Text('Success'),
-          ],
-        ),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () {
-             // Navigator.push(
-               // context,
-              //  //MaterialPageRoute(builder: (context) => LoginPage()),
-            //  );
-             Navigator.of(context).pop(); // Dismiss the dialog
-            },
-            child: Text('OK'),
-             style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(kMainColor), // Customize the text color
-          ),          ),
-        ],
-      ),
-    );
-  }
+ 
 
-Future<void> saveUserLocation() async {
+  Future<void> saveUserLocation() async {
+    setState(() {
+      isLoadingPosition = true;
+    });
     try {
-    
-       final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-       userViewModel.initSession() ; 
+      final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+      userViewModel.initSession();
 
-       
-     
-   
-         position = await userViewModel.determinePosition();
-         String? addresse = await userViewModel.getAddressFromCoordinates(position!.latitude, position!.longitude);
-     
-       userService.updateUserLocation(userViewModel.userId!, addresse!, position!.longitude, position!.latitude) ; 
-Navigator.pushReplacement(
+      position = await userViewModel.determinePosition();
+      String? addresse = await userViewModel.getAddressFromCoordinates(
+          position!.latitude, position!.longitude);
+
+      userService.updateUserLocation(userViewModel.userId!, addresse!,
+          position!.longitude, position!.latitude);
+      
+      setState(() {
+        isLoadingPosition = false;
+      });
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Home()),
+        MaterialPageRoute(builder: (context) => const Home()),
       );
-     
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Location updated successfully!'),
-      ));
+        showCustomToast(context, 'Location updated successfully');
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to update location: $e'),
-      ));
+      setState(() {
+        isLoadingPosition = false;
+      });
+      showCustomToast(context, 'Failed to update location' , isError: true);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -142,28 +117,34 @@ Navigator.pushReplacement(
                 Expanded(
                   child: GestureDetector(
                     onTap: () async {
-                      UserService userService = UserService() ; 
-                      final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-                      userViewModel.initSession() ; 
-                      print(userViewModel.userId!) ; 
-
-                     bool success = await userService.updateUserProfile(
-                  userViewModel.userId!,
-                  firstNameController.text,
-                  lastNameController.text,
-                  emailController.text,
-                  passwordController.text,
-                  
-                );
-                if(success)
-                showSuccessAlert('profile updated successfully') ; 
-                else{
-                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('check your data !'),
-      ));
-                }
-
-
+                      UserService userService = UserService();
+                      final userViewModel =
+                          Provider.of<UserViewModel>(context, listen: false);
+                      userViewModel.initSession();
+                      setState(() {
+                        isLoading = true;
+                      });
+                      bool success = await userService.updateUserProfile(
+                        userViewModel.userId!,
+                        firstNameController.text,
+                        lastNameController.text,
+                        emailController.text,
+                        passwordController.text,
+                      );
+                      if (success) {
+                       
+                        showCustomToast(context, 'Profile updated successfully');
+                         setState(() {
+                          isLoading = false;
+                        });
+                        userViewModel.fetchUserById();
+                        Navigator.pop(context);
+                      } else {
+                        setState(() {
+                          isLoading = false;
+                        });
+                        
+                      }
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10.0, right: 10.0),
@@ -176,9 +157,19 @@ Navigator.pushReplacement(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            isLoading
+                                ? const LoadingWidget(
+                                    color: Colors.white,
+                                    size: 10.0,
+                                    spacing: 10.0,
+                                )
+                                :
                             Text(
                               'Update Profile',
-                              style: kTextStyle.copyWith(color: Colors.white,fontWeight: FontWeight.bold, fontSize: 18.0),
+                              style: kTextStyle.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18.0),
                             ),
                           ],
                         ),
@@ -213,15 +204,11 @@ Navigator.pushReplacement(
                         Navigator.pop(context);
                       }),
                     ),
-                    Text(
-                      'Edit Profile',
-                      style: kTextStyle.copyWith(
-                          color: Colors.white, fontSize: 18.0),
-                    ),
+                   
                   ],
                 ),
                 const SizedBox(
-                  height: 40.0,
+                  height: 30.0,
                 ),
                 Expanded(
                   child: Container(
@@ -237,213 +224,230 @@ Navigator.pushReplacement(
                         const SizedBox(
                           height: 20.0,
                         ),
-                   Stack(
-  children: [
-    Container(
-      width: 90.0,
-      height: 90.0,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.transparent,
-      ),
-      child: ClipOval(
-        child: SizedBox(
-          width: 10.0,  // Set the width of the logo
-          height: 10.0,  // Set the height of the logo
-          child: Image.asset(
-            'images/portrait-man-laughing.png',
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
-    ),
-    Positioned(
-      bottom: 0.0,
-      right: 0.0,
-      child: Image.asset('images/editpicicon.png'),
-    ),
-  ],
-),
-
-        
+                        Stack(
+                          children: [
+                            Container(
+                              width: 90.0,
+                              height: 90.0,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.transparent,
+                              ),
+                              child: ClipOval(
+                                child: SizedBox(
+                                  width: 10.0, // Set the width of the logo
+                                  height: 10.0, // Set the height of the logo
+                                  child: Image.asset(
+                                    'images/portrait-man-laughing.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0.0,
+                              right: 0.0,
+                              child: Image.asset('images/editpicicon.png'),
+                            ),
+                          ],
+                        ),
                         const SizedBox(
                           height: 20.0,
                         ),
-                      Padding(
-                          padding: const EdgeInsets.only(left: 20.0, right: 20.0,top: 25.0),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20.0, right: 20.0, top: 25.0),
                           child: AppTextField(
                             controller: firstNameController,
                             cursorColor: kMainColor,
                             textFieldType: TextFieldType.NAME,
-                            decoration:  InputDecoration(
-  labelText: 'FirstName',
-  hintText: 'FirstName',
-  errorText: firstNameError,
-  border: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(12.0)), // Adjust the radius as needed
-  ),
-  focusedBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(12.0)), // Ensure the radius matches
-    borderSide: BorderSide(
-      color: kSecondaryColor, // Change this to your desired color
-      width: 2.0,
-    ),
-  ),
-  labelStyle: TextStyle(
-    color: Color.fromARGB(255, 187, 187, 187), // Color when the TextField is unfocused
-  ),
-  floatingLabelStyle: TextStyle(
-    color: kMainColor, // Color when the TextField is focused
-  ),
-),
-
+                            decoration: InputDecoration(
+                              labelText: 'FirstName',
+                              hintText: 'FirstName',
+                              errorText: firstNameError,
+                              border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    12.0)), // Adjust the radius as needed
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    12.0)), // Ensure the radius matches
+                                borderSide: BorderSide(
+                                  color:
+                                      kSecondaryColor, // Change this to your desired color
+                                  width: 2.0,
+                                ),
+                              ),
+                              labelStyle: const TextStyle(
+                                color: Color.fromARGB(255, 187, 187,
+                                    187), 
+                              ),
+                              floatingLabelStyle:const TextStyle(
+                                color:
+                                    kMainColor, // Color when the TextField is focused
+                              ),
+                            ),
                           ),
-                        ), 
+                        ),
                         const SizedBox(
                           height: 12.0,
                         ),
-                         Padding(
-                          padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 20.0, right: 20.0),
                           child: AppTextField(
                             controller: lastNameController,
                             cursorColor: kMainColor,
                             textFieldType: TextFieldType.NAME,
-                              decoration:  InputDecoration(
-   labelText: 'LastName',
-  hintText: 'LastName',
-  errorText: lastNameError,
-  border: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(12.0)), // Adjust the radius as needed
-  ),
-  focusedBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(12.0)), // Ensure the radius matches
-    borderSide: BorderSide(
-      color: kSecondaryColor, // Change this to your desired color
-      width: 2.0,
-    ),
-  ),
-  labelStyle: TextStyle(
-    color: Color.fromARGB(255, 187, 187, 187), // Color when the TextField is unfocused
-  ),
-  floatingLabelStyle: TextStyle(
-    color: kMainColor, // Color when the TextField is focused
-  ),
-),
-                          
+                            decoration: InputDecoration(
+                              labelText: 'LastName',
+                              hintText: 'LastName',
+                              errorText: lastNameError,
+                              border:const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    12.0)), // Adjust the radius as needed
+                              ),
+                              focusedBorder:const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    12.0)), // Ensure the radius matches
+                                borderSide: BorderSide(
+                                  color:
+                                      kSecondaryColor, // Change this to your desired color
+                                  width: 2.0,
+                                ),
+                              ),
+                              labelStyle: const TextStyle(
+                                color: Color.fromARGB(255, 187, 187,
+                                    187), // Color when the TextField is unfocused
+                              ),
+                              floatingLabelStyle: const TextStyle(
+                                color:
+                                    kMainColor, // Color when the TextField is focused
+                              ),
+                            ),
                           ),
                         ),
-
- const SizedBox(
+                        const SizedBox(
                           height: 12.0,
                         ),
-
-                       Padding(
-                          padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 20.0, right: 20.0),
                           child: AppTextField(
                             controller: emailController,
                             cursorColor: kMainColor,
                             textFieldType: TextFieldType.EMAIL,
-                        decoration:  InputDecoration(
-                         labelText: 'Email',
-                          hintText: 'Email',
-                            errorText: emailError,
-
-  border: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(12.0)), 
-  ),
-  focusedBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(12.0)), 
-    borderSide: BorderSide(
-      color: kSecondaryColor, 
-      width: 2.0,
-    ),
-  ),
-  labelStyle: TextStyle(
-    color: Color.fromARGB(255, 187, 187, 187), // Color when the TextField is unfocused
-  ),
-  floatingLabelStyle: TextStyle(
-    color: kMainColor, // Color when the TextField is focused
-  ),
-),
-
-
+                            decoration: InputDecoration(
+                              labelText: 'Email',
+                              hintText: 'Email',
+                              errorText: emailError,
+                              border: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12.0)),
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12.0)),
+                                borderSide: BorderSide(
+                                  color: kSecondaryColor,
+                                  width: 2.0,
+                                ),
+                              ),
+                              labelStyle: const TextStyle(
+                                color: Color.fromARGB(255, 187, 187,
+                                    187), // Color when the TextField is unfocused
+                              ),
+                              floatingLabelStyle:const TextStyle(
+                                color:
+                                    kMainColor, // Color when the TextField is focused
+                              ),
+                            ),
                           ),
                         ),
-                       const SizedBox(
+                        const SizedBox(
                           height: 12.0,
                         ),
                         Padding(
-                           padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                          padding:
+                              const EdgeInsets.only(left: 20.0, right: 20.0),
                           child: AppTextField(
-                            controller: passwordController,
-                             cursorColor: kMainColor,
-
-                            textFieldType: TextFieldType.PASSWORD,
-                              decoration:  InputDecoration(
-  labelText: 'Password',
-  errorText: passwordError,
-  border: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(12.0)), // Adjust the radius as needed
-  ),
-  focusedBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(12.0)), // Ensure the radius matches
-    borderSide: BorderSide(
-      color: kSecondaryColor, // Change this to your desired color
-      width: 2.0,
-    ),
-  ),
-  labelStyle: TextStyle(
-    color: Color.fromARGB(255, 187, 187, 187), // Color when the TextField is unfocused
-  ),
-  floatingLabelStyle: TextStyle(
-    color: kTitleColor, // Color when the TextField is focused
-  ),
-),
+                            enabled: false,
+                            controller: phoneController,
+                            cursorColor: kMainColor,
+                            textFieldType: TextFieldType.PHONE,
+                            decoration: InputDecoration(
+                              labelText: 'Phone',
+                              errorText: passwordError,
+                              border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    12.0)), // Adjust the radius as needed
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12.0)),
+                                borderSide: BorderSide(
+                                  color: kSecondaryColor,
+                                  width: 2.0,
+                                ),
+                              ),
+                              labelStyle: const TextStyle(
+                                color: Color.fromARGB(255, 187, 187, 187),
+                              ),
+                              floatingLabelStyle: const TextStyle(
+                                color: kTitleColor,
+                              ),
+                            ),
                           ),
                         ),
-
-                       Padding(
-  padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 80.0),
-  child: GestureDetector(
-    onTap: () {
-      saveUserLocation() ;
-    },
-    child: Material(
-      borderRadius: BorderRadius.circular(30.0),
-      color: Colors.white,
-      elevation: 3.0, // Adds shadow to the container
-      child: Container(
-        height: 55.0,
-        width: 200.0,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30.0),
-          border: Border.all(color: kMainColor, width: 2.0), // Border with kMainColor and width 2.0
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.location_on, color: kMainColor), // Location icon
-            SizedBox(width: 8.0), // Space between icon and text
-            Text(
-              'Update Position',
-              style: kTextStyle.copyWith(
-                color: kMainColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  ),
-)
-
-
-
-
-
-
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 10.0, right: 10.0, top: 80.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              saveUserLocation();
+                            },
+                            child: Material(
+                              borderRadius: BorderRadius.circular(30.0),
+                              color: Colors.white,
+                              elevation: 3.0, // Adds shadow to the container
+                              child: Container(
+                                height: 55.0,
+                                width: 200.0,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  border: Border.all(
+                                      color: kMainColor,
+                                      width:
+                                          2.0), // Border with kMainColor and width 2.0
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.location_on,
+                                        color: kMainColor), // Location icon
+                                    const SizedBox(
+                                        width:
+                                            8.0), // Space between icon and text
+                                    isLoadingPosition
+                                          ? const LoadingWidget(
+                                              color: kMainColor,
+                                              size: 10.0,
+                                              spacing: 10.0,
+                                          )
+                                          :Text(
+                                      'Update Position',
+                                      style: kTextStyle.copyWith(
+                                        color: kMainColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),

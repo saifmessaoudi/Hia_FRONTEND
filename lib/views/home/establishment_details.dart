@@ -43,7 +43,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("images/hiaauthbg.png"),
+                  image: AssetImage("images/hiaauthbgg.png"),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -67,10 +67,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                             }),
                           ),
                           const Spacer(),
-                          CircleAvatar(
-                            backgroundColor: Colors.red.withOpacity(0.1),
+                          const CircleAvatar(
+                            backgroundColor: kMainColor,
                             radius: 16.0,
-                            child: const Icon(
+                            child: Icon(
                               Icons.favorite_rounded,
                               color: Colors.red,
                               size: 16.0,
@@ -356,7 +356,7 @@ Expanded(
         fadeOutDuration: Duration(milliseconds: 300),
         imageErrorBuilder: (context, error, stackTrace) {
           return Image.asset(
-            'images/error_image.png', // Fallback image in case of error
+            'images/error_image.png', 
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,

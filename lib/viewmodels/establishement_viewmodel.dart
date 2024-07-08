@@ -40,7 +40,7 @@ class EstablishmentViewModel with ChangeNotifier {
     try {
       List<Establishment> establishments = await _establishmentService.getAllEstablishments();
       _establishments = establishments;
-      
+      notifyListeners();
       _lengthestablishments = establishments.length;
       notifyListeners();
       sortByDistance();

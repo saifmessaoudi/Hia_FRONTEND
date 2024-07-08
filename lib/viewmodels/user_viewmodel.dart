@@ -19,6 +19,9 @@ class UserViewModel with ChangeNotifier {
   User? _userData;
   User?  get userData => _userData;
 
+  String? _addresse;
+  String? get addresse => _addresse;
+
   Future<void> fetchUserById() async {
     _userData = await userService.getUserById(_userId!);
     notifyListeners();
@@ -148,9 +151,11 @@ Future<Position> determinePosition() async {
 Future<String?> getAddressFromCoordinates(double latitude, double longitude) async {
   try {
     List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
-    if (placemarks != null && placemarks.isNotEmpty) {
+    if (placemarks.isNotEmpty) {
       Placemark placemark = placemarks.first;
-      String address = '${placemark.street}, ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
+      String address = '  ${placemark.administrativeArea}, ${placemark.country}';
+        _addresse = address ; 
+        notifyListeners() ; 
       return address;
     } else {
       return null;

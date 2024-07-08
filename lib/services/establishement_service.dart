@@ -5,7 +5,7 @@ import 'package:hia/models/establishement.model.dart';
 import 'package:http/http.dart' as http;
 
 class EstablishementService extends ChangeNotifier {
-  final String baseUrl = 'http://192.168.0.207:3030';
+  final String baseUrl = 'http://10.0.2.2:3030';
 
 Future<List<Establishment>> getAllEstablishments() async {
     final url = Uri.parse('$baseUrl/establishement/getAll');

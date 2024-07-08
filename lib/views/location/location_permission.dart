@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hia/services/user_service.dart';
+import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/views/home/home.dart';
-import 'package:hia/views/home/home_screen.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
@@ -17,38 +17,40 @@ class LocationPermission extends StatefulWidget {
 }
 
 class _LocationPermissionState extends State<LocationPermission> {
-   final UserService userService = UserService();
+  final UserService userService = UserService();
+  bool isLoading = false;
 
+  String? userId;
+  Position? position;
 
- String? userId ;
- Position? position ; 
- 
   @override
   void initState() {
     super.initState();
   }
 
-
- Future<void> saveUserLocation() async {
+  Future<void> saveUserLocation() async {
+    setState(() {
+      isLoading = true;
+    });
     try {
-    
-       final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-       userViewModel.initSession() ; 
+      final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+      userViewModel.initSession();
 
-       
-     
-   
-         position = await userViewModel.determinePosition();
-         String? addresse = await userViewModel.getAddressFromCoordinates(position!.latitude, position!.longitude);
-     
-       userService.updateUserLocation(userViewModel.userId!, addresse!, position!.longitude, position!.latitude) ; 
-Navigator.pushReplacement(
+      position = await userViewModel.determinePosition();
+      String? addresse = await userViewModel.getAddressFromCoordinates(
+          position!.latitude, position!.longitude);
+
+      userService.updateUserLocation(userViewModel.userId!, addresse!,
+          position!.longitude, position!.latitude);
+      setState(() {
+        isLoading = false;
+      });
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Home()),
+        MaterialPageRoute(builder: (context) => const Home()),
       );
-     
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Location updated successfully!'),
       ));
     } catch (e) {
@@ -57,11 +59,12 @@ Navigator.pushReplacement(
       ));
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-         resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             Container(
@@ -75,18 +78,18 @@ Navigator.pushReplacement(
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: IconButton(
-        icon: Icon(
-          Icons.arrow_back,
-          color: kTitleColor,
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-    ),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: kTitleColor,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
                 Expanded(
                   child: Container(
                     width: context.width(),
@@ -106,7 +109,8 @@ Navigator.pushReplacement(
                           height: 20.0,
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 30.0, right: 30.0),
+                          padding:
+                              const EdgeInsets.only(left: 30.0, right: 30.0),
                           child: Text(
                             'Find restaurants and your Favorite food',
                             textAlign: TextAlign.center,
@@ -130,17 +134,19 @@ Navigator.pushReplacement(
                         const SizedBox(
                           height: 20.0,
                         ),
-                        ButtonGlobal(
-                          buttontext: 'Allow Location Access',
-                          buttonDecoration:
-                          kButtonDecoration.copyWith(color: kMainColor),
-                          onPressed: (){
-                        
-
-                            saveUserLocation() ; 
-                            
-                          },
-                        ),
+                        isLoading
+                            ? const LoadingWidget(
+                                color: kMainColor,
+                                spacing: 10.0,
+                              )
+                            : ButtonGlobal(
+                                buttontext: 'Allow Location Access',
+                                buttonDecoration: kButtonDecoration.copyWith(
+                                    color: kMainColor),
+                                onPressed: () {
+                                  saveUserLocation();
+                                },
+                              ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
