@@ -7,9 +7,9 @@ class User {
   final String? phone;
   final bool isVerified;
   final String? profileImage;
-  final String? address;
-  final String? longitude;
-  final String? latitude;
+   final String? address;
+   final String? longitude;
+   final String? latitude;
   final List<String> favoriteFood;
   final List<String> foodPreference;
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/splash/splash_view.dart';
+import 'package:hia/widgets/smart_scaffold.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
@@ -43,9 +44,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<SplashViewModel>(context);
 
-    return Scaffold(
+    return SmartScaffold(
       body: Center(
         child: Consumer<SplashViewModel>(
           builder: (context, viewModel, _) {

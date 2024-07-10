@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/models/user.model.dart';
 import 'package:http/http.dart' as http;
 
@@ -26,7 +27,7 @@ class UserService extends ChangeNotifier {
       String firstName, String lastName, String email, String password) async {
     try {
       final response = await http.post(
-        Uri.parse(baseUrl + '/user/register'),
+        Uri.parse('$baseUrl/user/register'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -52,7 +53,7 @@ class UserService extends ChangeNotifier {
       }
     } catch (error) {
       // Handle network errors or any other exceptions here
-      print('Error: $error');
+      Debugger.red('Error: $error');
       return {
         'success': false,
         'message': 'Failed to sign up. Please try again later.'
@@ -84,7 +85,7 @@ class UserService extends ChangeNotifier {
       String id, String address, double longitude, double latitude) async {
     try {
       final response = await http.put(
-        Uri.parse(baseUrl + '/user/updatelocation'),
+        Uri.parse('$baseUrl/user/updatelocation'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -97,13 +98,12 @@ class UserService extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        print('Location updated successfully');
+        Debugger.green('Location updated successfully');
       } else {
         throw Exception('Failed to update location: ${response.body}');
       }
     } catch (error) {
-      print('Error updating location: $error');
-      throw error;
+      Debugger.red('Error updating location: $error');
     }
   }
 
@@ -125,14 +125,14 @@ class UserService extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        print('Profile updated successfully');
+        Debugger.green('Profile updated successfully');
         return true;
       } else {
-        print('Failed to update profile: ${response.statusCode}');
+        Debugger.red('Failed to update profile: ${response.statusCode}');
         return false;
       }
     } catch (error) {
-      print('Error updating profile: $error');
+      Debugger.red('Error updating profile: $error');
       return false;
     }
   }
@@ -140,7 +140,7 @@ class UserService extends ChangeNotifier {
   Future<Map<String, dynamic>> forgetPassword(String email) async {
     try {
       final response = await http.post(
-        Uri.parse(baseUrl + '/user/send-email'),
+        Uri.parse('$baseUrl/user/send-email'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -250,6 +250,8 @@ class UserService extends ChangeNotifier {
     }
   }
 
+
+
   Future<Map<String, dynamic>> verifyOtpPhone(String phone, String otp) async {
     try {
       final response = await http.post(
@@ -304,6 +306,31 @@ class UserService extends ChangeNotifier {
         'success': false,
         'message': 'Failed to reset password. Please try again later.'
       };
+    }
+  }
+  Future<bool> saveUserPreferences(String userId, List<String> preferences) async {
+    final url = Uri.parse('$baseUrl/user/chooseFoodPreference');
+    final body = jsonEncode({
+      'userId': userId,
+      'foodPreference': preferences,
+    });
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print('Failed to save preferences: ${response.statusCode}');
+        return false;
+      }
+    } catch (error) {
+      print('Error saving preferences: $error');
+      return false;
     }
   }
 }

@@ -7,6 +7,7 @@ import 'package:hia/views/foodPreference/food_preferences_screen.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/views/home/home.dart';
+import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
@@ -51,9 +52,7 @@ class _LocationPermissionState extends State<LocationPermission> {
         MaterialPageRoute(builder: (context) => const FoodPreferencePage()),
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Location updated successfully!'),
-      ));
+      const CustomToastWidget( isError: false, message: 'Location updated successfully',);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Failed to update location: $e'),

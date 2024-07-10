@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -25,16 +24,11 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final UserService userService = UserService();
 
   String? emailError;
-  String? firstNameError;
-  String? lastNameError;
   String? passwordError;
-
   bool isLoading = false;
 
   void showSuccessAlert(String message) {
@@ -45,9 +39,9 @@ class _SignInState extends State<SignIn> {
           children: [
             Icon(
               Icons.done,
-              color: Colors.green, // Customize the color if needed
+              color: Colors.green,
             ),
-            SizedBox(width: 8), // Add some space between the icon and text
+            SizedBox(width: 8),
             Text('Success'),
           ],
         ),
@@ -55,16 +49,11 @@ class _SignInState extends State<SignIn> {
         actions: [
           TextButton(
             onPressed: () {
-              // Navigator.push(
-              // context,
-              //  //MaterialPageRoute(builder: (context) => LoginPage()),
-              //  );
-              Navigator.of(context).pop(); // Dismiss the dialog
+              Navigator.of(context).pop();
             },
             child: Text('OK'),
             style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(
-                  kMainColor), // Customize the text color
+              foregroundColor: MaterialStateProperty.all<Color>(kMainColor),
             ),
           ),
         ],
@@ -90,338 +79,59 @@ class _SignInState extends State<SignIn> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 40.0,
-                ),
+                const SizedBox(height: 40.0),
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0, top: 30.0),
                   child: SizedBox(
-                      width: context.width() / 2,
-                      child: Text(
-                        'Welcome to Hia',
-                        style: kTextStyle.copyWith(
-                            color: kTitleColor,
-                            fontSize: 26.0,
-                            fontWeight: FontWeight.bold),
-                      )),
+                    width: MediaQuery.of(context).size.width / 2,
+                    child: Text(
+                      'Welcome to Hia',
+                      style: kTextStyle.copyWith(
+                        color: kTitleColor,
+                        fontSize: 26.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
-                const SizedBox(
-                  height: 40.0,
-                ),
+                const SizedBox(height: 40.0),
                 Expanded(
                   child: Container(
-                    width: context.width(),
+                    width: MediaQuery.of(context).size.width,
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30.0),
-                          topRight: Radius.circular(30.0)),
+                        topLeft: Radius.circular(30.0),
+                        topRight: Radius.circular(30.0),
+                      ),
                       color: Colors.white,
                     ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20.0, right: 20.0, top: 30.0),
-                          child: AppTextField(
-                            controller: emailController,
-                            cursorColor: kMainColor,
-                            textFieldType: TextFieldType.EMAIL,
-                            decoration: InputDecoration(
-                              labelText: 'Email',
-                              hintText: 'Email',
-                              errorText: emailError,
-                              border: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                    12.0)), // Adjust the radius as needed
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                    12.0)), // Ensure the radius matches
-                                borderSide: BorderSide(
-                                  color:
-                                      kSecondaryColor, // Change this to your desired color
-                                  width: 2.0,
-                                ),
-                              ),
-                              labelStyle: const TextStyle(
-                                color: Color.fromARGB(255, 187, 187,
-                                    187), // Color when the TextField is unfocused
-                              ),
-                              floatingLabelStyle: const TextStyle(
-                                color:
-                                    kMainColor, // Color when the TextField is focused
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20.0, right: 20.0, top: 20.0, bottom: 20.0),
-                          child: AppTextField(
-                            controller: passwordController,
-                            cursorColor: kMainColor,
-                            textFieldType: TextFieldType.PASSWORD,
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              hintText: 'Password',
-                              errorText: passwordError,
-                              border: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                    12.0)), // Adjust the radius as needed
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                    12.0)), // Ensure the radius matches
-                                borderSide: BorderSide(
-                                  color: kSecondaryColor,
-                                  width: 2.0,
-                                ),
-                              ),
-                              labelStyle: const TextStyle(
-                                color: Color.fromARGB(255, 187, 187, 187),
-                              ),
-                              floatingLabelStyle: const TextStyle(
-                                color: kMainColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Forgot your password?  ',
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                  color: kTitleColor,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  // Navigate to Sign Up Page
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ForgetPassword()),
-                                  );
-                                },
-                                child: const Text(
-                                  'Here',
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                    color: kSecondaryColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        ButtonGlobal(
-                          buttontext: 'Log In',
-                          buttonDecoration:
-                              kButtonDecoration.copyWith(color: kMainColor),
-                          onPressed: () async {
-                            setState(() {
-                              emailError = emailController.text.isEmpty
-                                  ? 'Please enter your email'
-                                  : !RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
-                                          .hasMatch(emailController.text)
-                                      ? 'Please enter a valid email'
-                                      : null;
-                              firstNameError = firstNameController.text.isEmpty
-                                  ? 'Please enter your FirsName'
-                                  : null;
-                              lastNameError = lastNameController.text.isEmpty
-                                  ? 'Please enter your lastName'
-                                  : null;
-                              passwordError = passwordController.text.isEmpty
-                                  ? 'Please enter your password'
-                                  : passwordController.text.length < 6
-                                      ? 'Password must be at least 6 characters long'
-                                      : null;
-
-                              // Add similar logic for other fields
-                            });
-
-                            if (emailError == null && passwordError == null) {
-                              //createUserAccount() ;
-                              final authViewModel = Provider.of<UserViewModel>(
-                                  context,
-                                  listen: false);
-                              bool success = await authViewModel.login(
-                                emailController.text,
-                                passwordController.text,
-                              );
-
-                              if (success) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const LocationPermission()),
-                                );
-                              } else {
-                                setState(() {
-                                  emailError = 'Invalid email or password';
-
-                                  passwordError = 'Invalid email or password';
-                                });
-                              }
-                            }
-                          },
-
-                          //const PhoneVerification().launch(context);
-                        ),
-                        const SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Or create your account here   ',
-                                style: TextStyle(
-                                  fontSize: 15.0,
-                                  color: kTitleColor,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  // Navigate to Sign Up Page
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SignUp()),
-                                  );
-                                },
-                                child: const Text(
-                                  'SignUp',
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                    color: kSecondaryColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Divider(
-                                thickness: 1.0,
-                                color: kGreyTextColor.withOpacity(0.3),
-                              ),
-                            )),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'or',
-                                style:
-                                    kTextStyle.copyWith(color: kGreyTextColor),
-                              ),
-                            ),
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Divider(
-                                thickness: 1.0,
-                                color: kGreyTextColor.withOpacity(0.3),
-                              ),
-                            )),
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            signInWithFacebook();
-                          },
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return SingleChildScrollView(
                           child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20.0,
-                                right: 20.0,
-                                bottom: 10.0,
-                                top: 15.0),
-                            child: Container(
-                              width: context.width(),
-                              height: 60.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                color: const Color.fromARGB(255, 14, 85, 177),
-                              ),
-                              child: isLoading
-                                  ? const Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        LoadingWidget(
-                                          color: white,
-                                          size: 10.0,
-                                          spacing: 10.0,
-                                        ),
-                                      ],
-                                    )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        const Icon(
-                                          FontAwesomeIcons.facebookF,
-                                          size: 30.0,
-                                          color: Colors.white,
-                                        ),
-                                        const SizedBox(
-                                          width: 5.0,
-                                        ),
-                                        Text(
-                                          'Continue With Facebook',
-                                          style: kTextStyle.copyWith(
-                                              color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(left: 10.0, right: 10.0),
-                          child: RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                              text: 'By continuing, you agree to our  ',
-                              style: kTextStyle.copyWith(color: kTitleColor),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: 'Terms & conditions',
-                                    style: kTextStyle.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: kSecondaryColor)),
-                                TextSpan(
-                                  text: '  and ',
-                                  style:
-                                      kTextStyle.copyWith(color: kTitleColor),
-                                ),
-                                TextSpan(
-                                    text: 'Privacy Policy',
-                                    style: kTextStyle.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: kSecondaryColor)),
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              children: [
+                                _buildEmailField(),
+                                const SizedBox(height: 20.0),
+                                _buildPasswordField(),
+                                const SizedBox(height: 10.0),
+                                _buildForgotPasswordRow(context),
+                                const SizedBox(height: 10.0),
+                                _buildLoginButton(context),
+                                const SizedBox(height: 10.0),
+                                _buildSignUpRow(context),
+                                const SizedBox(height: 10.0),
+                                _buildOrDivider(),
+                                const SizedBox(height: 10.0),
+                                _buildFacebookButton(),
+                                const SizedBox(height: 10.0),
+                                _buildTermsAndPrivacyText(),
                               ],
                             ),
                           ),
-                        )
-                      ],
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -433,9 +143,286 @@ class _SignInState extends State<SignIn> {
     );
   }
 
+  Widget _buildEmailField() {
+    return AppTextField(
+      controller: emailController,
+      cursorColor: kMainColor,
+      textFieldType: TextFieldType.EMAIL,
+      decoration: InputDecoration(
+        labelText: 'Email',
+        hintText: 'Email',
+        errorText: emailError,
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+        ),
+        focusedBorder: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderSide: BorderSide(
+            color: kSecondaryColor,
+            width: 2.0,
+          ),
+        ),
+        labelStyle: const TextStyle(
+          color: Color.fromARGB(255, 187, 187, 187),
+        ),
+        floatingLabelStyle: const TextStyle(
+          color: kMainColor,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return AppTextField(
+      controller: passwordController,
+      cursorColor: kMainColor,
+      textFieldType: TextFieldType.PASSWORD,
+      decoration: InputDecoration(
+        labelText: 'Password',
+        hintText: 'Password',
+        errorText: passwordError,
+        border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+        ),
+        focusedBorder: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderSide: BorderSide(
+            color: kSecondaryColor,
+            width: 2.0,
+          ),
+        ),
+        labelStyle: const TextStyle(
+          color: Color.fromARGB(255, 187, 187, 187),
+        ),
+        floatingLabelStyle: const TextStyle(
+          color: kMainColor,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildForgotPasswordRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'Forgot your password?  ',
+            style: TextStyle(
+              fontSize: 15.0,
+              color: kTitleColor,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ForgetPassword()),
+              );
+            },
+            child: const Text(
+              'Here',
+              style: TextStyle(
+                fontSize: 15.0,
+                color: kSecondaryColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLoginButton(BuildContext context) {
+    return ButtonGlobal(
+      buttontext: 'Log In',
+      buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+      onPressed: () async {
+        setState(() {
+          emailError = emailController.text.isEmpty
+              ? 'Please enter your email'
+              : !RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+                      .hasMatch(emailController.text)
+                  ? 'Please enter a valid email'
+                  : null;
+          passwordError = passwordController.text.isEmpty
+              ? 'Please enter your password'
+              : passwordController.text.length < 6
+                  ? 'Password must be at least 6 characters long'
+                  : null;
+        });
+
+        if (emailError == null && passwordError == null) {
+          final authViewModel =
+              Provider.of<UserViewModel>(context, listen: false);
+          bool success = await authViewModel.login(
+            emailController.text,
+            passwordController.text,
+          );
+
+          if (success) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const LocationPermission()),
+            );
+          } else {
+            setState(() {
+              emailError = 'Invalid email or password';
+              passwordError = 'Invalid email or password';
+            });
+          }
+        }
+      },
+    );
+  }
+
+  Widget _buildSignUpRow(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'Or create your account here   ',
+            style: TextStyle(
+              fontSize: 15.0,
+              color: kTitleColor,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SignUp()),
+              );
+            },
+            child: const Text(
+              'SignUp',
+              style: TextStyle(
+                fontSize: 15.0,
+                color: kSecondaryColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOrDivider() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+            child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Divider(
+            thickness: 1.0,
+            color: kGreyTextColor.withOpacity(0.3),
+          ),
+        )),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'or',
+            style: kTextStyle.copyWith(color: kGreyTextColor),
+          ),
+        ),
+        Expanded(
+            child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Divider(
+            thickness: 1.0,
+            color: kGreyTextColor.withOpacity(0.3),
+          ),
+        )),
+      ],
+    );
+  }
+
+  Widget _buildFacebookButton() {
+    return GestureDetector(
+      onTap: () {
+        signInWithFacebook();
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(
+            left: 20.0, right: 20.0, bottom: 10.0, top: 15.0),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 60.0,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: const Color.fromARGB(255, 14, 85, 177),
+          ),
+          child: isLoading
+              ? const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    LoadingWidget(
+                      color: white,
+                      size: 10.0,
+                      spacing: 10.0,
+                    ),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      FontAwesomeIcons.facebookF,
+                      size: 30.0,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(
+                      width: 5.0,
+                    ),
+                    Text(
+                      'Continue With Facebook',
+                      style: kTextStyle.copyWith(color: Colors.white),
+                    ),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTermsAndPrivacyText() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+      child: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          text: 'By continuing, you agree to our  ',
+          style: kTextStyle.copyWith(color: kTitleColor),
+          children: <TextSpan>[
+            TextSpan(
+                text: 'Terms & conditions',
+                style: kTextStyle.copyWith(
+                    fontWeight: FontWeight.bold, color: kSecondaryColor)),
+            TextSpan(
+              text: '  and ',
+              style: kTextStyle.copyWith(color: kTitleColor),
+            ),
+            TextSpan(
+                text: 'Privacy Policy',
+                style: kTextStyle.copyWith(
+                    fontWeight: FontWeight.bold, color: kSecondaryColor)),
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<void> signInWithFacebook() async {
     String _token;
-    String _userId;
     String email = '';
     final authViewModel = Provider.of<UserViewModel>(context, listen: false);
     setState(() {

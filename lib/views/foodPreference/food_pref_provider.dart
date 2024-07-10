@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 
 class FoodPreferenceProvider with ChangeNotifier {
   final UserViewModel _userViewModel;
 
   FoodPreferenceProvider(this._userViewModel);
+
   final Map<String, bool> _selectedPreferences = {
     "Fast Food": false,
     "Vegan": false,
@@ -14,15 +16,91 @@ class FoodPreferenceProvider with ChangeNotifier {
 
   Map<String, bool> get selectedPreferences => _selectedPreferences;
 
+  bool _isLoading = false;
+   
+  bool get isLoading => _isLoading;
+
   void togglePreference(String preference) {
     _selectedPreferences[preference] = !_selectedPreferences[preference]!;
     notifyListeners();
   }
 
-  void savePreferences() {
-    // Save preferences to the server
+  //fetch last pref
+  void fetchLastPref() {
+    final userViewModel = _userViewModel;
+    if (userViewModel.userData != null) {
+      final userPrefs = userViewModel.userData!.foodPreference;
+      if (userPrefs != null) {
+        for (var pref in userPrefs) {
+          if (_selectedPreferences.containsKey(pref)) {
+            _selectedPreferences[pref] = true;
+          }
+        }
+      }
+    }
+    notifyListeners();
+  }
 
-    //print from user id view model
-    print(_userViewModel.userId);
+  void savePreferences() async{
+_isLoading = true;
+    // Save preferences to the server
+    final userId = _userViewModel.userId;
+    final selectedPrefs = _selectedPreferences.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+
+
+    if (userId != null) {
+      final success = await _userViewModel.userService.saveUserPreferences(userId, selectedPrefs);
+
+      if (success) {
+        Debugger.green('Preferences saved successfully');
+      } else {
+        Debugger.red('Failed to save preferences');
+      }
+    } else {
+      Debugger.red('User not authenticated');
+    }
+    _isLoading = false;
+    notifyListeners();
+
+  }
+
+  void updatePreferences() async{
+    // Update preferences in the server
+    final userId = _userViewModel.userId;
+    final selectedPrefs = _selectedPreferences.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+
+    
+    _isLoading = true;
+
+    if (userId != null) {
+      final success = await _userViewModel.userService.saveUserPreferences(userId, selectedPrefs);
+
+      if ( success) {
+        Debugger.green('Preferences updated successfully');
+      } else {
+        Debugger.red('Failed to update preferences');
+      }
+    } else {
+      Debugger.red('User not authenticated');
+    }
+
+    _isLoading = false;
+    notifyListeners();
+
+  }
+
+  void initializePreferences(List<String> preferences) {
+    for (var preference in preferences) {
+      if (_selectedPreferences.containsKey(preference)) {
+        _selectedPreferences[preference] = true;
+      }
+    }
+    notifyListeners();
   }
 }

@@ -1,10 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
+import 'package:hia/views/foodPreference/food_preferences_screen.dart';
 import 'package:hia/views/home/home.dart';
 import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -31,6 +33,8 @@ class _EditProfileState extends State<EditProfile> {
   String? lastNameError;
   String? emailError;
   String? passwordError;
+  // List of user preferences
+  List<String> userPreferences = [];
 
   Position? position;
   bool isLoading = false;
@@ -51,6 +55,10 @@ class _EditProfileState extends State<EditProfile> {
         TextEditingController(text: userViewModel.userData?.email ?? '');
     phoneController =
         TextEditingController(text: userViewModel.userData?.phone ?? '');
+
+    // Initialize the user preferences
+    userPreferences = userViewModel.userData?.foodPreference ?? [];  
+
   }
 
   @override
@@ -76,8 +84,8 @@ class _EditProfileState extends State<EditProfile> {
      
       userService.updateUserLocation(userViewModel.userId!, addresse!,
           position!.longitude, position!.latitude);
-       userViewModel.fetchUserById(userViewModel.userId!);
 
+      
       setState(() {
         isLoadingPosition = false;
       });
@@ -97,6 +105,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -234,7 +243,7 @@ class _EditProfileState extends State<EditProfile> {
                                   width: 10.0, // Set the width of the logo
                                   height: 10.0, // Set the height of the logo
                                   child: Image.asset(
-                                    'images/portrait-man-laughing.png',
+                                    'images/h_logo.png',
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -394,6 +403,54 @@ class _EditProfileState extends State<EditProfile> {
                             ),
                           ),
                         ),
+
+                        const Gap(5.0),
+                        //TITLE MY PREF
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20.0),
+                          child: Text(
+                            'My Preferences',
+                            style: kTextStyle.copyWith(
+                              color: kTitleColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                            ),
+                          ),
+                        ),
+                        const Gap(5.0),
+                      Row(
+                      children: [
+                             Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Wrap(
+                                spacing: 10.0,
+                                runSpacing: 4.0,
+                                children: userPreferences
+                                    .map((pref) => Chip(
+                                        backgroundColor: kMainColor,
+                                        label: Text(pref , style: kTextStyle.copyWith(color: Colors.white, fontSize: 12.0)),
+                                        ))
+                                    .toList(),
+                              ),
+                            ),
+                            
+                            ),
+                                IconButton(
+                                      icon: const Icon(Icons.add),
+                                      onPressed: () {
+                                        // Handle adding new preference
+                                        Navigator.pushReplacement(context, 
+                                        MaterialPageRoute(builder: (context) => const FoodPreferencePage())
+                                        );
+
+                                      },
+                                    ),
+                          ],
+                          )
+                          ,
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 10.0, right: 10.0, top: 80.0),
@@ -442,7 +499,8 @@ class _EditProfileState extends State<EditProfile> {
                               ),
                             ),
                           ),
-                        )
+                        ),
+                        
                       ],
                     ),
                   ),

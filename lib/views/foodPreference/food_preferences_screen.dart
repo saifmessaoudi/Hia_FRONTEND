@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:hia/helpers/debugging_printer.dart';
+import 'package:hia/utils/loading_widget.dart';
+import 'package:hia/viewmodels/establishment_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_pref_provider.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/views/home/home.dart';
+import 'package:hia/widgets/custom_toast.dart';
 import 'package:provider/provider.dart';
+import 'package:hia/viewmodels/user_viewmodel.dart';
 
 class FoodPreferencePage extends StatefulWidget {
   const FoodPreferencePage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _FoodPreferencePageState createState() => _FoodPreferencePageState();
 }
 
@@ -20,6 +24,23 @@ class _FoodPreferencePageState extends State<FoodPreferencePage> {
     {"name": "Sugar", "image": "images/sugar.jpg"},
     {"name": "Nut-Free", "image": "images/fastfood.jpg"},
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializePreferences();
+    });
+  }
+
+  void _initializePreferences() {
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
+    final foodPreferenceProvider =
+        Provider.of<FoodPreferenceProvider>(context, listen: false);
+
+    foodPreferenceProvider.initializePreferences(userViewModel.foodPreference);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,17 +179,27 @@ class _FoodPreferencePageState extends State<FoodPreferencePage> {
                         const SizedBox(
                           height: 5.0,
                         ),
-                        ButtonGlobal(
-                            buttontext: 'Save Preferences',
+                                    
+                      ButtonGlobal(
+                            buttontext: foodPreferenceProvider.isLoading
+                                ? 'Saving...'
+                                : 'Save Preferences',
                             buttonDecoration:
                                 kButtonDecoration.copyWith(color: kMainColor),
                             onPressed: () {
+                              final userViewModel =
+                          Provider.of<UserViewModel>(context, listen: false);
+                          final establishementViwModel = Provider.of<EstablishmentViewModel>(context, listen: false);
+                      userViewModel.initSession();
                               foodPreferenceProvider.savePreferences();
+                             userViewModel.fetchUserById(userViewModel.userId!);
+                             establishementViwModel.fetchEstablishments();
+
+                            showCustomToast(context, 'Preferences saved successfully');
                               Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
                                     builder: (context) => const Home()),
-                                (Route<dynamic> route) =>
-                                    false, // Remove all routes
+                                (Route<dynamic> route) => false,
                               );
                             }),
                         Padding(

@@ -31,11 +31,16 @@ dependencies:
   flutter_facebook_auth: ^7.0.0
   dots_indicator: ^3.0.0
   shimmer: ^3.0.0
+  gap: ^3.0.1
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  hive_generator: ^1.1.0
+  build_runner: ^2.1.2
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

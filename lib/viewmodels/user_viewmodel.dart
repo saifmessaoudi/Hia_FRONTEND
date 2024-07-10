@@ -20,9 +20,14 @@ class UserViewModel with ChangeNotifier {
   
 
    UserViewModel() {
-    // Initialize session on app startup
     initSession();
   }
+
+  String? getAuthenticatedUserId(){
+    return _userId;
+  
+  }
+
 bool isAuthenticated() {
     return _token != null;
   }
@@ -166,4 +171,9 @@ bool isAuthenticated() {
       return null;
     }
   }
+  List<String> get foodPreference {
+    return _userData?.foodPreference ?? [];
+  }
+
+
 }
