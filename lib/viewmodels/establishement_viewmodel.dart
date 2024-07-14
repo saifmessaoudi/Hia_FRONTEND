@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:hia/models/food.model.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hia/models/establishement.model.dart';
@@ -72,6 +73,34 @@ class EstablishmentViewModel with ChangeNotifier {
       return null;
     }
   }
+
+ void fetchFoodsFromEstablishment(int i) async {
+  try {
+    // Ensure the index i is within the bounds of the establishments list
+    if (i < 0 || i >= establishments!.length) {
+      throw RangeError('Index $i is out of bounds for the list of establishments');
+    }
+
+    // Assuming establishments is a list of objects that have an 'id' field
+    String establishmentId = establishments![i].id; // Ensure this is the correct field
+
+    // Debug prints
+    print('Fetching foods for establishment ID: $establishmentId');
+
+    // Fetch foods using the establishment ID
+    List<Food> foods = await _establishmentService.getProductsByEstablishmentID(establishmentId);
+    print('Fetched foods: $foods');
+  } catch (error) {
+    print('Error fetching foods: $error');
+    print('Index i: $i, Type of i: ${i.runtimeType}');
+    print('Establishment at index i: ${establishments![i]}, Type: ${establishments![i].runtimeType}');
+  }
+}
+
+
+
+
+
 
   Future<void> _fetchEstablishmentsFromService() async {
     try {

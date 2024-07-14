@@ -237,12 +237,15 @@ Navigator.of(context).push(
                   spacing: 10,
                   itemCount: establishmentViewModel.establishments!.length,
                   itemBuilder: (_, i) {
+                    
                     establishmentViewModel.calculateDistance(i);
                     return BookTableCard(
                       restaurantData: establishmentViewModel.establishments![i],
                       index: i,
                     ).onTap(
+                      
                       () {
+                        establishmentViewModel.fetchFoodsFromEstablishment(2) ; 
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => ProductDetails(
@@ -251,6 +254,7 @@ Navigator.of(context).push(
                             ),
                           ),
                         );
+                        
                       },
                       highlightColor: context.cardColor,
                     );
