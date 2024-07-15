@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/utils/loading_widget.dart';
-import 'package:hia/viewmodels/establishment_viewmodel.dart';
+import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_pref_provider.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/constant.dart';

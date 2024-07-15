@@ -1,11 +1,11 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'package:hia/models/establishment.model.dart';
+import 'package:hia/models/establishement.model.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hia/models/offer.model.dart';
 import 'package:hia/utils/connectivity_manager.dart';
 import 'package:hia/utils/navigation_service.dart';
-import 'package:hia/viewmodels/establishment_viewmodel.dart';
+import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:hia/viewmodels/food_viewmodel.dart';
 import 'package:hia/viewmodels/offer.viewmodel.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';

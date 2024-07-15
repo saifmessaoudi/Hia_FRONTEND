@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:hia/helpers/debugging_printer.dart';
-import 'package:hia/models/establishment.model.dart';
+import 'package:hia/models/establishement.model.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import '../services/establishment_service.dart';
 

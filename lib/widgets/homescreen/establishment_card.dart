@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
-import 'package:hia/models/establishment.model.dart';
+import 'package:hia/models/establishement.model.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 

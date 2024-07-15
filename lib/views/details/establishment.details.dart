@@ -1,8 +1,8 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-import 'package:hia/models/establishment.model.dart';
-import 'package:hia/viewmodels/establishment_viewmodel.dart';
+import 'package:hia/models/establishement.model.dart';
+import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:hia/views/global_components/button_global.dart';
 
 

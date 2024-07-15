@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:hia/helpers/debugging_printer.dart';
-import 'package:hia/models/establishment.model.dart';
+import 'package:hia/models/establishement.model.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
