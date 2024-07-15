@@ -13,6 +13,7 @@ import 'package:hia/views/details/establishment.details.dart';
 import 'package:hia/views/details/food_details_screen.dart';
 import 'package:hia/views/foods/foods_see_all_screen.dart';
 import 'package:hia/views/global_components/category_data.dart';
+import 'package:hia/widgets/filter_dialog.dart';
 import 'package:hia/widgets/homescreen/box_card.dart';
 import 'package:hia/widgets/homescreen/establishment_card.dart';
 import 'package:hia/widgets/homescreen/food_card.dart';
@@ -134,12 +135,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-                                const Expanded(
-                                  flex: 1,
-                                  child: Image(
-                                    image: AssetImage('images/filter.png'),
-                                  ),
-                                ),
+                                 Expanded(
+                          flex: 1,
+                          child: IconButton(
+                            icon: const Image(
+                              image: AssetImage('images/filter.png'),
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return FilterDialog(
+                                    onApply: (selectedFilters) {
+                                      Provider.of<FoodViewModel>(context, listen: false).applyFilters(selectedFilters);
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
                               ],
                             ),
                           ),
@@ -147,25 +162,33 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  Positioned(
-                    top: 220,
-                    left: 30.0,
-                    right: 30.0,
-                    child: Row(
-                      children: [
-                        Text(
-                          'Offers',
-                          style: kTextStyle.copyWith(
-                            color: kTitleColor,
-                            fontSize: 18.0,
+                    
+                        ],
+                      ),
+
+                  Consumer<FoodViewModel>(
+                            builder: (context, foodViewModel, child) {
+                              return foodViewModel.selectedFilters.isNotEmpty
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                      child: Wrap(
+                                        spacing: 8.0,
+                                        children: foodViewModel.selectedFilters.map((filter) {
+                                          return Chip(
+                                        backgroundColor: kMainColor,
+                                        label: Text( filter , style: kTextStyle.copyWith(color: Colors.white, fontSize: 12.0)),
+
+                                          );
+                                        }).toList(),
+                                      ),
+                                    )
+                                  : Container();
+                            },
                           ),
-                        ),
-                        const Spacer(),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                                   
+                
+                
+              
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Consumer<OfferViewModel>(
@@ -374,6 +397,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const Gap(20.0),
+        
             ],
           ),
         ),
