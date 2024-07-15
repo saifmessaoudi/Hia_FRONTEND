@@ -29,14 +29,18 @@ void main() async {
   Hive.openBox('offerBox');
   
   
+
+  
+
   runApp(
+    
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ConnectivityManager()),
-        ChangeNotifierProvider(create: (context) => UserViewModel()),
+                ChangeNotifierProvider(create: (_) => ConnectivityManager()),
+
+        ChangeNotifierProvider(create: (_) => UserViewModel()),
         ChangeNotifierProvider(
-          create: (context) => SplashViewModel(
-              Provider.of<UserViewModel>(context, listen: false)),
+          create: (context) => SplashViewModel(Provider.of<UserViewModel>(context, listen: false)),
         ),
         ChangeNotifierProvider(
           create: (context) => FoodPreferenceProvider(

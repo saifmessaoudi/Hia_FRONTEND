@@ -7,11 +7,11 @@ import 'package:hia/models/establishement.model.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 
-class BookTableCard extends StatelessWidget {
+class EstablishmentCard extends StatelessWidget {
   final Establishment establishment;
  
 
-     BookTableCard({required this.establishment});
+     EstablishmentCard({required this.establishment});
 
 
   @override

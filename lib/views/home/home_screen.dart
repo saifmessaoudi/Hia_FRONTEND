@@ -18,9 +18,16 @@ import 'package:hia/widgets/homescreen/box_card.dart';
 import 'package:hia/widgets/homescreen/establishment_card.dart';
 import 'package:hia/widgets/homescreen/food_card.dart';
 import 'package:hia/widgets/smart_scaffold.dart';
+import 'package:hia/views/home/BookTableCard.dart';
+import 'package:hia/views/home/establishment_details.dart';
+import 'package:hia/views/home/establishment_screen.dart';
+import 'package:hia/views/home/establishment_search_delegate.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+
+
+
 
 //import 'product_details.dart';
 
@@ -122,6 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     child: AppTextField(
                                       textFieldType: TextFieldType.NAME,
+                                      enabled: false,
                                       decoration: const InputDecoration(
                                         prefixIcon: Icon(
                                           Icons.search,
@@ -236,6 +244,86 @@ class _HomeScreenState extends State<HomeScreen> {
                   
                 ),
               ),
+               Padding(
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Nearly establishments:',
+                    style: kTextStyle.copyWith(
+                      color: kTitleColor,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ProductScreen(
+                              
+                            ),
+                          ),
+                        );                    },
+                    child: Text(
+                      'See All',
+                      style: kTextStyle.copyWith(
+                        color: kMainColor,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+             Consumer<EstablishmentViewModel>(
+    builder: (context, establishmentViewModel, child) {
+      return establishmentViewModel.isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: kMainColor,
+              ),
+            )
+          : establishmentViewModel.establishments != null && establishmentViewModel.establishments!.isNotEmpty
+              ? HorizontalList(
+                  spacing: 10,
+                  itemCount: establishmentViewModel.establishments!.length,
+                  itemBuilder: (_, i) {
+                    
+                    establishmentViewModel.calculateDistance(i);
+                    return BookTableCard(
+                      restaurantData: establishmentViewModel.establishments![i],
+                      index: i,
+                    ).onTap(
+                      
+                      () {
+                        establishmentViewModel.fetchFoodsFromEstablishment(2) ; 
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ProductDetails(
+                              product: establishmentViewModel.establishments![i],
+                              index: i,
+                            ),
+                          ),
+                        );
+                        
+                      },
+                      highlightColor: context.cardColor,
+                    );
+                  },
+                )
+                : const Center(
+                    child: Text(
+                      'There is no available data',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  );
+      },
+    ),
+      
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                 child: Row(
@@ -285,7 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             spacing: 10,
                             itemCount: establishmentViewModel.establishments.length,
                             itemBuilder: (_, i) {
-                              return BookTableCard(establishment: establishmentViewModel.establishments[i]).onTap(
+                              return EstablishmentCard(establishment: establishmentViewModel.establishments[i]).onTap(
                                 () {
                                  //navigate 
                                   Navigator.push(
@@ -409,29 +497,3 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
-class CatCard extends StatelessWidget {
-  const CatCard({Key? key, required this.catList}) : super(key: key);
-  final CategoryData catList;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CircleAvatar(
-            backgroundColor: Colors.white,
-            radius: 30.0,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image(
-                image: AssetImage(catList.catIcon),
-              ),
-            )),
-        Text(
-          catList.catTitle,
-          style: kTextStyle.copyWith(color: kTitleColor),
-        ),
-      ],
-    );
-  }
-}
