@@ -1,8 +1,13 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:hia/models/establishment.model.dart';
+import 'package:hia/models/food.model.dart';
+import 'package:hia/models/offer.model.dart';
 import 'package:hia/utils/connectivity_manager.dart';
 import 'package:hia/utils/navigation_service.dart';
 import 'package:hia/viewmodels/establishment_viewmodel.dart';
+import 'package:hia/viewmodels/food_viewmodel.dart';
+import 'package:hia/viewmodels/offer.viewmodel.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_pref_provider.dart';
 import 'package:hia/views/home/home.dart';
@@ -13,15 +18,21 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
- 
-  await Hive.openBox('establishmentBox');
+  
+  Hive.registerAdapter(FoodAdapter());
+  Hive.registerAdapter(OfferAdapter());
+
+  Hive.openBox('foodBox');
+  Hive.openBox('establishmentBox');
+  Hive.openBox('offerBox');
+  
   
   runApp(
     MultiProvider(
       providers: [
-                ChangeNotifierProvider(create: (context) => ConnectivityManager()),
-
+        ChangeNotifierProvider(create: (context) => ConnectivityManager()),
         ChangeNotifierProvider(create: (context) => UserViewModel()),
         ChangeNotifierProvider(
           create: (context) => SplashViewModel(
@@ -31,9 +42,15 @@ void main() async {
           create: (context) => FoodPreferenceProvider(
               Provider.of<UserViewModel>(context, listen: false)),
         ),
-        ChangeNotifierProvider(create: (context) => EstablishmentViewModel(Provider.of<UserViewModel>(context, listen: false)))
+        ChangeNotifierProvider(create: (context) => EstablishmentViewModel(Provider.of<UserViewModel>(context, listen: false))),
+        ChangeNotifierProvider(create: (context) => FoodViewModel(Provider.of<UserViewModel>(context, listen: false))),
+        ChangeNotifierProvider(create: (context) => OfferViewModel())
+
       ],
-      child: const MyApp(),
+      child: DevicePreview(
+        enabled: false,
+        builder: (context) => const MyApp(),
+      ),
     ),
   );
 }
@@ -44,6 +61,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      useInheritedMediaQuery: true,
+      builder: DevicePreview.appBuilder,
+      locale: DevicePreview.locale(context),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         pageTransitionsTheme: const PageTransitionsTheme(builders: {

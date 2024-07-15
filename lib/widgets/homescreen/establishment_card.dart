@@ -9,15 +9,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 class BookTableCard extends StatelessWidget {
   final Establishment establishment;
-
-//test data
-  final restaurantData = RestaurantData(
-    restaurantName: 'The Blue Door',
-    restaurantLocation: 'Kigali, Rwanda',
-    restaurantRating: '4.5',
-    restaurantRatingCount: '200',
-    restaurantImage: 'images/restaurant.png',
-  );  
+ 
 
      BookTableCard({required this.establishment});
 
@@ -36,12 +28,12 @@ class BookTableCard extends StatelessWidget {
         
           padding: const EdgeInsets.all(8.0),
           child: SizedBox(
-            width: 300.0,
+            width: 280.0,
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Image(image: AssetImage(restaurantData.restaurantImage),fit: BoxFit.cover,),
+                const Padding(
+                  padding:  EdgeInsets.only(top: 8.0),
+                  child: Image(image: AssetImage("images/restaurant.png"),fit: BoxFit.cover,),
                 ),
                 Row(
                   children: [
@@ -62,7 +54,7 @@ class BookTableCard extends StatelessWidget {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: restaurantData.restaurantLocation,
+                                  text: establishment.address,
                                   style: kTextStyle.copyWith(
                                       color: kGreyTextColor),
                                 ),
@@ -82,7 +74,7 @@ class BookTableCard extends StatelessWidget {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: restaurantData.restaurantRatingCount,
+                                  text: establishment.averageRating.toString(),
                                   style: kTextStyle.copyWith(
                                       color: kGreyTextColor),
                                 ),
@@ -101,6 +93,29 @@ class BookTableCard extends StatelessWidget {
                             ),
                           ),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                establishment.isOpened ? 
+                                TextSpan(
+                                  text: "Open",
+                                  style: kTextStyle.copyWith(
+                                      color: kMainColor),
+                                ) :
+                                TextSpan(
+                                  text: "Closed",
+                                  style: kTextStyle.copyWith(
+                                      color: Colors.red),
+                                ),
+                                const WidgetSpan(
+                                  child: SizedBox(width: 2.0,),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                          ],
                     ),
                   ],
@@ -114,18 +129,3 @@ class BookTableCard extends StatelessWidget {
   }
 }
 
-class RestaurantData {
-  final String restaurantName;
-  final String restaurantLocation;
-  final String restaurantRating;
-  final String restaurantRatingCount;
-  final String restaurantImage;
-
-  RestaurantData({
-    required this.restaurantName,
-    required this.restaurantLocation,
-    required this.restaurantRating,
-    required this.restaurantRatingCount,
-    required this.restaurantImage,
-  });
-}

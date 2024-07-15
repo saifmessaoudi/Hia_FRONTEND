@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:gap/gap.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/helpers/debugging_printer.dart';
+import 'package:hia/models/establishment.model.dart';
 import 'package:hia/viewmodels/establishment_viewmodel.dart';
+import 'package:hia/viewmodels/food_viewmodel.dart';
+import 'package:hia/viewmodels/offer.viewmodel.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
+import 'package:hia/views/details/box_details_screen.dart';
+import 'package:hia/views/details/establishment.details.dart';
+import 'package:hia/views/details/food_details_screen.dart';
+import 'package:hia/views/foods/foods_see_all_screen.dart';
 import 'package:hia/views/global_components/category_data.dart';
+import 'package:hia/widgets/homescreen/box_card.dart';
 import 'package:hia/widgets/homescreen/establishment_card.dart';
+import 'package:hia/widgets/homescreen/food_card.dart';
 import 'package:hia/widgets/smart_scaffold.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
@@ -158,19 +168,49 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: HorizontalList(
-                  spacing: 10,
-                  itemCount: banner.length,
-                  itemBuilder: (_, i) {
-                    return Image(
-                      image: AssetImage(banner[i]),
-                    ).onTap(
-                      () {
-                        // const CourseDetails().launch(context);
-                      },
-                      highlightColor: context.cardColor,
-                    );
+                child: Consumer<OfferViewModel>(
+                  builder: (context, offerViewModel, child) {
+                    return offerViewModel.isLoading
+                        ? Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: SizedBox(
+                              height: 170, // Specify a fixed height for the ListView
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 5,
+                                itemBuilder: (_, __) => Container(
+                                  width: 300,
+                                  margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : HorizontalList(
+                            spacing: 10,
+                            itemCount: offerViewModel.offers.length,
+                            itemBuilder: (_, i) {
+                              return SurpriseBoxCard(
+                                offer: offerViewModel.offers[i],
+                              ).onTap(
+                                () {
+                                  Navigator.push(
+                                         context,
+                                         MaterialPageRoute(
+                                           builder: (context) =>  BoxDetailsScreen(box: offerViewModel.offers[i],),
+                                         ),
+                                       );
+                                },
+                                highlightColor: context.cardColor,
+                              );
+                            },
+                          );
                   },
+                  
                 ),
               ),
               Padding(
@@ -223,10 +263,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemCount: establishmentViewModel.establishments.length,
                             itemBuilder: (_, i) {
                               return BookTableCard(establishment: establishmentViewModel.establishments[i]).onTap(
-                                () {},
+                                () {
+                                 //navigate 
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>  EstablishmentDetailsScreen(establishment: establishmentViewModel.establishments[i],),
+                                      ),
+                                    );
+                                },
                                 highlightColor: context.cardColor,
+
                               );
-                            },
+                            }
                           );
                   },
                 ),
@@ -247,9 +296,60 @@ class _HomeScreenState extends State<HomeScreen> {
                       'See all',
                       style: kTextStyle.copyWith(color: kGreyTextColor),
                     ).onTap(() {
-                      //const ProductScreen().launch(context);
-                    }),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const FoodScreen(),
+                        ),
+                      );                    }),
                   ],
+                ),
+              ),
+               Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Consumer<FoodViewModel>(
+                  builder: (context, foodViewModel, child) {
+                    return foodViewModel.isLoading
+                        ? Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: SizedBox(
+                              height: 170, // Specify a fixed height for the ListView
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 5,
+                                itemBuilder: (_, __) => Container(
+                                  width: 300,
+                                  margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : 
+                        HorizontalList(
+                            spacing: 10,
+                            itemCount: foodViewModel.foods.length,
+                            itemBuilder: (_, i) {
+                              return FoodCard(food: foodViewModel.foods[i]).onTap(
+                                () {
+                                     Navigator.push(
+                                         context,
+                                         MaterialPageRoute(
+                                           builder: (context) =>  FoodDetailsScreen(food: foodViewModel.foods[i],),
+                                         ),
+                                       );
+                                },
+                                highlightColor: context.cardColor,
+                              );
+                            },
+                          );
+                        
+
+                  },
                 ),
               ),
               Padding(
@@ -268,11 +368,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       'See all',
                       style: kTextStyle.copyWith(color: kGreyTextColor),
                     ).onTap(() {
-                      //const ProductScreen().launch(context);
+                      
                     }),
                   ],
                 ),
               ),
+              const Gap(20.0),
             ],
           ),
         ),
@@ -283,121 +384,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
-class FoodCard extends StatelessWidget {
-  const FoodCard({
-    Key? key,
-    //  required this.productData
-  }) : super(key: key);
-  //final ProductData productData;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SizedBox(
-          width: 160.0,
-          child: Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  /*Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Image(
-                     // image: AssetImage(productData.productImage),
-                      width: 100.0,
-                      height: 100.0,
-                    ),
-                  ),*/
-                  /*  Row(
-                    children: [
-                      Text(
-                      //  productData.productTitle,
-                       // style: kTextStyle.copyWith(color: kTitleColor),
-                      ),
-                    ],
-                  ),*/
-                  Row(
-                    children: [
-                      RatingBarIndicator(
-                        //  rating: productData.productRating.toDouble(),
-                        itemBuilder: (context, index) => const Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        ),
-                        itemCount: 5,
-                        itemSize: 10.0,
-                      ),
-                      const SizedBox(
-                        width: 5.0,
-                      ),
-                      /*  Text(
-                     //   productData.productRating,
-                      //  style: kTextStyle.copyWith(color: kGreyTextColor),
-                      ),*/
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            const WidgetSpan(
-                              child: Padding(
-                                padding: EdgeInsets.only(bottom: 12.0),
-                                child: Icon(
-                                  Icons.attach_money,
-                                  color: kMainColor,
-                                  size: 7.0,
-                                ),
-                              ),
-                            ),
-                            TextSpan(
-                              // text: productData.productPrice,
-                              style: kTextStyle.copyWith(
-                                  color: kTitleColor, fontSize: 16.0),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Spacer(),
-                      const CircleAvatar(
-                        backgroundColor: kSecondaryColor,
-                        radius: 16.0,
-                        child: Icon(
-                          Icons.shopping_cart_outlined,
-                          color: kMainColor,
-                          size: 16.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          top: 10.0,
-          right: 10.0,
-          child: CircleAvatar(
-            backgroundColor: const Color(0xFFE51000).withOpacity(0.1),
-            radius: 16.0,
-            child: const Icon(
-              Icons.favorite,
-              color: Color(0xFFE51000),
-              size: 16.0,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 class CatCard extends StatelessWidget {
   const CatCard({Key? key, required this.catList}) : super(key: key);
