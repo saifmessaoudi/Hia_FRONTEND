@@ -290,7 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemCount: establishmentViewModel.establishments!.length,
                   itemBuilder: (_, i) {
                     
-                    establishmentViewModel.calculateDistance(i);
+                    establishmentViewModel.calculateDistance(establishmentViewModel.establishments![i]);
                     return BookTableCard(
                       restaurantData: establishmentViewModel.establishments![i],
                       index: i,
@@ -301,7 +301,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => ProductDetails(
-                              product: establishmentViewModel.establishments![i],
+                              product: establishmentViewModel.establishments[i],
                               index: i,
                             ),
                           ),

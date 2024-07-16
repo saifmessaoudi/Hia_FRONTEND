@@ -198,13 +198,13 @@ class EstablishmentViewModel extends ChangeNotifier {
 
   }
 
-  void calculateDistance(int index) {
+  void calculateDistance(Establishment establishement) {
 
     User user = _userViewModel.userData!;
     double lat1 = user.latitude.toDouble();
     double lon1 = user.longitude.toDouble();
-    double lat2 = establishments![index].latitude;
-    double lon2 = establishments[index].longitude;
+    double lat2 = establishement.latitude;
+    double lon2 = establishement.longitude;
     distance = _calculateDistance(lat1, lon1, lat2, lon2);
   }
 
