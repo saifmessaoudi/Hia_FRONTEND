@@ -290,7 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemCount: establishmentViewModel.establishments!.length,
                   itemBuilder: (_, i) {
                     
-                    establishmentViewModel.calculateDistance(i);
+                    establishmentViewModel.calculateDistance(establishmentViewModel.establishments![i]);
                     return BookTableCard(
                       restaurantData: establishmentViewModel.establishments![i],
                       index: i,

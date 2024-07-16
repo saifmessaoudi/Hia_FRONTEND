@@ -194,7 +194,7 @@ class EstablishmentViewModel extends ChangeNotifier {
     return R * c; // Distance in km
   }
 
-  void calculateDistance(int index) {
+  void calculateDistance(Establishment establishement) {
     if (_userViewModel.userData == null || _establishments == null || _establishments!.isEmpty) {
       print('User data or establishments are null or empty.');
       return;
@@ -203,8 +203,8 @@ class EstablishmentViewModel extends ChangeNotifier {
     User user = _userViewModel.userData!;
     double lat1 = user.latitude.toDouble();
     double lon1 = user.longitude.toDouble();
-    double lat2 = _establishments![index].latitude;
-    double lon2 = _establishments![index].longitude;
+    double lat2 = establishement.latitude;
+    double lon2 = establishement.longitude;
     _distance = _calculateDistance(lat1, lon1, lat2, lon2);
     notifyListeners();
   }

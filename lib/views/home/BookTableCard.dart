@@ -18,22 +18,31 @@ class BookTableCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
         final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
+        
 
     return Padding(
+      
       padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
       child: Material(
+        
         elevation: 2.0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
+
+
         ),
         child: Padding(
+          
           padding: const EdgeInsets.all(8.0),
           child: SizedBox(
+            
             width: 230.0,
             
             child: Column(
+              
               children: [
                 Padding(
+                  
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Image.network(
                     restaurantData.image ?? '',
