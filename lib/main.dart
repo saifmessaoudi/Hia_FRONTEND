@@ -23,6 +23,7 @@ void main() async {
   
   Hive.registerAdapter(FoodAdapter());
   Hive.registerAdapter(OfferAdapter());
+  Hive.registerAdapter(EstablishmentAdapter());
 
   Hive.openBox('foodBox');
   Hive.openBox('establishmentBox');
@@ -46,7 +47,7 @@ void main() async {
           create: (context) => FoodPreferenceProvider(
               Provider.of<UserViewModel>(context, listen: false)),
         ),
-        ChangeNotifierProvider(create: (context) => EstablishmentViewModel(Provider.of<UserViewModel>(context, listen: false))),
+        ChangeNotifierProvider(create: (context) => EstablishmentViewModel()),
         ChangeNotifierProvider(create: (context) => FoodViewModel(Provider.of<UserViewModel>(context, listen: false))),
         ChangeNotifierProvider(create: (context) => OfferViewModel())
 

@@ -1,8 +1,8 @@
 import 'package:hive/hive.dart';
 
+part 'establishement.model.g.dart';
 
-
-@HiveType(typeId: 1)
+@HiveType(typeId: 3)
 class Review extends HiveObject {
   @HiveField(0)
   String? user;
@@ -33,7 +33,7 @@ class Review extends HiveObject {
 }
 
 
-@HiveType(typeId: 0)
+@HiveType(typeId: 2)
 class Establishment extends HiveObject {
   @HiveField(0)
   String id;

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:hia/models/food.model.dart';
@@ -17,9 +18,31 @@ class EstablishmentViewModel extends ChangeNotifier {
   List<Establishment> establishments = [];
   List<Establishment> recommendedEstablishments = [];
   bool isLoading = false;
-  UserViewModel userViewModel;
+  final UserViewModel _userViewModel = UserViewModel();
 
-  EstablishmentViewModel(this.userViewModel) {
+
+
+  String? _address;
+  String? get address => _address;
+
+
+  int? _lengthEstablishments;
+  int? get lengthEstablishments => _lengthEstablishments;
+
+  double distance = 0.0;
+
+  List<double> distances = [];
+
+  
+
+ 
+
+ 
+
+
+  final String _establishmentsBoxName = 'establishmentsBox';
+
+  EstablishmentViewModel() {
      _userViewModel.initSession();
     _initialize();
     fetchEstablishments();
@@ -27,7 +50,6 @@ class EstablishmentViewModel extends ChangeNotifier {
 
   Future<void> fetchEstablishments() async {
     isLoading = true;
-    notifyListeners();
 
     try {
       Debugger.yellow('Attempting to fetch cached establishments...');
@@ -43,7 +65,7 @@ class EstablishmentViewModel extends ChangeNotifier {
         await _service.cacheData(establishments);
       }
       // Filter establishments based on user preferences
-      establishments = filterByPreferences(establishments, userViewModel.foodPreference);
+      establishments = filterByPreferences(establishments, _userViewModel.foodPreference);
     } catch (e) {
       Debugger.red('Error fetching establishments: $e');
       // Handle error appropriately here (e.g., show a message to the user)
@@ -67,49 +89,30 @@ class EstablishmentViewModel extends ChangeNotifier {
     }).toList();
   }
 
-  final UserViewModel _userViewModel = UserViewModel();
-
-  String? _address;
-  String? get address => _address;
-
-
-  int? _lengthEstablishments;
-  int? get lengthEstablishments => _lengthEstablishments;
-
-  double? _distance;
-  double? get distance => _distance;
-
-  List<Establishment>? _establishments;
-
-  List<double>? _distances;
-  List<double>? get distances => _distances;
-
-  bool _isLoading = false;
-
-  final String _establishmentsBoxName = 'establishmentsBox';
+  
 
 
   Future<void> _initialize() async {
-    _isLoading = true;
-    notifyListeners();
 
     try {
       await Hive.openBox<Establishment>(_establishmentsBoxName);
 
-      _establishments = await _fetchEstablishmentsFromCache();
+      establishments = await _fetchEstablishmentsFromCache();
 
-      if (_establishments == null || _establishments!.isEmpty) {
+      if (establishments.isEmpty) {
         await _fetchEstablishmentsFromService();
       }
 
-      _isLoading = false;
-      notifyListeners();
     } catch (e) {
       print('Error initializing: $e');
     }
+
+    notifyListeners();
+
+
   }
 
-  Future<List<Establishment>?> _fetchEstablishmentsFromCache() async {
+  Future<List<Establishment>> _fetchEstablishmentsFromCache() async {
     try {
       final box = Hive.box<Establishment>(_establishmentsBoxName);
       if (box.isNotEmpty) {
@@ -118,7 +121,7 @@ class EstablishmentViewModel extends ChangeNotifier {
       return [];
     } catch (e) {
       print('Error fetching from cache: $e');
-      return null;
+      return [];
     }
   }
 
@@ -154,7 +157,7 @@ class EstablishmentViewModel extends ChangeNotifier {
     try {
       List<Establishment> establishments =
           await _service.getAllEstablishments();
-      _establishments = establishments;
+      establishments = establishments;
       _lengthEstablishments = establishments.length;
       notifyListeners();
       sortByDistance();
@@ -192,25 +195,21 @@ class EstablishmentViewModel extends ChangeNotifier {
     final c = 2 * asin(sqrt(a));
 
     return R * c; // Distance in km
+
   }
 
   void calculateDistance(int index) {
-    if (_userViewModel.userData == null || _establishments == null || _establishments!.isEmpty) {
-      print('User data or establishments are null or empty.');
-      return;
-    }
 
     User user = _userViewModel.userData!;
     double lat1 = user.latitude.toDouble();
     double lon1 = user.longitude.toDouble();
-    double lat2 = _establishments![index].latitude;
-    double lon2 = _establishments![index].longitude;
-    _distance = _calculateDistance(lat1, lon1, lat2, lon2);
-    notifyListeners();
+    double lat2 = establishments![index].latitude;
+    double lon2 = establishments[index].longitude;
+    distance = _calculateDistance(lat1, lon1, lat2, lon2);
   }
 
   void sortByDistance() {
-    if (_userViewModel.userData == null || _establishments == null) {
+    if (_userViewModel.userData == null || establishments == null) {
       print('User data or establishments are null.');
       return;
     }
@@ -219,11 +218,11 @@ class EstablishmentViewModel extends ChangeNotifier {
     double userLat = user.latitude.toDouble();
     double userLon = user.longitude.toDouble();
 
-    _distances = _establishments?.map((establishment) {
+    distances = establishments.map((establishment) {
       return _calculateDistance(userLat, userLon, establishment.latitude, establishment.longitude);
     }).toList();
 
-    _establishments?.sort((a, b) {
+    establishments.sort((a, b) {
       double distanceA = _calculateDistance(userLat, userLon, a.latitude, a.longitude);
       double distanceB = _calculateDistance(userLat, userLon, b.latitude, b.longitude);
       return distanceA.compareTo(distanceB);
