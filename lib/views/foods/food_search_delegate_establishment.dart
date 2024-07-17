@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:hia/models/food.model.dart';
-import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:hia/viewmodels/food_viewmodel.dart';
 
 
-class FoodSearchDelegate extends SearchDelegate<Food> {
-  final EstablishmentViewModel establishmentViewModel;
+class FoodSearchDelegateEstablishment extends SearchDelegate<Food> {
+  final FoodViewModel foodViewModel;
 
-  FoodSearchDelegate(this.establishmentViewModel);
+  FoodSearchDelegateEstablishment(this.foodViewModel);
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -38,9 +37,7 @@ class FoodSearchDelegate extends SearchDelegate<Food> {
       ingredients: [], 
       remise: 0, 
       isAvailable: true, 
-      remiseDeadline: DateTime.now(),
-      reviews: [],
-      establishment: Establishment(
+      remiseDeadline: DateTime.now(), reviews: [], establishment: Establishment(
         name: '',
         address: '',
         phone: '',
@@ -48,7 +45,7 @@ class FoodSearchDelegate extends SearchDelegate<Food> {
         averageRating: 0,
         foods: [],
         reviews: [], id: '', latitude: 0.0, longitude: 0.0, isOpened: false,
-      ),
+      )
     ));
   },
 );
@@ -69,8 +66,8 @@ class FoodSearchDelegate extends SearchDelegate<Food> {
 
   Widget _buildEstablishmentList() {
     
-    List<Food> filteredEstablishments = establishmentViewModel.foodbyestablishment!.where((food) {
-      return food.name.toLowerCase().contains(query.toLowerCase());
+    List<Food> filteredEstablishments = foodViewModel.foods.where((establishment) {
+      return establishment.name.toLowerCase().contains(query.toLowerCase());
     }).toList();
 
    return ListView.builder(

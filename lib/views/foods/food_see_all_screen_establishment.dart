@@ -1,24 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:hia/models/establishement.model.dart';
+import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:hia/viewmodels/food_viewmodel.dart';
 import 'package:hia/views/foods/food_search_delegate.dart';
-import 'package:hia/views/foods/food_search_delegate_establishment.dart';
 import 'package:hia/widgets/homescreen/food_card.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import '../../constant.dart';
 
-class FoodScreen extends StatefulWidget {
-  const FoodScreen({Key? key}) : super(key: key);
+class FoodSeeAllScreenEstablishment extends StatefulWidget {
+  const FoodSeeAllScreenEstablishment({required this.product});
+
+    final Establishment product;
+
 
   @override
-  _FoodScreenState createState() => _FoodScreenState();
+  _FoodSeeAllScreenEstablishmentState createState() => _FoodSeeAllScreenEstablishmentState();
 }
 
-class _FoodScreenState extends State<FoodScreen> {
+class _FoodSeeAllScreenEstablishmentState extends State<FoodSeeAllScreenEstablishment> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+        final establishmentviewmodel = Provider.of<EstablishmentViewModel>(context, listen: false);
+        establishmentviewmodel.fetchFoodsFromEstablishment(widget.product.id) ; 
+
+
+  }
 
   @override
   Widget build(BuildContext context) {
-    final foodViewModel = Provider.of<FoodViewModel>(context, listen: false);
+        final establishmentviewmodel = Provider.of<EstablishmentViewModel>(context, listen: false);
 
     return SafeArea(
       child: Scaffold(
@@ -47,7 +60,7 @@ class _FoodScreenState extends State<FoodScreen> {
                         }),
                       ),
                       Text(
-                        'Popular Deals',
+                        widget.product.name,
                         style: kTextStyle.copyWith(
                             color: Colors.white, fontSize: 18.0),
                       ),
@@ -57,7 +70,7 @@ class _FoodScreenState extends State<FoodScreen> {
                         onPressed: () async {
                           final selected = await showSearch(
                             context: context,
-                            delegate: FoodSearchDelegateEstablishment(Provider.of<FoodViewModel>(context, listen: false),), // Replace with your custom SearchDelegate
+                            delegate: FoodSearchDelegate(Provider.of<EstablishmentViewModel>(context, listen: false),), // Replace with your custom SearchDelegate
                           );
                           // Handle search results if needed
                         },
@@ -69,6 +82,7 @@ class _FoodScreenState extends State<FoodScreen> {
                   ),
                   Container(
                     width: context.width(),
+                    height: context.height()+100,
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30.0),
@@ -88,10 +102,10 @@ class _FoodScreenState extends State<FoodScreen> {
                             childAspectRatio: 0.75,
                             crossAxisCount: 2,
                             children: List.generate(
-                              foodViewModel.foods.length,
+                              establishmentviewmodel.foodbyestablishment!.length,
                               (index) => Center(
                                 child: FoodCard(
-                                  food: foodViewModel.foods[index],
+                                  food: establishmentviewmodel.foodbyestablishment![index],
                                 ).onTap(() {
                                   // Handle tap
                                 }),

@@ -4,14 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:hia/viewmodels/establishement_viewmodel.dart';
+import 'package:hia/views/details/food_details_screen.dart';
+import 'package:hia/views/foods/food_see_all_screen_establishment.dart';
+import 'package:hia/views/foods/foods_see_all_screen.dart';
 import 'package:hia/views/global_components/button_global.dart';
+import 'package:hia/widgets/homescreen/food_card.dart';
 
 
 
 import 'package:nb_utils/nb_utils.dart' as nb_utils;
+import 'package:nb_utils/nb_utils.dart';
 
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constant.dart';
@@ -302,23 +308,103 @@ Expanded(
                                 ],
                               ),
                             ),
-                           Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: ReadMoreText(
-                                widget.product.description ?? '',
-                                trimLines: 10,
-                                colorClickableText: kMainColor,
-                                trimMode: TrimMode.Line,
-                                style: kTextStyle.copyWith(color: kTitleColor),
-                                trimCollapsedText: 'Show more',
-                                trimExpandedText: 'Show less',
-                                moreStyle:
-                                    kTextStyle.copyWith(color: kMainColor),
-                              ),
-                            ),
+                          Padding(
+  padding: const EdgeInsets.all(20.0),
+  child: Text(
+    widget.product.description ?? '',
+    style: kTextStyle.copyWith(color: kTitleColor),
+  ),
+),
+
                             const SizedBox(height: 20.0,),
+                            Padding(
+                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                child: Row(
+                  children: [
+                    Text(
+                      'Our Products :',
+                      style: kTextStyle.copyWith(
+                        color: kTitleColor,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      'See all',
+                      style: kTextStyle.copyWith(color: kGreyTextColor),
+                    ).onTap(() {
+Navigator.of(context).push(
+  MaterialPageRoute(
+    builder: (context) => FoodSeeAllScreenEstablishment(product: widget.product),
+  ),
+);
+                   }),
+                  ],
+                ),
+              ),
                             
-                            
+                        Padding(
+  padding: const EdgeInsets.all(10.0),
+  child: Consumer<EstablishmentViewModel>(
+    builder: (context, viewModel, child) {
+      if (viewModel.isFetchingFoods) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: SizedBox(
+            height: 170, // Specify a fixed height for the ListView
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 5,
+              itemBuilder: (_, __) => Container(
+                width: 300,
+                margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+            ),
+          ),
+        );
+      } else if (viewModel.foodbyestablishment == null || viewModel.foodbyestablishment!.isEmpty) {
+        return Center(
+          child: Text(
+            'No available products',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey,
+            ),
+          ),
+        );
+      } else {
+        return HorizontalList(
+          spacing: 10,
+          itemCount: viewModel.foodbyestablishment!.length,
+          itemBuilder: (_, i) {
+            return FoodCard(
+              food: viewModel.foodbyestablishment![i],
+            ).onTap(
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FoodDetailsScreen(
+                      food: viewModel.foodbyestablishment![i],
+                    ),
+                  ),
+                );
+              },
+              highlightColor: context.cardColor,
+            );
+          },
+        );
+      }
+    },
+  ),
+),
+
+
                             
                             
                             Row(

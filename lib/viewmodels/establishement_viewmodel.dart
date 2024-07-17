@@ -35,6 +35,10 @@ class EstablishmentViewModel extends ChangeNotifier {
    List<Food>? _foodbyestablishment;
   List<Food>? get foodbyestablishment => _foodbyestablishment;
 
+  bool _isFetchingFoods = false;
+
+   bool get isFetchingFoods => _isFetchingFoods;
+
   final String _establishmentsBoxName = 'establishmentsBox';
 
   EstablishmentViewModel() {
@@ -111,30 +115,32 @@ class EstablishmentViewModel extends ChangeNotifier {
     }
   }
 
-  void fetchFoodsFromEstablishment(int i) async {
-    try {
-      // Ensure the index i is within the bounds of the establishments list
-      if (i < 0 || i >= establishments.length) {
-        throw RangeError('Index $i is out of bounds for the list of establishments');
-      }
+ void fetchFoodsFromEstablishment(String establishementID)async {
+  try {
+    _isFetchingFoods = true;
+    notifyListeners();
 
-      // Assuming establishments is a list of objects that have an 'id' field
-      String establishmentId = establishments[i].id; // Ensure this is the correct field
+    // Ensure the index i is within the bounds of the establishments list
+   
 
-      // Debug prints
-      print('Fetching foods for establishment ID: $establishmentId');
+    // Assuming establishments is a list of objects that have an 'id' field
+    //String establishmentId = establishments[i].id; // Ensure this is the correct field
 
-      // Fetch foods using the establishment ID
-      _foodbyestablishment = await _service.getProductsByEstablishmentID(establishmentId);
-      notifyListeners() ; 
-      print('Fetched foods: $_foodbyestablishment');
+    // Debug prints
+   // print('Fetching foods for establishment ID: $establishmentId');
 
-    } catch (error) {
-      print('Error fetching foods: $error');
-      print('Index i: $i, Type of i: ${i.runtimeType}');
-      print('Establishment at index i: ${establishments[i]}, Type: ${establishments[i].runtimeType}');
-    }
+    // Fetch foods using the establishment ID
+    _foodbyestablishment = await _service.getProductsByEstablishmentID(establishementID);
+
+    print('Fetched foods: $_foodbyestablishment');
+  } catch (error) {
+    print('Error fetching foods: $error');
+  
+  } finally {
+    _isFetchingFoods = false;
+    notifyListeners();
   }
+}
 
   Future<void> _fetchEstablishmentsFromService() async {
     try {
