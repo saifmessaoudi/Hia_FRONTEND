@@ -309,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
             index: i,
           ).onTap(
             () {
-              establishmentViewModel.fetchFoodsFromEstablishment(i);
+              establishmentViewModel.fetchFoodsFromEstablishment(establishmentViewModel.establishments[i].id);
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => ProductDetails(
@@ -479,6 +479,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
+
+
+            
+
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                 child: Row(

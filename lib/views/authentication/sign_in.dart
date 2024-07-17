@@ -11,6 +11,7 @@ import 'package:hia/views/authentication/phone_auth.dart';
 import 'package:hia/views/authentication/registration/sign_up.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/views/location/location_permission.dart';
+import 'package:lottie/lottie.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -79,25 +80,24 @@ class _SignInState extends State<SignIn> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 40.0),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20.0, top: 30.0),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width / 2,
-                    child: Text(
-                      'Welcome to Hia',
-                      style: kTextStyle.copyWith(
-                        color: kTitleColor,
-                        fontSize: 26.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
+                const SizedBox(height: 30.0),
+               Padding(
+  padding: const EdgeInsets.only( top: 10.0,right: 280),
+  child: SizedBox(
+    width: MediaQuery.of(context).size.width / 2,
+    child: Image.asset(
+      'images/h_logo_white.png',
+      height: 40.0,
+      width: 40.0,
+    ),
+  ),
+),
+
                 const SizedBox(height: 40.0),
                 Expanded(
                   child: Container(
                     width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(30.0),
@@ -112,6 +112,13 @@ class _SignInState extends State<SignIn> {
                             padding: const EdgeInsets.all(20.0),
                             child: Column(
                               children: [
+                                Lottie.asset(
+                    'images/lottie.json', // Replace with your Lottie animation file path
+                    height: 200, // Adjust height as needed
+                    width: double.infinity, // Take full width
+                    fit: BoxFit.contain, // Adjust fit as needed
+                  ),
+                   const SizedBox(height: 8.0),
                                 _buildEmailField(),
                                 const SizedBox(height: 20.0),
                                 _buildPasswordField(),

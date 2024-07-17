@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hia/models/food.model.dart';
-import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:hia/viewmodels/food_viewmodel.dart';
 
 
-class FoodSearchDelegate extends SearchDelegate<Food> {
-  final EstablishmentViewModel establishmentViewModel;
+class FoodSearchDelegateEstablishment extends SearchDelegate<Food> {
+  final FoodViewModel foodViewModel;
 
-  FoodSearchDelegate(this.establishmentViewModel);
+  FoodSearchDelegateEstablishment(this.foodViewModel);
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -58,8 +57,8 @@ class FoodSearchDelegate extends SearchDelegate<Food> {
 
   Widget _buildEstablishmentList() {
     
-    List<Food> filteredEstablishments = establishmentViewModel.foodbyestablishment!.where((food) {
-      return food.name.toLowerCase().contains(query.toLowerCase());
+    List<Food> filteredEstablishments = foodViewModel.foods.where((establishment) {
+      return establishment.name.toLowerCase().contains(query.toLowerCase());
     }).toList();
 
    return ListView.builder(
