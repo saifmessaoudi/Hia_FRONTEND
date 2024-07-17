@@ -14,14 +14,17 @@ class BookTableCard extends StatelessWidget {
 
   final Establishment restaurantData;
  final  int index ; 
+ 
 
   @override
   Widget build(BuildContext context) {
         final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
+        
 
     return Padding(
       padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
       child: Material(
+        color: Colors.white ,
         elevation: 2.0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -51,14 +54,17 @@ class BookTableCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           
-  Text(
-  restaurantData.name.toUpperCase(),
+ Text(
+  restaurantData.name.length > 12 
+    ? '${restaurantData.name.substring(0, 12)}...' 
+    : restaurantData.name.toUpperCase(),
   style: kTextStyle.copyWith(
     color: kTitleColor,
     fontWeight: FontWeight.bold,
-    fontSize: 16,
+    fontSize: 14,
   ),
 ),
+
 const SizedBox(height: 5,) ,
 RichText(
                             text: TextSpan(
@@ -99,8 +105,12 @@ const SizedBox(height: 6,) ,
                                     size: 15.0,
                                   ),
                                 ),
-                               
-                              
+                                TextSpan(
+                                  text: "${establishmentViewModel.distances![index].toStringAsFixed(1)} km",
+                                  style: kTextStyle.copyWith(
+                                    color: kGreyTextColor,
+                                  ),
+                                ),
                               ],
                             ),
                           ),

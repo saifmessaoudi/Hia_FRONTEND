@@ -12,38 +12,33 @@ import 'package:nb_utils/nb_utils.dart';
 import '../services/establishement_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class EstablishmentViewModel extends ChangeNotifier {
   final EstablishmentService _service = EstablishmentService();
   List<Establishment> establishments = [];
   List<Establishment> recommendedEstablishments = [];
   bool isLoading = false;
+  bool _isSorting = false;
   final UserViewModel _userViewModel = UserViewModel();
-
-
 
   String? _address;
   String? get address => _address;
 
-
   int? _lengthEstablishments;
   int? get lengthEstablishments => _lengthEstablishments;
 
-  double distance = 0.0;
+  double? _distance;
+  double? get distance => _distance;
 
-  List<double> distances = [];
+  List<double>? _distances;
+  List<double>? get distances => _distances;
 
-  
-
- 
-
- 
-
+   List<Food>? _foodbyestablishment;
+  List<Food>? get foodbyestablishment => _foodbyestablishment;
 
   final String _establishmentsBoxName = 'establishmentsBox';
 
   EstablishmentViewModel() {
-     _userViewModel.initSession();
+    _userViewModel.initSession();
     _initialize();
     fetchEstablishments();
   }
@@ -89,11 +84,7 @@ class EstablishmentViewModel extends ChangeNotifier {
     }).toList();
   }
 
-  
-
-
   Future<void> _initialize() async {
-
     try {
       await Hive.openBox<Establishment>(_establishmentsBoxName);
 
@@ -102,14 +93,11 @@ class EstablishmentViewModel extends ChangeNotifier {
       if (establishments.isEmpty) {
         await _fetchEstablishmentsFromService();
       }
-
     } catch (e) {
       print('Error initializing: $e');
     }
 
     notifyListeners();
-
-
   }
 
   Future<List<Establishment>> _fetchEstablishmentsFromCache() async {
@@ -125,38 +113,34 @@ class EstablishmentViewModel extends ChangeNotifier {
     }
   }
 
- void fetchFoodsFromEstablishment(int i) async {
-  try {
-    // Ensure the index i is within the bounds of the establishments list
-    if (i < 0 || i >= establishments!.length) {
-      throw RangeError('Index $i is out of bounds for the list of establishments');
+  void fetchFoodsFromEstablishment(int i) async {
+    try {
+      // Ensure the index i is within the bounds of the establishments list
+      if (i < 0 || i >= establishments.length) {
+        throw RangeError('Index $i is out of bounds for the list of establishments');
+      }
+
+      // Assuming establishments is a list of objects that have an 'id' field
+      String establishmentId = establishments[i].id; // Ensure this is the correct field
+
+      // Debug prints
+      print('Fetching foods for establishment ID: $establishmentId');
+
+      // Fetch foods using the establishment ID
+      _foodbyestablishment = await _service.getProductsByEstablishmentID(establishmentId);
+      notifyListeners() ; 
+      print('Fetched foods: $_foodbyestablishment');
+
+    } catch (error) {
+      print('Error fetching foods: $error');
+      print('Index i: $i, Type of i: ${i.runtimeType}');
+      print('Establishment at index i: ${establishments[i]}, Type: ${establishments[i].runtimeType}');
     }
-
-    // Assuming establishments is a list of objects that have an 'id' field
-    String establishmentId = establishments![i].id; // Ensure this is the correct field
-
-    // Debug prints
-    print('Fetching foods for establishment ID: $establishmentId');
-
-    // Fetch foods using the establishment ID
-    List<Food> foods = await _service.getProductsByEstablishmentID(establishmentId);
-    print('Fetched foods: $foods');
-  } catch (error) {
-    print('Error fetching foods: $error');
-    print('Index i: $i, Type of i: ${i.runtimeType}');
-    print('Establishment at index i: ${establishments![i]}, Type: ${establishments![i].runtimeType}');
   }
-}
-
-
-
-
-
 
   Future<void> _fetchEstablishmentsFromService() async {
     try {
-      List<Establishment> establishments =
-          await _service.getAllEstablishments();
+      List<Establishment> establishments = await _service.getAllEstablishments();
       establishments = establishments;
       _lengthEstablishments = establishments.length;
       notifyListeners();
@@ -195,30 +179,33 @@ class EstablishmentViewModel extends ChangeNotifier {
     final c = 2 * asin(sqrt(a));
 
     return R * c; // Distance in km
-
   }
 
   void calculateDistance(Establishment establishement) {
-
     User user = _userViewModel.userData!;
     double lat1 = user.latitude.toDouble();
     double lon1 = user.longitude.toDouble();
     double lat2 = establishement.latitude;
     double lon2 = establishement.longitude;
-    distance = _calculateDistance(lat1, lon1, lat2, lon2);
+    _distance = _calculateDistance(lat1, lon1, lat2, lon2);
   }
 
-  void sortByDistance() {
+  void sortByDistance() async {
     if (_userViewModel.userData == null || establishments == null) {
       print('User data or establishments are null.');
       return;
     }
 
+    _isSorting = true;
+    notifyListeners();
+
     User user = _userViewModel.userData!;
     double userLat = user.latitude.toDouble();
     double userLon = user.longitude.toDouble();
 
-    distances = establishments.map((establishment) {
+    await Future.delayed(Duration(seconds: 1)); // Simulate loading delay
+
+    _distances = establishments.map((establishment) {
       return _calculateDistance(userLat, userLon, establishment.latitude, establishment.longitude);
     }).toList();
 
@@ -228,8 +215,11 @@ class EstablishmentViewModel extends ChangeNotifier {
       return distanceA.compareTo(distanceB);
     });
 
+    _isSorting = false;
     notifyListeners();
   }
+
+  bool get isSorting => _isSorting;
 
   void launchMaps(double latitude, double longitude) async {
     if (_userViewModel.userData == null) {
@@ -238,10 +228,16 @@ class EstablishmentViewModel extends ChangeNotifier {
     }
 
     try {
-      final Uri url = Uri.parse('https://www.google.com/maps/dir/?api=1&origin=${_userViewModel.userData!.latitude.toDouble()},${_userViewModel.userData!.longitude.toDouble()}&destination=$latitude,$longitude');
+      final Uri url = Uri.parse(
+          'https://www.google.com/maps/dir/?api=1&origin=${_userViewModel.userData!.latitude.toDouble()},${_userViewModel.userData!.longitude.toDouble()}&destination=$latitude,$longitude');
 
-      if (await canLaunch(url.toString())) {
-        await launch(url.toString());
+      print('Generated URL: $url');
+
+      final canLaunch = await canLaunchUrl(url);
+      print('Can launch URL: $canLaunch');
+
+      if (canLaunch) {
+        await launchUrl(url);
       } else {
         throw 'Could not launch $url';
       }
@@ -249,6 +245,4 @@ class EstablishmentViewModel extends ChangeNotifier {
       print('Error launching maps: $e');
     }
   }
- 
-
 }

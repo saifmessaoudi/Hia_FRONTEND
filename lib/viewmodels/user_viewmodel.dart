@@ -23,14 +23,9 @@ class UserViewModel with ChangeNotifier {
   
 
    UserViewModel() {
+    // Initialize session on app startup
     initSession();
   }
-
-  String? getAuthenticatedUserId(){
-    return _userId;
-  
-  }
-
 bool isAuthenticated() {
     return _token != null;
   }
@@ -38,6 +33,14 @@ bool isAuthenticated() {
     _userData = await userService.getUserById(userId);
     notifyListeners();
   }
+
+  String? getAuthenticatedUserId(){
+    return _userId;
+  
+  }
+
+
+
 
   Future<bool> login(String email, String password) async {
     try {

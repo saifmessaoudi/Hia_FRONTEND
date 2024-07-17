@@ -9,7 +9,7 @@ import 'package:hia/views/global_components/button_global.dart';
 
 
 import 'package:nb_utils/nb_utils.dart' as nb_utils;
-import 'package:readmore/readmore.dart' as readmore;
+
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -209,7 +209,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 children: [
                                   Expanded(
                                     child: RichText(
-    text: TextSpan(
+   text: TextSpan(
       children: [
         const WidgetSpan(
           child: Icon(
@@ -323,6 +323,7 @@ Expanded(
                               ),
                             ),
                             const SizedBox(height: 20.0,),
+                            
                             
                             
                             

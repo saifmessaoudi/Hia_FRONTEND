@@ -13,6 +13,10 @@
 </dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>We need your location to show directions.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>We need your location to show directions.</string>
 	<key>CFBundleDisplayName</key>
 	<string>Hia</string>
 	<key>CFBundleExecutable</key>

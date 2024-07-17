@@ -277,52 +277,68 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
              Consumer<EstablishmentViewModel>(
-    builder: (context, establishmentViewModel, child) {
-      return establishmentViewModel.isLoading
-          ? const Center(
+  builder: (context, establishmentViewModel, child) {
+    // Check if data is loading or sorting
+    if (establishmentViewModel.isLoading || establishmentViewModel.isSorting) {
+      return const Center(
+        child: CircularProgressIndicator(
+          color: kMainColor,
+        ),
+      );
+    }
+
+    // Check if establishments are available
+    if (establishmentViewModel.establishments != null && establishmentViewModel.establishments.isNotEmpty) {
+      return HorizontalList(
+        spacing: 10,
+        itemCount: establishmentViewModel.establishments.length,
+        itemBuilder: (_, i) {
+          establishmentViewModel.calculateDistance(establishmentViewModel.establishments[i]);
+
+          // Check if distances are available
+          if (establishmentViewModel.distances == null || establishmentViewModel.distances!.length <= i) {
+            return const Center(
               child: CircularProgressIndicator(
                 color: kMainColor,
               ),
-            )
-          : establishmentViewModel.establishments != null && establishmentViewModel.establishments!.isNotEmpty
-              ? HorizontalList(
-                  spacing: 10,
-                  itemCount: establishmentViewModel.establishments!.length,
-                  itemBuilder: (_, i) {
-                    
-                    establishmentViewModel.calculateDistance(establishmentViewModel.establishments![i]);
-                    return BookTableCard(
-                      restaurantData: establishmentViewModel.establishments![i],
-                      index: i,
-                    ).onTap(
-                      
-                      () {
-                        establishmentViewModel.fetchFoodsFromEstablishment(2) ; 
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ProductDetails(
-                              product: establishmentViewModel.establishments[i],
-                              index: i,
-                            ),
-                          ),
-                        );
-                        
-                      },
-                      highlightColor: context.cardColor,
-                    );
-                  },
-                )
-                : const Center(
-                    child: Text(
-                      'There is no available data',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  );
-      },
-    ),
+            );
+          }
+
+          return BookTableCard(
+            restaurantData: establishmentViewModel.establishments[i],
+            index: i,
+          ).onTap(
+            () {
+              establishmentViewModel.fetchFoodsFromEstablishment(i);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ProductDetails(
+                    product: establishmentViewModel.establishments[i],
+                    index: i,
+                  ),
+                ),
+              );
+            },
+            highlightColor: context.cardColor,
+          );
+        },
+      );
+    }
+
+    // Default message if no data is available
+    return const Center(
+      child: Text(
+        'There is no available data',
+        style: TextStyle(
+          fontSize: 16,
+          color: Colors.grey,
+        ),
+      ),
+    );
+  },
+),
+
+
       
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 20.0),
