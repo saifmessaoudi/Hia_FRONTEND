@@ -27,13 +27,15 @@ class FoodAdapter extends TypeAdapter<Food> {
       isAvailable: fields[7] as bool,
       remise: fields[8] as int,
       remiseDeadline: fields[9] as DateTime,
+      reviews: (fields[10] as List?)?.cast<Review>(),
+      establishment: fields[11] as Establishment, // Correct field type
     );
   }
 
   @override
   void write(BinaryWriter writer, Food obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -53,7 +55,11 @@ class FoodAdapter extends TypeAdapter<Food> {
       ..writeByte(8)
       ..write(obj.remise)
       ..writeByte(9)
-      ..write(obj.remiseDeadline);
+      ..write(obj.remiseDeadline)
+      ..writeByte(10)
+      ..write(obj.reviews)
+      ..writeByte(11)
+      ..write(obj.establishment);
   }
 
   @override

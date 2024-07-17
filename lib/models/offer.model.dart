@@ -1,3 +1,4 @@
+import 'package:hia/models/establishement.model.dart';
 import 'package:hia/utils/date_formatter.dart';
 import 'package:hive/hive.dart';
 import 'food.model.dart'; // Import the Food model to use it within the Offer model
@@ -19,7 +20,7 @@ class Offer extends HiveObject {
   final List<Food> food;
 
   @HiveField(4)
-  final String etablishment;
+  final Establishment etablishment;
 
   @HiveField(5)
   final int remise;
@@ -45,6 +46,9 @@ class Offer extends HiveObject {
   @HiveField(12)
   final DateTime updatedAt;
 
+  @HiveField(13)
+  final int price;
+
   Offer({
     required this.name,
     required this.description,
@@ -59,6 +63,7 @@ class Offer extends HiveObject {
     required this.id,
     required this.createdAt,
     required this.updatedAt,
+    required this.price,
   });
 
   factory Offer.fromJson(Map<String, dynamic> json) {
@@ -67,7 +72,7 @@ class Offer extends HiveObject {
       description: json['description'],
       image: json['image'],
       food: (json['food'] as List).map((item) => Food.fromJson(item)).toList(),
-      etablishment: json['etablishment'],
+      etablishment: Establishment.fromJson(json['etablishment']),
       remise: json['remise'],
       validFrom: DateTime.parse(json['validFrom']),
       validUntil: DateTime.parse(json['validUntil']),
@@ -76,6 +81,7 @@ class Offer extends HiveObject {
       id: json['_id'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
+      price: json['price'],
     );
   }
 
@@ -94,6 +100,7 @@ class Offer extends HiveObject {
       '_id': id,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      'price': price,
     };
   }
 

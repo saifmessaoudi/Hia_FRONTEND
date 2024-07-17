@@ -1,10 +1,9 @@
-// ignore_for_file: use_key_in_widget_constructors
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gap/gap.dart';
 import 'package:hia/models/food.model.dart';
+import 'package:hia/views/details/establishment.details.dart';
 import 'package:hia/views/global_components/button_global.dart';
-
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../constant.dart';
@@ -15,10 +14,10 @@ class FoodDetailsScreen extends StatefulWidget {
   final Food food;
 
   @override
-  _ProductDetailsState createState() => _ProductDetailsState();
+  _FoodDetailsScreenState createState() => _FoodDetailsScreenState();
 }
 
-class _ProductDetailsState extends State<FoodDetailsScreen> {
+class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
   int quantity = 1;
 
   @override
@@ -47,7 +46,7 @@ class _ProductDetailsState extends State<FoodDetailsScreen> {
                             padding: const EdgeInsets.all(20.0),
                             child: const Icon(
                               Icons.arrow_back,
-                              color: kTitleColor,
+                              color: Colors.white,
                             ).onTap(() {
                               Navigator.pop(context);
                             }),
@@ -79,6 +78,7 @@ class _ProductDetailsState extends State<FoodDetailsScreen> {
                           color: Colors.white,
                         ),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const SizedBox(
                               height: 100.0,
@@ -113,15 +113,14 @@ class _ProductDetailsState extends State<FoodDetailsScreen> {
                                       child: Text(
                                         quantity.toString(),
                                         style: kTextStyle.copyWith(
-                                            color: Colors.white),
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
-                                          quantity > 0
-                                              ? quantity += 1
-                                              : quantity = 1;
+                                          quantity += 1;
                                         });
                                       },
                                       child: const Icon(
@@ -133,52 +132,36 @@ class _ProductDetailsState extends State<FoodDetailsScreen> {
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0, right: 20.0, top: 20.0),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    widget.food.name,
-                                    style: kTextStyle.copyWith(
-                                        color: kTitleColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20.0),
+                            const Gap(20),
+                             Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => EstablishmentDetailsScreen(establishment: widget.food.establishment)));
+                                },
+                                child: Text(
+                                  widget.food.establishment.name,
+                                  style: kTextStyle.copyWith(
+                                    color: kMainColor,
+                                    fontSize: 17.0,
+                                    decoration: TextDecoration.underline,
                                   ),
-                                ],
+                                ),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0,
-                                  right: 20.0,
-                                  bottom: 20.0,
-                                  top: 10.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      '\$${widget.food.price}',
-                                      style: kTextStyle.copyWith(
-                                        color: kMainColor,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: RichText(
+                            const Gap(20),
+                            RichText(
                                       text: TextSpan(
                                         children: [
-                                          const WidgetSpan(
+                                          WidgetSpan(
                                             child: Icon(
-                                              Icons.star,
-                                              color: Colors.amber,
+                                              Icons.lock_clock,
+                                              color: widget.food.isAvailable ? kMainColor : Colors.red,
                                               size: 18.0,
                                             ),
                                           ),
                                           TextSpan(
-                                            text: widget.food.averageRating
-                                                .toString(),
+                                            text: widget.food.isAvailable ? ' Available' : ' Not Available',
                                             style: kTextStyle.copyWith(
                                               fontWeight: FontWeight.bold,
                                               color: kTitleColor,
@@ -187,41 +170,176 @@ class _ProductDetailsState extends State<FoodDetailsScreen> {
                                         ],
                                       ),
                                     ),
+                            const Gap(20),
+                             Text(
+                                    widget.food.name,
+                                    style: kTextStyle.copyWith(
+                                      color: kTitleColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 22.0,
+                                    ),
                                   ),
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                              Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 10.0),
+                              child: Row(
+                                children: [
                                  
+                                  const Gap(10),
+                                  Text(
+                                    '${widget.food.price} TND',
+                                    style: kTextStyle.copyWith(
+                                      color: kMainColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        const WidgetSpan(
+                                          child: Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                            size: 18.0,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: widget.food.averageRating
+                                              .toString(),
+                                          style: kTextStyle.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: kTitleColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const Gap(30),
+                                  RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            const WidgetSpan(
+                                              child: Icon(
+                                                Icons.reviews,
+                                                color: kTitleColor,
+                                                size: 18.0,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: "${widget.food.reviews!.length }  Reviews", 
+                                              style: kTextStyle.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: kTitleColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+  ),
+
                                 ],
                               ),
                             ),
                             const SizedBox(
                               height: 20.0,
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: ButtonGlobal(
-                                      buttontext: 'Add To Cart',
-                                      buttonDecoration: kButtonDecoration
-                                          .copyWith(color: kMainColor),
-                                      onPressed: () {
-                                      },
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0),
+                              child: Text(
+                                widget.food.description,
+                                style: kTextStyle.copyWith(
+                                  color: kTitleColor,
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20.0,
+                            ),
+                            //title center ingredients 
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Ingredients',
+                                    style: kTextStyle.copyWith(
+                                      color: kTitleColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0,
                                     ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: ButtonGlobal(
-                                      buttontext: 'Checkout',
-                                      buttonDecoration: kButtonDecoration
-                                          .copyWith(color: kMainColor),
-                                      onPressed: () {
-                                      },
+                                  const Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Implement show all ingredients logic
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'Show All',
+                                          style: kTextStyle.copyWith(
+                                            color: kMainColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12.0,
+                                          ),
+                                        ),
+                                        const Icon(
+                                          FontAwesomeIcons.chevronRight,
+                                          color: kMainColor,
+                                          size: 12.0,
+                                        ),
+                                      ],
                                     ),
                                   ),
+                                ],
+                              ),
+                            ),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0),
+                              child: Row(
+                                children: widget.food.ingredients.map((ingredient) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 10.0),
+                                    child: Chip(
+                                      label: Text(
+                                        ingredient,
+                                        style: kTextStyle.copyWith(
+                                          color: kTitleColor,
+                                        ),
+                                      ),
+                                      backgroundColor: Colors.white,
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20.0,
+                            ),
+                          
+                          //aa to cart
+
+                             ButtonGlobal(
+                                buttontext: 'Add to Cart',
+                                buttonDecoration: kButtonDecoration.copyWith(
+                                  color: kMainColor,
                                 ),
-                              ],
+                                onPressed: () {
+                                  // Implement add to cart logic
+                                },
+                              ),     
+                          
+                            const SizedBox(
+                              height: 20.0,
                             ),
                           ],
                         ),
@@ -233,7 +351,7 @@ class _ProductDetailsState extends State<FoodDetailsScreen> {
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
                       radius: MediaQuery.of(context).size.width / 4,
-                      child: Image.asset(widget.food.image ),
+                      child: Image.asset(widget.food.image),
                     ),
                   ),
                 ],

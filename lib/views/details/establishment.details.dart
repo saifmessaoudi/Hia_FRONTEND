@@ -1,15 +1,18 @@
 // ignore_for_file: use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:hia/views/global_components/button_global.dart';
+import 'package:hia/views/offers/offers_establishment.dart';
 
 
 
 import 'package:nb_utils/nb_utils.dart' as nb_utils;
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../constant.dart';
 
@@ -96,101 +99,79 @@ class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
                             const SizedBox(
                               height: 100.0,
                             ),
-                            /*SizedBox(
-                              width: 100.0,
-                              height: 50.0,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: kMainColor,
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          quantity > 1
-                                              ? quantity -= 1
-                                              : quantity = 1;
-                                        });
-                                      },
-                                      child: const Icon(
-                                        Icons.remove,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 10.0, right: 10.0),
-                                      child: Text(
-                                        quantity.toString(),
-                                        style: kTextStyle.copyWith(
-                                            color: Colors.white),
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          quantity > 0
-                                              ? quantity += 1
-                                              : quantity = 1;
-                                        });
-                                      },
-                                      child: const Icon(
-                                        Icons.add,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),*/
+                            
                             Padding(
                                 padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                                 child: IconButton(
-                                  icon: Icon(Icons.phone_in_talk_sharp, color: const Color.fromARGB(255, 0, 26, 48)),
+                                  icon:const  Icon(Icons.phone_in_talk_sharp, color:  Color.fromARGB(255, 0, 26, 48)),
                                   onPressed: () async {
-                                    
+                                    String phoneNumber = 'tel:${widget.establishment.phone}';
+                                    if (await canLaunch(phoneNumber)) {
+                                      await launch(phoneNumber);
+                                    } else {
+                                      throw 'Could not launch $phoneNumber';
+                                    }
                                   },
                                 ),
                               ),
-
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0, right: 20.0, top: 20.0),
-                              child: Row(
-                                children: [
-                                  Text(
+                              const Gap(20),
+                                Text(
                                     widget.establishment.name,
                                     style: kTextStyle.copyWith(
                                         color: kTitleColor,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20.0),
                                   ),
-                                   Row(
-      children: [
-        
-        const SizedBox(width: 15),
-        Text(
-          widget.establishment.isOpened ? 'Opened' : 'Closed',
-          style: kTextStyle.copyWith(
-            color: widget.establishment.isOpened ? kMainColor : Colors.red,
-             fontWeight: FontWeight.bold,
-            
-          ),
-        ),
-        const SizedBox(width: 7),
-        Icon(
-          Icons.access_time,
-          color: widget.establishment.isOpened ? kMainColor : const Color.fromARGB(255, 114, 26, 19),
-          size: 16,
-        ),
-      ],
-    ),
+                                  const Gap(15),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const SizedBox(width: 15),
+                                  Text(
+                                    widget.establishment.isOpened ? 'Opened' : 'Closed',
+                                    style: kTextStyle.copyWith(
+                                      color: widget.establishment.isOpened ? kMainColor : Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 7),
+                                  Icon(
+                                    Icons.access_time,
+                                    color: widget.establishment.isOpened ? kMainColor : const Color.fromARGB(255, 114, 26, 19),
+                                    size: 16,
+                                  ),
+                                  const Spacer(),
+                                  // Add your title and icon here
+                                  GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(context, 
+                                        MaterialPageRoute(builder: (context) =>  OffersEstablishmentScreen(id:widget.establishment.id)
+                                        ));
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Browse Offer',
+                                            style: kTextStyle.copyWith(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(width: 5), // Adjust spacing
+                                          Icon(
+                                            Icons.shopping_bag,
+                                            color: kMainColor,
+                                            size: 20,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                  const SizedBox(width: 15), // Adjust spacing
                                 ],
                               ),
-                            ),
+                              const Gap(10),
+
                             Padding(
                               padding: const EdgeInsets.only(
                                   left: 20.0,

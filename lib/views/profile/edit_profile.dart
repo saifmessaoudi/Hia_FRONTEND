@@ -404,52 +404,70 @@ class _EditProfileState extends State<EditProfile> {
                           ),
                         ),
 
-                        const Gap(5.0),
-                        //TITLE MY PREF
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20.0),
-                          child: Text(
-                            'My Preferences',
-                            style: kTextStyle.copyWith(
-                              color: kTitleColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                        ),
-                        const Gap(5.0),
-                      Row(
-                      children: [
-                             Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Wrap(
-                                spacing: 10.0,
-                                runSpacing: 4.0,
-                                children: userPreferences
-                                    .map((pref) => Chip(
-                                        backgroundColor: kMainColor,
-                                        label: Text(pref , style: kTextStyle.copyWith(color: Colors.white, fontSize: 12.0)),
-                                        ))
-                                    .toList(),
+                        const Gap(10.0),
+                       Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // TITLE: My Preferences
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: Text(
+            'My Preferences',
+            style: kTextStyle.copyWith(
+              color: kTitleColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 18.0,
+            ),
+          ),
+        ),
+        const Gap(5.0),
+        Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Wrap(
+                      spacing: 10.0,
+                      runSpacing: 4.0,
+                      children: userPreferences
+                          .map(
+                            (pref) => Chip(
+                              backgroundColor: kMainColor,
+                              label: Text(
+                                pref,
+                                style: kTextStyle.copyWith(
+                                  color: Colors.white,
+                                  fontSize: 12.0,
+                                ),
                               ),
                             ),
-                            
-                            ),
-                                IconButton(
-                                      icon: const Icon(Icons.add),
-                                      onPressed: () {
-                                        // Handle adding new preference
-                                        Navigator.pushReplacement(context, 
-                                        MaterialPageRoute(builder: (context) => const FoodPreferencePage())
-                                        );
-
-                                      },
-                                    ),
-                          ],
                           )
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                // Handle adding new preference
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const FoodPreferencePage(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ],
+    )
                           ,
                         Padding(
                           padding: const EdgeInsets.only(

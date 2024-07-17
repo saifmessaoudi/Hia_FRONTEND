@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:hia/viewmodels/establishement_viewmodel.dart';
+import 'package:hia/views/details/establishment.details.dart';
 import 'package:hia/views/home/establishment_details.dart';
 
 class EstablishmentSearchDelegate extends SearchDelegate<Establishment> {
@@ -110,7 +111,7 @@ class EstablishmentSearchDelegate extends SearchDelegate<Establishment> {
         // Navigate to ProductDetails screen
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => ProductDetails(product: establishment,index: index ,),
+            builder: (context) => EstablishmentDetailsScreen(establishment: establishment),
           ),
         );
       },

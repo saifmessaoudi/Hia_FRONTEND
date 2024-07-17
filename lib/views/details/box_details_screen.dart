@@ -1,9 +1,8 @@
-// ignore_for_file: use_key_in_widget_constructors
-
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:hia/models/offer.model.dart';
+import 'package:hia/views/details/establishment.details.dart';
 import 'package:hia/views/global_components/button_global.dart';
-
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../constant.dart';
@@ -46,7 +45,7 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                             padding: const EdgeInsets.all(20.0),
                             child: const Icon(
                               Icons.arrow_back,
-                              color: kTitleColor,
+                              color: Colors.white,
                             ).onTap(() {
                               Navigator.pop(context);
                             }),
@@ -67,7 +66,7 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                         ],
                       ),
                       const SizedBox(
-                        height: 150,
+                        height: 220,
                       ),
                       Container(
                         width: context.width(),
@@ -78,101 +77,48 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                           color: Colors.white,
                         ),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const SizedBox(
-                              height: 100.0,
-                            ),
                             SizedBox(
-                              width: 100.0,
-                              height: 50.0,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: kMainColor,
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          quantity > 1
-                                              ? quantity -= 1
-                                              : quantity = 1;
-                                        });
-                                      },
-                                      child: const Icon(
-                                        Icons.remove,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 10.0, right: 10.0),
-                                      child: Text(
-                                        quantity.toString(),
-                                        style: kTextStyle.copyWith(
-                                            color: Colors.white),
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          quantity > 0
-                                              ? quantity += 1
-                                              : quantity = 1;
-                                        });
-                                      },
-                                      child: const Icon(
-                                        Icons.add,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0, right: 20.0, top: 20.0),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    widget.box.name,
-                                    style: kTextStyle.copyWith(
-                                        color: kTitleColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20.0),
+                              height: 100.0,
+                              child: Center(
+                                child: Text(
+                                  widget.box.name,
+                                  style: kTextStyle.copyWith(
+                                    color: kTitleColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 26.0,
                                   ),
-                                ],
-                              ),
-                            ),
-                             //description with read more 
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0, right: 20.0, top: 10.0),
-                              child: Text(
-                                widget.box.description,
-                                style: kTextStyle.copyWith(
-                                    color: kTitleColor, fontSize: 16.0),
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0,
-                                  right: 20.0,
-                                  bottom: 20.0,
-                                  top: 10.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => EstablishmentDetailsScreen(establishment: widget.box.etablishment)));
+                                },
+                                child: Text(
+                                  widget.box.etablishment.name,
+                                  style: kTextStyle.copyWith(
+                                    color: kMainColor,
+                                    fontSize: 17.0,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Gap(10),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                               child: Row(
                                 children: [
-                                 
                                   Expanded(
                                     child: RichText(
                                       text: TextSpan(
                                         children: [
-                                           WidgetSpan(
+                                          WidgetSpan(
                                             child: Icon(
                                               Icons.lock_clock,
                                               color: widget.box.isAvailable ? kMainColor : Colors.red,
@@ -180,7 +126,7 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                                             ),
                                           ),
                                           TextSpan(
-                                            text: widget.box.isAvailable ?  'Available' : 'Not Available',
+                                            text: widget.box.isAvailable ? ' Available' : ' Not Available',
                                             style: kTextStyle.copyWith(
                                               fontWeight: FontWeight.bold,
                                               color: kTitleColor,
@@ -190,35 +136,68 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                                       ),
                                     ),
                                   ),
-                                  //quantity
                                   Expanded(
                                     child: RichText(
                                       text: TextSpan(
                                         children: [
-                                          const WidgetSpan(
+                                           WidgetSpan(
                                             child: Icon(
                                               Icons.shopping_cart,
-                                              color: kMainColor,
+                                              color: widget.box.quantity < 3 ? Colors.red : kMainColor,
                                               size: 18.0,
                                             ),
                                           ),
                                           TextSpan(
-                                            text: ' ${widget.box.quantity} in stock',
-                                            style: kTextStyle.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: kTitleColor,
+                                          text: " ${widget.box.quantity} items left",
+                                            style:  TextStyle(
+                                              fontSize: 14,
+                                              color: widget.box.quantity < 3 ? Colors.red : kTitleColor,
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
                                   ),
-                                 
                                 ],
+                              ),
+                            ),
+                            const Gap(25),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Text(
+                                widget.box.description,
+                                style: kTextStyle.copyWith(
+                                  color: kTitleColor,
+                                  fontSize: 16.0,
+                                ),
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             const SizedBox(
                               height: 20.0,
+                            ),
+                            //price tunisian 
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Price: ',
+                                    style: kTextStyle.copyWith(
+                                      color: kTitleColor,
+                                      fontSize: 18.0,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${widget.box.price} TND',
+                                    style: kTextStyle.copyWith(
+                                      color: kMainColor,
+                                      fontSize: 20.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                             Row(
                               children: [
@@ -227,15 +206,17 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                                     padding: const EdgeInsets.all(10.0),
                                     child: ButtonGlobal(
                                       buttontext: 'Add To Cart',
-                                      buttonDecoration: kButtonDecoration
-                                          .copyWith(color: kMainColor),
+                                      buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
                                       onPressed: () {
+                                        // Implement add to cart logic
                                       },
                                     ),
                                   ),
                                 ),
-                              
                               ],
+                            ),
+                            const SizedBox(
+                              height: 60.0,
                             ),
                           ],
                         ),
@@ -247,7 +228,12 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
                       radius: MediaQuery.of(context).size.width / 4,
-                      child: Image.asset("images/box.png",width: 100.0, height: 100.0,fit: BoxFit.cover,),
+                      child: Image.asset(
+                        "images/boxfood.jpg",
+                        width: 130.0,
+                        height: 130.0,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ],

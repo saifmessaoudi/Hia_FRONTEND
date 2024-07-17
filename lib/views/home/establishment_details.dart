@@ -43,7 +43,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("images/hiaauthbg.png"),
+                  image: AssetImage("images/hiaauthbgg.png"),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -150,19 +150,19 @@ class _ProductDetailsState extends State<ProductDetails> {
                               ),
                             ),*/
                             Padding(
-  padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-  child: IconButton(
-    icon: Icon(Icons.phone_in_talk_sharp, color: const Color.fromARGB(255, 0, 26, 48)),
-    onPressed: () async {
-      String phoneNumber = 'tel:${widget.product.phone}';
-      if (await canLaunch(phoneNumber)) {
-        await launch(phoneNumber);
-      } else {
-        throw 'Could not launch $phoneNumber';
-      }
-    },
-  ),
-),
+                                padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                                child: IconButton(
+                                  icon: Icon(Icons.phone_in_talk_sharp, color: const Color.fromARGB(255, 0, 26, 48)),
+                                  onPressed: () async {
+                                    String phoneNumber = 'tel:${widget.product.phone}';
+                                    if (await canLaunch(phoneNumber)) {
+                                      await launch(phoneNumber);
+                                    } else {
+                                      throw 'Could not launch $phoneNumber';
+                                    }
+                                  },
+                                ),
+                              ),
 
                             Padding(
                               padding: const EdgeInsets.only(
@@ -209,25 +209,19 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 children: [
                                   Expanded(
                                     child: RichText(
-   text: TextSpan(
-      children: [
-        const WidgetSpan(
-          child: Icon(
-            Icons.location_on,
-            color: kMainColor,
-            size: 18.0,
-          ),
-        ),
-        TextSpan(
-          text: "${establishmentViewModel.distances![widget.index].toStringAsFixed(1)} km", 
-          style: kTextStyle.copyWith(
-            fontWeight: FontWeight.bold,
-            color: kTitleColor,
-          ),
-        ),
-      ],
-    ),
-  ),
+                                            text: const TextSpan(
+                                                children: [
+                                                   WidgetSpan(
+                                                    child: Icon(
+                                                      Icons.location_on,
+                                                      color: kMainColor,
+                                                      size: 18.0,
+                                                    ),
+                                                  ),
+                                                
+                                                ],
+                                              ),
+                                            ),    
                                   ),
                                   
                                Expanded(

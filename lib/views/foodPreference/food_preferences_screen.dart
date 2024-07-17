@@ -19,10 +19,10 @@ class FoodPreferencePage extends StatefulWidget {
 
 class _FoodPreferencePageState extends State<FoodPreferencePage> {
   final List<Map<String, String>> preferences = [
-    {"name": "Fast Food", "image": "images/fastfood.jpg"},
+    {"name": "Fast Food", "image": "images/fastfood.png"},
     {"name": "Vegan", "image": "images/vegan.jpg"},
-    {"name": "Sugar", "image": "images/sugar.jpg"},
-    {"name": "Nut-Free", "image": "images/fastfood.jpg"},
+    {"name": "Sugar", "image": "images/sugar.png"},
+    {"name": "Nut-Free", "image": "images/fastfood.png"},
   ];
 
   @override

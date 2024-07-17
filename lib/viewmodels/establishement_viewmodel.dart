@@ -39,7 +39,7 @@ class EstablishmentViewModel extends ChangeNotifier {
 
   EstablishmentViewModel() {
     _userViewModel.initSession();
-    _initialize();
+   
     fetchEstablishments();
   }
 
@@ -48,16 +48,14 @@ class EstablishmentViewModel extends ChangeNotifier {
 
     try {
       Debugger.yellow('Attempting to fetch cached establishments...');
-      establishments = (await _service.getCachedData()) as List<Establishment>;
+      establishments = await _service.fetchEstablishments();
       if (establishments.isEmpty) {
         Debugger.red('No cached data found, fetching from server...');
         establishments = await _service.fetchEstablishments();
       } else {
         Debugger.green('Loaded establishments from cache.');
         // Fetch new data from server and update cache
-        List<Establishment> newEstablishments = await _service.fetchEstablishments();
-        establishments = mergeEstablishments(establishments, newEstablishments);
-        await _service.cacheData(establishments);
+        List<Establishment> newEstablishments = await _service.fetchEstablishments();        
       }
       // Filter establishments based on user preferences
       establishments = filterByPreferences(establishments, _userViewModel.foodPreference);
@@ -87,7 +85,7 @@ class EstablishmentViewModel extends ChangeNotifier {
   Future<void> _initialize() async {
     try {
       await Hive.openBox<Establishment>(_establishmentsBoxName);
-
+        
       establishments = await _fetchEstablishmentsFromCache();
 
       if (establishments.isEmpty) {

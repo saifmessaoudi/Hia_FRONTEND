@@ -1,3 +1,4 @@
+import 'package:hia/models/offer.model.dart';
 import 'package:hive/hive.dart';
 
 part 'establishement.model.g.dart';
@@ -74,6 +75,8 @@ class Establishment extends HiveObject {
   @HiveField(12)
   List<Review>? reviews;
 
+
+
   Establishment({
     required this.id,
     required this.name,
@@ -126,5 +129,14 @@ class Establishment extends HiveObject {
       'foods': foods,
       'reviews': reviews?.map((e) => e.toJson()).toList(),
     };
+  }
+
+  String? get city {
+    if (address == null) return null;
+
+    // Example regex to extract the city part from an address string
+    final RegExp cityRegex = RegExp(r'\b(?:[A-Z][a-z.-]+[ ]?)+\b');
+    final match = cityRegex.firstMatch(address!);
+    return match?.group(0);
   }
 }

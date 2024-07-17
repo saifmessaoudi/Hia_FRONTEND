@@ -117,16 +117,25 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 4,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFF7F5F2),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 4,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF7F5F2),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showSearch(
+                                        context: context,
+                                        delegate: EstablishmentSearchDelegate(
+                                          Provider.of<EstablishmentViewModel>(context, listen: false),
+                                        ),
+                                      );
+                                    },
                                     child: AppTextField(
                                       textFieldType: TextFieldType.NAME,
                                       enabled: false,
@@ -143,6 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
+                              ),
                                  Expanded(
                           flex: 1,
                           child: IconButton(
@@ -277,44 +287,34 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
              Consumer<EstablishmentViewModel>(
-  builder: (context, establishmentViewModel, child) {
-    // Check if data is loading or sorting
-    if (establishmentViewModel.isLoading || establishmentViewModel.isSorting) {
-      return const Center(
-        child: CircularProgressIndicator(
-          color: kMainColor,
-        ),
-      );
-    }
+            builder: (context, establishmentViewModel, child) {
+              // Check if data is loading or sorting
+              if (establishmentViewModel.isLoading || establishmentViewModel.isSorting) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: kMainColor,
+                  ),
+                );
+              }
 
-    // Check if establishments are available
-    if (establishmentViewModel.establishments != null && establishmentViewModel.establishments.isNotEmpty) {
-      return HorizontalList(
-        spacing: 10,
-        itemCount: establishmentViewModel.establishments.length,
-        itemBuilder: (_, i) {
-          establishmentViewModel.calculateDistance(establishmentViewModel.establishments[i]);
+          // Check if establishments are available
+          if (establishmentViewModel.establishments != null && establishmentViewModel.establishments.isNotEmpty) {
+            return HorizontalList(
+              spacing: 10,
+              itemCount: establishmentViewModel.establishments.length,
+              itemBuilder: (_, i) {
+               
 
-          // Check if distances are available
-          if (establishmentViewModel.distances == null || establishmentViewModel.distances!.length <= i) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: kMainColor,
-              ),
-            );
-          }
-
-          return BookTableCard(
-            restaurantData: establishmentViewModel.establishments[i],
-            index: i,
-          ).onTap(
+              return BookTableCard(
+                restaurantData: establishmentViewModel.establishments[i],
+                  index: i,
+              ).onTap(
             () {
               establishmentViewModel.fetchFoodsFromEstablishment(i);
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => ProductDetails(
-                    product: establishmentViewModel.establishments[i],
-                    index: i,
+                  builder: (context) => EstablishmentDetailsScreen(
+                    establishment: establishmentViewModel.establishments[i],
                   ),
                 ),
               );

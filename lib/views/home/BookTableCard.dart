@@ -105,12 +105,7 @@ const SizedBox(height: 6,) ,
                                     size: 15.0,
                                   ),
                                 ),
-                                TextSpan(
-                                  text: "${establishmentViewModel.distances![index].toStringAsFixed(1)} km",
-                                  style: kTextStyle.copyWith(
-                                    color: kGreyTextColor,
-                                  ),
-                                ),
+                              
                               ],
                             ),
                           ),

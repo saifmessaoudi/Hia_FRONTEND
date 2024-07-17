@@ -21,7 +21,7 @@ class OfferAdapter extends TypeAdapter<Offer> {
       description: fields[1] as String,
       image: fields[2] as String,
       food: (fields[3] as List).cast<Food>(),
-      etablishment: fields[4] as String,
+      etablishment: fields[4] as Establishment,
       remise: fields[5] as int,
       validFrom: fields[6] as DateTime,
       validUntil: fields[7] as DateTime,
@@ -30,13 +30,14 @@ class OfferAdapter extends TypeAdapter<Offer> {
       id: fields[10] as String,
       createdAt: fields[11] as DateTime,
       updatedAt: fields[12] as DateTime,
+      price: fields[13] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, Offer obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -62,7 +63,9 @@ class OfferAdapter extends TypeAdapter<Offer> {
       ..writeByte(11)
       ..write(obj.createdAt)
       ..writeByte(12)
-      ..write(obj.updatedAt);
+      ..write(obj.updatedAt)
+      ..writeByte(13)
+      ..write(obj.price);
   }
 
   @override

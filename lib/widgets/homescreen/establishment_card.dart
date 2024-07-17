@@ -31,9 +31,14 @@ class EstablishmentCard extends StatelessWidget {
             width: 280.0,
             child: Column(
               children: [
-                const Padding(
-                  padding:  EdgeInsets.only(top: 8.0),
-                  child: Image(image: AssetImage("images/restaurant.png"),fit: BoxFit.cover,),
+                 Padding(
+                  padding:  const EdgeInsets.only(top: 8.0),
+                  child: Image(
+                    image: NetworkImage(establishment.image ?? ''),
+                    fit: BoxFit.cover,
+                    height: 110,
+                    width: 110,
+                  ),
                 ),
                 Row(
                   children: [
@@ -42,7 +47,7 @@ class EstablishmentCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(establishment.name, style: kTextStyle.copyWith(color: kTitleColor, fontWeight: FontWeight.bold),),
+                          Text(establishment.name, style: kTextStyle.copyWith(color: kTitleColor,fontSize:16,  fontWeight: FontWeight.bold),),
                           RichText(
                             text: TextSpan(
                               children: [
@@ -54,7 +59,7 @@ class EstablishmentCard extends StatelessWidget {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: establishment.address,
+                                  text: establishment.city,
                                   style: kTextStyle.copyWith(
                                       color: kGreyTextColor),
                                 ),
@@ -85,7 +90,7 @@ class EstablishmentCard extends StatelessWidget {
                                 const WidgetSpan(
                                   child: Icon(
                                     Icons.star_rate_rounded,
-                                    color: kMainColor,
+                                    color: Colors.amber,
                                     size: 15.0,
                                   ),
                                 ),
@@ -95,24 +100,12 @@ class EstablishmentCard extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(4.0),
-                          child: RichText(
-                            text: TextSpan(
-                              children: [
-                                establishment.isOpened ? 
-                                TextSpan(
-                                  text: "Open",
-                                  style: kTextStyle.copyWith(
-                                      color: kMainColor),
-                                ) :
-                                TextSpan(
-                                  text: "Closed",
-                                  style: kTextStyle.copyWith(
-                                      color: Colors.red),
-                                ),
-                                const WidgetSpan(
-                                  child: SizedBox(width: 2.0,),
-                                ),
-                              ],
+                          child :Text(
+                            establishment.isOpened ? 'Opened' : 'Closed',
+                            style: kTextStyle.copyWith(
+                              color: establishment.isOpened ? Colors.green : Colors.red,
+                              fontWeight: FontWeight.bold,
+                              
                             ),
                           ),
                         ),

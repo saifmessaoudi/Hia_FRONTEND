@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:hia/models/establishement.model.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hia/viewmodels/food_viewmodel.dart';
 
@@ -37,6 +38,16 @@ class FoodSearchDelegate extends SearchDelegate<Food> {
       remise: 0, 
       isAvailable: true, 
       remiseDeadline: DateTime.now(),
+      reviews: [],
+      establishment: Establishment(
+        name: '',
+        address: '',
+        phone: '',
+        image: '',
+        averageRating: 0,
+        foods: [],
+        reviews: [], id: '', latitude: 0.0, longitude: 0.0, isOpened: false,
+      ),
     ));
   },
 );

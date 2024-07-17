@@ -19,21 +19,8 @@ final OfferService _service = OfferService();
     notifyListeners();
 
     try {
-      Debugger.yellow('Attempting to fetch cached offers...');
-      offers = (await _service.getCachedData()) ?? [];
-      if (offers.isEmpty) {
-        Debugger.red('No cached data found, fetching from server...');
-        offers = await _service.fetchOffers();
-        await _service.cacheData(offers);  // Cache the fetched data
-      } else {
-        Debugger.green('Loaded offers from cache.');
-        // Fetch new data from server and update cache
-        if (await _service.hasInternetConnection()) {
-          List<Offer> newOffers = await _service.fetchOffers();
-          offers = mergeOffers(offers, newOffers);
-          await _service.cacheData(offers);
-        }
-      }
+      offers = await _service.fetchOffers();
+      Debugger.green('Offers fetched successfully');
     } catch (e) {
       Debugger.red('Error fetching offers: $e');
       // Handle error appropriately here (e.g., show a message to the user)
@@ -49,6 +36,10 @@ final OfferService _service = OfferService();
       offerMap[offer.name] = offer;
     }
     return offerMap.values.toList();
+  }
+
+  List<Offer> getOffersByEstablishment(String id) {
+    return offers.where((offer) => offer.etablishment.id == id).toList();
   }
 
  }
