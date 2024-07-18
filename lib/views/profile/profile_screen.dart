@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/authentication/sign_in.dart';
 import 'package:hia/views/profile/edit_profile.dart';
 import 'package:hia/widgets/custom_dialog.dart';
+import 'package:hia/widgets/smart_scaffold.dart';
 
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
@@ -20,8 +22,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return SmartScaffold(
+    
         body: Stack(
           children: [
             Container(
@@ -35,8 +37,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SingleChildScrollView(
               child: Column(
                 children: [
-                  const SizedBox(
-                    height: 130.0,
+                   SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.18,
                   ),
                   Container(
                     width: context.width(),
@@ -299,11 +301,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               Icons.arrow_forward_ios,
                                               color: kGreyTextColor),
                                         ),
+                                        
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
+                              ),const Gap(20),
                             ],
                           ),
                         )
@@ -315,7 +318,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ],
         ),
-      ),
+      
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/models/user.model.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +20,9 @@ class UserViewModel with ChangeNotifier {
 
   String? _address;
   String? get address => _address;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   
 
@@ -43,9 +47,12 @@ bool isAuthenticated() {
 
 
   Future<bool> login(String email, String password) async {
+    _isLoading = true;
+    notifyListeners();
     try {
       final response = await userService.login(email, password);
-
+      _isLoading = false;
+      notifyListeners();
       if (response['token'] != null) {
         _token = response['token'];
 
@@ -60,15 +67,18 @@ bool isAuthenticated() {
         notifyListeners();
         await fetchUserById(userId!);
 
-        notifyListeners();
-
         return true;
       } else {
         return false;
       }
     } catch (error) {
-      print('Error: $error');
+      _isLoading = false;
+      Debugger.red ('Error: $error');
       return false;
+    }
+    finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 

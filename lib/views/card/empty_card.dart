@@ -26,7 +26,7 @@ class EmptyCard extends StatelessWidget {
                 height: 277,
               ),
               const Gap(20),
-             const Text("Your Card is Empty",style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold)),
+             const Text("Your Card is Empty",style: TextStyle(color: Colors.white,fontSize: 22,fontWeight: FontWeight.bold)),
               const Gap(30),
               const Text(
                 "Start Shopping and Fill it with Amazing Finds!",

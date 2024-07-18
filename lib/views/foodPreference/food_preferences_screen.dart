@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hia/helpers/debugging_printer.dart';
-import 'package:hia/utils/loading_widget.dart';
+
 import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_pref_provider.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/views/home/home.dart';
 import 'package:hia/widgets/custom_toast.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 
@@ -35,7 +35,6 @@ class _FoodPreferencePageState extends State<FoodPreferencePage> {
 
   void _initializePreferences() {
     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-    final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
     final foodPreferenceProvider =
         Provider.of<FoodPreferenceProvider>(context, listen: false);
 
@@ -182,7 +181,7 @@ class _FoodPreferencePageState extends State<FoodPreferencePage> {
                           ButtonGlobal(
                                     buttonTextColor: Colors.white,
                                     buttontext: foodPreferenceProvider.isLoading ? 'Saving...' : 'Save Preferences',
-                                    buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                                    buttonDecoration: kButtonDecoration.copyWith(color: foodPreferenceProvider.isLoading ? gray : kMainColor),
                                     onPressed: () {
                                       final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
                                       foodPreferenceProvider.savePreferences().then((_) {

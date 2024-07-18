@@ -352,7 +352,15 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
                       radius: MediaQuery.of(context).size.width / 4,
-                      child: Image.asset(widget.food.image),
+                      child: ClipRect(
+                        child: Image.network(
+                          widget.food.image,
+                          fit: BoxFit.cover,
+                          width: MediaQuery.of(context).size.width / 4,
+                          height: MediaQuery.of(context).size.width / 4,
+                        ),
+                      ),
+                      
                     ),
                   ),
                 ],

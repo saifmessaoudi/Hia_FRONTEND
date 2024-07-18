@@ -45,10 +45,14 @@ class FoodCard extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Image(
-                        image: AssetImage(food.image),
-                        width: 100.0,
-                        height: 100.0,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: Image.network(
+                          food.image,
+                          width: 90.0,
+                          height: 90.0,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     Row(

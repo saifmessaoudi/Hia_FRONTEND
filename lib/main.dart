@@ -15,6 +15,7 @@ import 'package:hia/views/home/home.dart';
 import 'package:hia/views/splash/on_board_screen.dart';
 import 'package:hia/views/splash/splash_screen.dart';
 import 'package:hia/views/splash/splash_view.dart';
+import 'package:hia/widgets/offline_screen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +39,8 @@ void main() async {
     
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ConnectivityManager()),
+         ChangeNotifierProvider(
+            create: (context) => ConnectivityManager(),),
 
         ChangeNotifierProvider(create: (_) => UserViewModel()),
         ChangeNotifierProvider(

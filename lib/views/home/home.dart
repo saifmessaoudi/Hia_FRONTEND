@@ -8,6 +8,7 @@ import 'package:hia/utils/connectivity_manager.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/card/empty_card.dart';
 import 'package:hia/views/profile/profile_screen.dart';
+import 'package:hia/widgets/smart_scaffold.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/offline_screen.dart';
@@ -64,7 +65,7 @@ void updateSelectedIndex(int index) {
       
       return Consumer<ConnectivityManager>(
         builder: (context, connectivityManager,child){
-          return Scaffold(
+          return SmartScaffold(
               body: _widgetOptions.elementAt(_selectedItemPosition),
               bottomNavigationBar: Container(
                 height: 78.0,
