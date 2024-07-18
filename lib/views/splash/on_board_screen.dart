@@ -61,7 +61,7 @@ class _OnBoardState extends State<OnBoard> {
           child: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height - 30,
+                height: MediaQuery.of(context).size.height - 10,
                 width: MediaQuery.of(context).size.width,
                 child: Stack(
                   children: [

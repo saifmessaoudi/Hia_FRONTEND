@@ -370,7 +370,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.all(10.0),
                 child: Consumer<EstablishmentViewModel>(
                   builder: (context, establishmentViewModel, child) {
-                    return establishmentViewModel.isLoading
+                    if(establishmentViewModel.recommendedEstablishments.isEmpty) {
+                      const Gap(20.0);
+                      return const Center(
+
+                        child: Text(
+                          'Oops! No recommended establishments',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      
+                      ); 
+                    } 
+                    else {
+                     return establishmentViewModel.isLoading
                         ? Shimmer.fromColors(
                             baseColor: Colors.grey[300]!,
                             highlightColor: Colors.grey[100]!,
@@ -392,15 +407,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           )
                         : HorizontalList(
                             spacing: 10,
-                            itemCount: establishmentViewModel.establishments.length,
+                            itemCount: establishmentViewModel.recommendedEstablishments.length,
                             itemBuilder: (_, i) {
-                              return EstablishmentCard(establishment: establishmentViewModel.establishments[i]).onTap(
+                              return EstablishmentCard(establishment: establishmentViewModel.recommendedEstablishments[i]).onTap(
                                 () {
                                  //navigate 
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>  EstablishmentDetailsScreen(establishment: establishmentViewModel.establishments[i],),
+                                        builder: (context) =>  EstablishmentDetailsScreen(establishment: establishmentViewModel.recommendedEstablishments[i],),
                                       ),
                                     );
                                 },
@@ -409,6 +424,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             }
                           );
+                    }
                   },
                 ),
               ),

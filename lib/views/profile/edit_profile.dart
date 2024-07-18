@@ -8,6 +8,7 @@ import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_preferences_screen.dart';
 import 'package:hia/views/home/home.dart';
+import 'package:hia/widgets/back_row.dart';
 import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
@@ -199,16 +200,11 @@ class _EditProfileState extends State<EditProfile> {
             ),
             Column(
               children: [
-                Row(
+                const Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                      ).onTap(() {
-                        Navigator.pop(context);
-                      }),
+                      padding:  EdgeInsets.all(20.0),
+                      child:  BackRow(title: ""),
                     ),
                   ],
                 ),

@@ -179,30 +179,26 @@ class _FoodPreferencePageState extends State<FoodPreferencePage> {
                         const SizedBox(
                           height: 5.0,
                         ),
-                                    
-                      ButtonGlobal(
-                        buttonTextColor: Colors.white,
-                            buttontext: foodPreferenceProvider.isLoading
-                                ? 'Saving...'
-                                : 'Save Preferences',
-                            buttonDecoration:
-                                kButtonDecoration.copyWith(color: kMainColor),
-                            onPressed: () {
-                              final userViewModel =
-                          Provider.of<UserViewModel>(context, listen: false);
-                          final establishementViwModel = Provider.of<EstablishmentViewModel>(context, listen: false);
-                      userViewModel.initSession();
-                              foodPreferenceProvider.savePreferences();
-                             userViewModel.fetchUserById(userViewModel.userId!);
-                             establishementViwModel.fetchEstablishments();
+                          ButtonGlobal(
+                                    buttonTextColor: Colors.white,
+                                    buttontext: foodPreferenceProvider.isLoading ? 'Saving...' : 'Save Preferences',
+                                    buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                                    onPressed: () {
+                                      final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
+                                      foodPreferenceProvider.savePreferences().then((_) {
+                                        establishmentViewModel.updateRecommendedEstablishments();
+                                        if (!foodPreferenceProvider.isLoading) {
+                                          showCustomToast(context, 'Preferences saved successfully');
+                                          Navigator.of(context).pushAndRemoveUntil(
+                                            MaterialPageRoute(builder: (context) => const Home()),
+                                            (Route<dynamic> route) => false,
+                                          );
+                                        }
+                                      });
+                                    },
+                                  ),
 
-                            showCustomToast(context, 'Preferences saved successfully');
-                              Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) => const Home()),
-                                (Route<dynamic> route) => false,
-                              );
-                            }),
+
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(

@@ -1,5 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hia/models/offer.model.dart';
@@ -37,7 +38,7 @@ void main() async {
     
     MultiProvider(
       providers: [
-                ChangeNotifierProvider(create: (_) => ConnectivityManager()),
+        ChangeNotifierProvider(create: (_) => ConnectivityManager()),
 
         ChangeNotifierProvider(create: (_) => UserViewModel()),
         ChangeNotifierProvider(
@@ -47,9 +48,21 @@ void main() async {
           create: (context) => FoodPreferenceProvider(
               Provider.of<UserViewModel>(context, listen: false)),
         ),
-        ChangeNotifierProvider(create: (context) => EstablishmentViewModel()),
+        ChangeNotifierProvider(create: (context) => EstablishmentViewModel( Provider.of<UserViewModel>(context, listen: false), Provider.of<FoodPreferenceProvider>(context, listen: false))),
         ChangeNotifierProvider(create: (context) => FoodViewModel(Provider.of<UserViewModel>(context, listen: false))),
-        ChangeNotifierProvider(create: (context) => OfferViewModel())
+        ChangeNotifierProvider(create: (context) => OfferViewModel()),
+        ChangeNotifierProxyProvider<UserViewModel, FoodPreferenceProvider>(
+          create: (context) => FoodPreferenceProvider(context.read<UserViewModel>()),
+          update: (context, userViewModel, foodPreferenceProvider) => foodPreferenceProvider!..updateUserViewModel(userViewModel),
+        ),
+        ChangeNotifierProxyProvider<FoodPreferenceProvider, EstablishmentViewModel>(
+          create: (context) => EstablishmentViewModel(Provider.of<UserViewModel>(context, listen: false), Provider.of<FoodPreferenceProvider>(context, listen: false)),
+          update: (context, foodPreferenceProvider, establishmentViewModel) {
+            establishmentViewModel!.listenToPreferences(foodPreferenceProvider);
+            return establishmentViewModel;
+          },
+        ),
+
 
       ],
       child: DevicePreview(
@@ -65,23 +78,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      useInheritedMediaQuery: true,
-      builder: DevicePreview.appBuilder,
-      locale: DevicePreview.locale(context),
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        pageTransitionsTheme: const PageTransitionsTheme(builders: {
-          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-        }),
-      ),
-      title: 'Hia Tunisia',
-      initialRoute: '/',
-      navigatorKey: NavigationService.navigatorKey,
-      routes: {
-        '/': (context) => const SplashScreen(),
-        '/onboard': (context) => const OnBoard(),
-        '/home': (context) => const Home(),
+    return ScreenUtilInit(
+      designSize: Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp(
+          useInheritedMediaQuery: true,
+          builder: DevicePreview.appBuilder,
+          locale: DevicePreview.locale(context),
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            pageTransitionsTheme: const PageTransitionsTheme(builders: {
+              TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            }),
+          ),
+          title: 'Hia Tunisia',
+          initialRoute: '/',
+          navigatorKey: NavigationService.navigatorKey,
+          routes: {
+            '/': (context) => const SplashScreen(),
+            '/onboard': (context) => const OnBoard(),
+            '/home': (context) => const Home(),
+          },
+        );
       },
     );
   }

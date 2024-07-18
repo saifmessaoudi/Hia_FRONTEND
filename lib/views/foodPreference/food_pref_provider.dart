@@ -3,7 +3,7 @@ import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 
 class FoodPreferenceProvider with ChangeNotifier {
-  final UserViewModel _userViewModel;
+   UserViewModel _userViewModel;
 
   FoodPreferenceProvider(this._userViewModel);
 
@@ -25,6 +25,10 @@ class FoodPreferenceProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void updateUserViewModel(UserViewModel userViewModel) {
+    _userViewModel = userViewModel;
+  }
+
   //fetch last pref
   void fetchLastPref() {
     final userViewModel = _userViewModel;
@@ -41,8 +45,9 @@ class FoodPreferenceProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void savePreferences() async{
-_isLoading = true;
+  Future<void> savePreferences() async{
+    _isLoading = true;
+    notifyListeners();
     // Save preferences to the server
     final userId = _userViewModel.userId;
     final selectedPrefs = _selectedPreferences.entries
@@ -56,6 +61,7 @@ _isLoading = true;
 
       if (success) {
         Debugger.green('Preferences saved successfully');
+        await _userViewModel.fetchUpdatedUserData();
       } else {
         Debugger.red('Failed to save preferences');
       }
@@ -67,7 +73,8 @@ _isLoading = true;
 
   }
 
-  void updatePreferences() async{
+  void updatePreferences() async{ 
+   _isLoading = true;
     // Update preferences in the server
     final userId = _userViewModel.userId;
     final selectedPrefs = _selectedPreferences.entries
@@ -76,7 +83,7 @@ _isLoading = true;
         .toList();
 
     
-    _isLoading = true;
+  
 
     if (userId != null) {
       final success = await _userViewModel.userService.saveUserPreferences(userId, selectedPrefs);

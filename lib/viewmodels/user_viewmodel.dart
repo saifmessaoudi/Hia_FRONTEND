@@ -182,5 +182,12 @@ bool isAuthenticated() {
     return _userData?.foodPreference ?? [];
   }
 
+  Future<void> fetchUpdatedUserData() async {
+    if (_userId != null) {
+      _userData = await userService.getUserById(_userId!);
+      notifyListeners();
+    }
+  }
+
 
 }
