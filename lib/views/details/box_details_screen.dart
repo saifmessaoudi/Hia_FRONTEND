@@ -205,6 +205,7 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: ButtonGlobal(
+                                      buttonTextColor: Colors.white,
                                       buttontext: 'Add To Cart',
                                       buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
                                       onPressed: () {

@@ -1,6 +1,8 @@
 import 'package:gap/gap.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
+import 'package:hia/views/global_components/button_global.dart';
+import 'package:hia/views/home/home.dart';
 import 'package:hia/widgets/smart_scaffold.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,7 @@ class EmptyCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Gap(130),
+              const Gap(120),
               Image.asset(
                 "images/emptyCard.png",
                 width: 264,
@@ -34,8 +36,18 @@ class EmptyCard extends StatelessWidget {
                   fontWeight: FontWeight.w400
                 ),
               ),
-              const Gap(16),
-              const Spacer(),
+              const Gap(40),
+                ButtonGlobal(
+                  buttonTextColor: kMainColor,
+                    buttontext: 'Go Shopping',
+                    buttonDecoration: kButtonDecoration.copyWith(
+                     color: Colors.white,
+                    ),
+                    onPressed: () {
+                    Home.of(context)?.updateSelectedIndex(0);
+                  },
+                ),  
+                const Spacer()
             ],
           ),
         ),

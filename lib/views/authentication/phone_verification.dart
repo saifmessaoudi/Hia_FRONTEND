@@ -97,6 +97,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                           height: 30.0,
                         ),
                         ButtonGlobal(
+                                buttonTextColor: Colors.white,
                           buttontext: 'Verify',
                           buttonDecoration:
                               kButtonDecoration.copyWith(color: kMainColor),

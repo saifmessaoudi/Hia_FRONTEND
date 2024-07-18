@@ -106,6 +106,8 @@ class _EmailOtpVerificationState extends State<EmailOtpVerification> {
                           height: 20.0,
                         ),
                         ButtonGlobal(
+                                buttonTextColor: Colors.white,
+
                           buttontext: 'Verify',
                           buttonDecoration:
                               kButtonDecoration.copyWith(color: kMainColor),

@@ -115,6 +115,7 @@ class _SignUpPhoneOtpState extends State<SignUpPhoneOtp> {
                           ),
                         ),
                         ButtonGlobal(
+                                buttonTextColor: Colors.white,
                           buttontext: 'Continue',
                           buttonDecoration:
                               kButtonDecoration.copyWith(color: kMainColor),

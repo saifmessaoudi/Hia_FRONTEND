@@ -12,10 +12,11 @@ import 'package:hia/views/details/box_details_screen.dart';
 import 'package:hia/views/details/establishment.details.dart';
 import 'package:hia/views/details/food_details_screen.dart';
 import 'package:hia/views/foods/foods_see_all_screen.dart';
-import 'package:hia/views/global_components/category_data.dart';
 import 'package:hia/widgets/filter_dialog.dart';
 import 'package:hia/widgets/homescreen/box_card.dart';
 import 'package:hia/widgets/homescreen/establishment_card.dart';
+import 'package:hia/widgets/homescreen/filter/filter_chip.dart';
+import 'package:hia/widgets/homescreen/filter/filter_data.dart';
 import 'package:hia/widgets/homescreen/food_card.dart';
 import 'package:hia/widgets/smart_scaffold.dart';
 import 'package:hia/views/home/BookTableCard.dart';
@@ -69,11 +70,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       child: Column(
+
                         children: [
                           const SizedBox(
                             height: 20.0,
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(10.0),
@@ -81,8 +84,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   children: [
                                     Image.asset(
                                       'images/h_logo_white.png',
-                                      height: 40.0,
-                                      width: 40.0,
+                                      height: 55.0,
+                                      width: 55.0,
                                     ),
                                     const SizedBox(
                                       height: 15.0,
@@ -103,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 text: userViewModel.userData?.address ?? '',
                                                 style: kTextStyle.copyWith(
                                                   color: white,
-                                                  fontSize: 15.0,
+                                                  fontSize: 14.0,
                                                 ),
                                               ),
                                             ],
@@ -155,17 +158,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                                  Expanded(
                           flex: 1,
-                          child: IconButton(
-                            icon: const Image(
-                              image: AssetImage('images/filter.png'),
+                          child: IconButton( 
+                            icon: const Image( image: AssetImage('images/filter.png'),
                             ),
                             onPressed: () {
                               showDialog(
                                 context: context,
-                                builder: (context) {
-                                  return FilterDialog(
-                                    onApply: (selectedFilters) {
-                                      Provider.of<FoodViewModel>(context, listen: false).applyFilters(selectedFilters);
+                                builder: (context) { return FilterDialog(
+                                     initialSelectedFilters: Provider.of<FoodViewModel>(context, listen: false).selectedFilters,
+                                    onApply: (selectedFilters) {  Provider.of<FoodViewModel>(context, listen: false).applyFilters(selectedFilters);
                                     },
                                   );
                                 },
@@ -184,25 +185,28 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
 
-                  Consumer<FoodViewModel>(
+                      Consumer<FoodViewModel>(
                             builder: (context, foodViewModel, child) {
-                              return foodViewModel.selectedFilters.isNotEmpty
+                              List<FilterData> selectedFilterData = foodViewModel.selectedFilters
+                                .map((filter) => catData.firstWhere(
+                                    (data) => data.catTitle.toLowerCase() == filter.toLowerCase()))
+                                .toList();
+                               return selectedFilterData.isNotEmpty
                                   ? Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
                                       child: Wrap(
-                                        spacing: 8.0,
-                                        children: foodViewModel.selectedFilters.map((filter) {
-                                          return Chip(
-                                        backgroundColor: kMainColor,
-                                        label: Text( filter , style: kTextStyle.copyWith(color: Colors.white, fontSize: 12.0)),
-
-                                          );
+                                        spacing: 14.0,
+                                        children: selectedFilterData.map((filterData) {
+                                          return FilterChipElement(catList: filterData , onRemove:() {
+                                            foodViewModel.removeFilter(filterData.catTitle);
+                                          },);
                                         }).toList(),
                                       ),
                                     )
                                   : Container();
                             },
                           ),
+
                                    
                 
                 
@@ -326,18 +330,18 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
-    // Default message if no data is available
-    return const Center(
-      child: Text(
-        'There is no available data',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.grey,
-        ),
-      ),
-    );
-  },
-),
+                          // Default message if no data is available
+                          return const Center(
+                            child: Text(
+                              'There is no available data',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
 
 
       
@@ -479,34 +483,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   },
                 ),
-              ),
-
-
-            
-
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                child: Row(
-                  children: [
-                    Text(
-                      'Poular Deals',
-                      style: kTextStyle.copyWith(
-                        color: kTitleColor,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      'See all',
-                      style: kTextStyle.copyWith(color: kGreyTextColor),
-                    ).onTap(() {
-                      
-                    }),
-                  ],
-                ),
-              ),
+              ), 
               const Gap(20.0),
-        
             ],
           ),
         ),

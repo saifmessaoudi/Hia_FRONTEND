@@ -168,6 +168,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                                 spacing: 10.0,
                               )
                             : ButtonGlobal(
+                                    buttonTextColor: Colors.white,
+
                                 buttontext: 'Continue',
                                 buttonDecoration: kButtonDecoration.copyWith(
                                     color: kMainColor),

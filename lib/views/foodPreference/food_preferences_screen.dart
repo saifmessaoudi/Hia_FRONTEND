@@ -181,6 +181,7 @@ class _FoodPreferencePageState extends State<FoodPreferencePage> {
                         ),
                                     
                       ButtonGlobal(
+                        buttonTextColor: Colors.white,
                             buttontext: foodPreferenceProvider.isLoading
                                 ? 'Saving...'
                                 : 'Save Preferences',

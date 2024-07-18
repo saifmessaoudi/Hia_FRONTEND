@@ -327,6 +327,7 @@ void showSuccessAlert(String message) {
                             
                             :
                         ButtonGlobal(
+                          buttonTextColor: Colors.white,
                           buttontext: 'Continue',
                           buttonDecoration:
                           kButtonDecoration.copyWith(color: kMainColor),

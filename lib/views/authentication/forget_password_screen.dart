@@ -128,6 +128,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                                 ],
                               )
                             : ButtonGlobal(
+                                    buttonTextColor: Colors.white,
+
                                 buttontext: 'Continue',
                                 buttonDecoration: kButtonDecoration.copyWith(
                                     color: kMainColor),

@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
-import 'package:hia/views/global_components/button_global.dart';
 
 class FilterDialog extends StatefulWidget {
   final Function(List<String>) onApply;
+  final List<String> initialSelectedFilters;
 
-  const FilterDialog({super.key, required this.onApply});
+  const FilterDialog({super.key, required this.onApply, required this.initialSelectedFilters});
 
   @override
   _FilterDialogState createState() => _FilterDialogState();
 }
 
 class _FilterDialogState extends State<FilterDialog> {
-  List<String> selectedFilters = [];
+  late List<String> selectedFilters;
 
   final List<Map<String, String>> filters = [
     {"name": "Restaurant", "image": "images/fastfood.png"},
     {"name": "Boulangerie", "image": "images/sugar.png"},
     {"name": "Sortie", "image": "images/fastfood.png"},
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    selectedFilters = List<String>.from(widget.initialSelectedFilters);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +45,6 @@ class _FilterDialogState extends State<FilterDialog> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                
                 const SizedBox(height: 10.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -71,7 +76,6 @@ class _FilterDialogState extends State<FilterDialog> {
                                 height: 70,
                                 width: 70,
                                 fit: BoxFit.cover,
-                                
                               ),
                             ),
                             Container(
@@ -79,7 +83,7 @@ class _FilterDialogState extends State<FilterDialog> {
                               width: 70,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10.0),
-                                color: isSelected ? kMainColor.withOpacity(0.3) : Colors.transparent,
+                                color: isSelected ? kMainColor.withOpacity(0.5) : Colors.transparent,
                               ),
                             ),
                             Positioned(
@@ -89,11 +93,11 @@ class _FilterDialogState extends State<FilterDialog> {
                               child: Text(
                                 filterName,
                                 textAlign: TextAlign.center,
-                                style:  TextStyle(
+                                style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 10.0,
                                   color: Colors.white,
-                                  backgroundColor: Colors.black.withOpacity(0.3)
+                                  backgroundColor: Colors.black.withOpacity(0.2),
                                 ),
                               ),
                             ),

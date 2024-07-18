@@ -65,6 +65,11 @@ class FoodViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeFilter(String filter) {
+    _selectedFilters.remove(filter);
+    applyFilters(_selectedFilters);
+  }
+
   List<Food> mergeFoods(List<Food> cached, List<Food> fetched) {
     final Map<String, Food> foodMap = {for (var e in cached) e.name: e};
     for (var food in fetched) {
