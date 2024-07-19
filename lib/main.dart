@@ -39,8 +39,10 @@ void main() async {
     
     MultiProvider(
       providers: [
-         ChangeNotifierProvider(
-            create: (context) => ConnectivityManager(),),
+        ChangeNotifierProvider(
+          create: (_) => ConnectivityManager(),
+          child: const MyApp(),
+        ),
 
         ChangeNotifierProvider(create: (_) => UserViewModel()),
         ChangeNotifierProvider(

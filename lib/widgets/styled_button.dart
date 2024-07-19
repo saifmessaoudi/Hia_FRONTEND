@@ -5,6 +5,7 @@ import 'package:hia/app/style/app_colors.dart';
 import 'package:hia/app/style/app_style.dart';
 import 'package:hia/app/style/font_size.dart';
 import 'package:hia/app/style/widget_modifier.dart';
+import 'package:hia/constant.dart';
 import 'package:hia/widgets/activity_indicator.dart';
 
 
@@ -100,7 +101,7 @@ class StyledButton extends StatelessWidget {
 
 enum ButtonStyles {
   primary(
-    textColor: AppColors.inputColor,
+    textColor: kMainColor,
     backgroundColor: AppColors.primary,
     borderColor: AppColors.inputColor,
     borderWidth: 0,

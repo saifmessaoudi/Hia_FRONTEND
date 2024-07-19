@@ -284,7 +284,7 @@ extension WidgetModifier on Widget {
   DecoratedBox border({
     Key? key,
     BoxBorder? border,
-    BorderRadius? borderRadius,
+    BorderRadius? borderRadius ,
   }) =>
       DecoratedBox(
         key: key,
