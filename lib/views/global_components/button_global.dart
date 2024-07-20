@@ -7,6 +7,7 @@ import 'package:hia/constant.dart';
 class ButtonGlobal extends StatelessWidget {
   final String buttontext;
   final Decoration buttonDecoration;
+  final Color buttonTextColor;
   // ignore: prefer_typing_uninitialized_variables
   var onPressed;
 
@@ -14,7 +15,8 @@ class ButtonGlobal extends StatelessWidget {
   ButtonGlobal({
     required this.buttontext,
     required this.buttonDecoration,
-    required this.onPressed
+    required this.onPressed,
+    required this.buttonTextColor
   });
 
   @override
@@ -28,7 +30,7 @@ class ButtonGlobal extends StatelessWidget {
         child: Center(
           child: Text(
             buttontext,
-            style: kTextStyle.copyWith(fontSize: 20.0, color: Colors.white,fontWeight: FontWeight.bold),
+            style: kTextStyle.copyWith(fontSize: 20.0, color: buttonTextColor,fontWeight: FontWeight.bold),
           ),
         ),
       ),

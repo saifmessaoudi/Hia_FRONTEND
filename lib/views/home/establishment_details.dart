@@ -431,6 +431,7 @@ Navigator.of(context).push(
                                   child: Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: ButtonGlobal(
+                                      buttonTextColor: Colors.white,
                                       buttontext: 'Checkout',
                                       buttonDecoration:
                                       kButtonDecoration.copyWith(color: kMainColor),

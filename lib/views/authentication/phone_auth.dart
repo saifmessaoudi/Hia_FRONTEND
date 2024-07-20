@@ -117,6 +117,8 @@ class _PhoneAuthState extends State<PhoneAuth> {
                           ),
                         ),
                         ButtonGlobal(
+                                buttonTextColor: Colors.white,
+
                           buttontext: 'Continue',
                           buttonDecoration:
                               kButtonDecoration.copyWith(color: kMainColor),

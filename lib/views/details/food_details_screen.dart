@@ -329,6 +329,7 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                           //aa to cart
 
                              ButtonGlobal(
+                               buttonTextColor: Colors.white,
                                 buttontext: 'Add to Cart',
                                 buttonDecoration: kButtonDecoration.copyWith(
                                   color: kMainColor,

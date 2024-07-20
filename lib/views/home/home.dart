@@ -18,6 +18,10 @@ class Home extends StatefulWidget {
 
   @override
   _HomeState createState() => _HomeState();
+
+  static _HomeState? of(BuildContext context) {
+    return context.findAncestorStateOfType<_HomeState>();
+  }
 }
 
 class _HomeState extends State<Home> {
@@ -34,6 +38,12 @@ class _HomeState extends State<Home> {
     HomeScreen(),
     ProfileScreen()
   ];
+void updateSelectedIndex(int index) {
+    setState(() {
+      _selectedItemPosition = index;
+    });
+  }
+
 
 
   @override
@@ -49,6 +59,7 @@ class _HomeState extends State<Home> {
           body: DisconnectedWidget(),
         );
       }
+      
 
       
       return Consumer<ConnectivityManager>(

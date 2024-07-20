@@ -140,6 +140,7 @@ class _LocationPermissionState extends State<LocationPermission> {
                                 spacing: 10.0,
                               )
                             : ButtonGlobal(
+                                buttonTextColor: Colors.white,
                                 buttontext: 'Allow Location Access',
                                 buttonDecoration: kButtonDecoration.copyWith(
                                     color: kMainColor),

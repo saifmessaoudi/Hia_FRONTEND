@@ -43,6 +43,9 @@ class FoodViewModel extends ChangeNotifier {
           _foods = mergeFoods(_foods, newFoods);
           await _service.cacheData(_foods);
         }
+        else {
+          Debugger.yellow('No internet connection, using cached data.');
+        }
       }
     } catch (e) {
       Debugger.red('Error fetching foods: $e');
@@ -63,6 +66,11 @@ class FoodViewModel extends ChangeNotifier {
       }).toList();
     }
     notifyListeners();
+  }
+
+  void removeFilter(String filter) {
+    _selectedFilters.remove(filter);
+    applyFilters(_selectedFilters);
   }
 
   List<Food> mergeFoods(List<Food> cached, List<Food> fetched) {

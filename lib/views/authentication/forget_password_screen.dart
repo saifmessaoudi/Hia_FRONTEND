@@ -2,11 +2,14 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/views/authentication/email.verification.dart';
 import 'package:hia/views/global_components/button_global.dart';
+import 'package:hia/widgets/back_row.dart';
 import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -40,33 +43,24 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: kTitleColor,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
+                const BackRow(title: ""),
+                const Gap(10),
                 Padding(
                   padding:
-                      const EdgeInsets.only(left: 20.0, top: 10.0, right: 10.0),
+                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
                   child: SizedBox(
                       width: context.width(),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
                             'You forgot your password?',
                             style: kTextStyle.copyWith(
                                 color: kTitleColor,
-                                fontSize: 20.0,
+                                fontSize: 22.0,
                                 fontWeight: FontWeight.bold),
                           ),
+                          const Gap(10),
                           Text(
                             'Please enter your email address to reset your password.',
                             style: kTextStyle.copyWith(
@@ -128,6 +122,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                                 ],
                               )
                             : ButtonGlobal(
+                                    buttonTextColor: Colors.white,
+
                                 buttontext: 'Continue',
                                 buttonDecoration: kButtonDecoration.copyWith(
                                     color: kMainColor),

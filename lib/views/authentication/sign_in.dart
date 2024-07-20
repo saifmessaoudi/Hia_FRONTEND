@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gap/gap.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
@@ -78,25 +79,36 @@ class _SignInState extends State<SignIn> {
               ),
             ),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 30.0),
-               Padding(
-  padding: const EdgeInsets.only( top: 10.0,right: 280),
-  child: SizedBox(
-    width: MediaQuery.of(context).size.width / 2,
-    child: Image.asset(
-      'images/h_logo_white.png',
-      height: 40.0,
-      width: 40.0,
-    ),
-  ),
-),
-
-                const SizedBox(height: 40.0),
+               Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children:[ 
+                    SizedBox(
+                    width: MediaQuery.of(context).size.width / 2,
+                    child: Image.asset(
+                      'images/h_logo_white.png',
+                      height: 50.0,
+                      width: 50.0,
+                    ),
+                  ),
+                 
+                  ]
+                ),
+              const Gap(13),
+                  const Text(
+                    'Welcome to Hia',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                const SizedBox(height: 25.0),
                 Expanded(
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery.of(context).size.width ,
                     height: MediaQuery.of(context).size.height,
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
@@ -113,11 +125,11 @@ class _SignInState extends State<SignIn> {
                             child: Column(
                               children: [
                                 Lottie.asset(
-                    'images/lottie.json', // Replace with your Lottie animation file path
-                    height: 200, // Adjust height as needed
-                    width: double.infinity, // Take full width
-                    fit: BoxFit.contain, // Adjust fit as needed
-                  ),
+                                'images/lottie.json', // Replace with your Lottie animation file path
+                                height: 200, // Adjust height as needed
+                                width: double.infinity, // Take full width
+                                fit: BoxFit.contain, // Adjust fit as needed
+                              ),
                    const SizedBox(height: 8.0),
                                 _buildEmailField(),
                                 const SizedBox(height: 20.0),
@@ -245,6 +257,7 @@ class _SignInState extends State<SignIn> {
 
   Widget _buildLoginButton(BuildContext context) {
     return ButtonGlobal(
+      buttonTextColor: Colors.white,
       buttontext: 'Log In',
       buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
       onPressed: () async {
