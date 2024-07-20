@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/models/offer.model.dart';
+import 'package:lottie/lottie.dart';
 
 class SurpriseBoxCard extends StatelessWidget {
   const SurpriseBoxCard({super.key, required this.offer});
@@ -31,11 +32,12 @@ class SurpriseBoxCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Image.asset(
-                "images/boxfood.jpg",
-                width: 80.0,
-                height: 80.0,
-              ),
+               Lottie.asset(
+                    'images/box.json', // Replace with your Lottie animation file path
+                    height: 80, // Adjust height as needed
+                    width: 80, // Take full width
+                    fit: BoxFit.contain, // Adjust fit as needed
+                  ),
               
               const Gap(10),
               Text(
@@ -53,7 +55,7 @@ class SurpriseBoxCard extends StatelessWidget {
                     " ${offer.quantity} items left",
                     style:  TextStyle(
                       fontSize: 14,
-                      color: offer.quantity < 5 ? Colors.red : kTitleColor,
+                      color: offer.quantity < 5 ? kTitleColor : kTitleColor,
                     ),
                   ),
                 
@@ -73,7 +75,7 @@ class SurpriseBoxCard extends StatelessWidget {
                       fontSize: 14,
                       color: offer.validUntil.difference(DateTime.now()).inDays < 3
                           ? Colors.red
-                          : kTitleColor,
+                          : Colors.red,
                     ),
                   ),
                 ],

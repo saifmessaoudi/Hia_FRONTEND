@@ -37,7 +37,7 @@ class FoodSearchDelegateEstablishment extends SearchDelegate<Food> {
       ingredients: [], 
       remise: 0, 
       isAvailable: true, 
-      remiseDeadline: DateTime.now(), reviews: [], establishment: Establishment(
+      remiseDeadline: DateTime.now(), establishment: Establishment(
         name: '',
         address: '',
         phone: '',

@@ -39,6 +39,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  @override
+void initState() {
+  super.initState();
+  // Trigger distance calculation on initialization
+  final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
+  establishmentViewModel.calculateAllDistances();
+}
   List<String> banner = ['images/banner1.png', 'images/banner2.png'];
 
 
@@ -183,7 +191,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     
                         ],
                       ),
-
+Padding(
+                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                child: Row(
+                  children: [
+                    Text(
+                      'Box offers :',
+                      style: kTextStyle.copyWith(
+                        color: kTitleColor,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      'See all',
+                      style: kTextStyle.copyWith(color: kGreyTextColor),
+                    ).onTap(() {
+                      
+                    }),
+                  ],
+                ),
+              ),
                   Consumer<FoodViewModel>(
                             builder: (context, foodViewModel, child) {
                               return foodViewModel.selectedFilters.isNotEmpty
@@ -254,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   
                 ),
               ),
-               Padding(
+   Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 20.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -287,57 +315,60 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
              Consumer<EstablishmentViewModel>(
-            builder: (context, establishmentViewModel, child) {
-              // Check if data is loading or sorting
-              if (establishmentViewModel.isLoading || establishmentViewModel.isSorting) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: kMainColor,
-                  ),
-                );
-              }
+    builder: (context, establishmentViewModel, child) {
+      if (establishmentViewModel.isLoading || establishmentViewModel.isSorting || establishmentViewModel.isCalculating) {
+        return const Center(
+          child: CircularProgressIndicator(
+            color: kMainColor,
+          ),
+        );
+      }
 
-          // Check if establishments are available
-          if (establishmentViewModel.establishments != null && establishmentViewModel.establishments.isNotEmpty) {
-            return HorizontalList(
-              spacing: 10,
-              itemCount: establishmentViewModel.establishments.length,
-              itemBuilder: (_, i) {
-               
-
-              return BookTableCard(
-                restaurantData: establishmentViewModel.establishments[i],
-                  index: i,
-              ).onTap(
-            () {
-              establishmentViewModel.fetchFoodsFromEstablishment(establishmentViewModel.establishments[i].id);
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ProductDetails(
-                    product: establishmentViewModel.establishments[i],
-                    index: i,
-                  ),
+      if (establishmentViewModel.establishments != null && establishmentViewModel.establishments.isNotEmpty) {
+        return HorizontalList(
+          spacing: 10,
+          itemCount: establishmentViewModel.establishments.length,
+          itemBuilder: (_, i) {
+            if (establishmentViewModel.distances == null || establishmentViewModel.distances!.length <= i) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: kMainColor,
                 ),
               );
-            },
-            highlightColor: context.cardColor,
-          );
-        },
-      );
-    }
+            }
 
-    // Default message if no data is available
-    return const Center(
-      child: Text(
-        'There is no available data',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.grey,
+            return BookTableCard(
+              restaurantData: establishmentViewModel.establishments[i],
+              index: i,
+            ).onTap(
+              () {
+                establishmentViewModel.fetchFoodsFromEstablishment(establishmentViewModel.establishments[i].id);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ProductDetails(
+                      product: establishmentViewModel.establishments[i],
+                      index: i,
+                    ),
+                  ),
+                );
+              },
+              highlightColor: context.cardColor,
+            );
+          },
+        );
+      }
+
+      return const Center(
+        child: Text(
+          'There is no available data',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey,
+          ),
         ),
-      ),
-    );
-  },
-),
+      );
+    },
+  ),
 
 
       
@@ -484,27 +515,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             
 
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                child: Row(
-                  children: [
-                    Text(
-                      'Poular Deals',
-                      style: kTextStyle.copyWith(
-                        color: kTitleColor,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      'See all',
-                      style: kTextStyle.copyWith(color: kGreyTextColor),
-                    ).onTap(() {
-                      
-                    }),
-                  ],
-                ),
-              ),
+              
               const Gap(20.0),
         
             ],

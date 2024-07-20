@@ -18,7 +18,7 @@ class BookTableCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
+    final establishmentViewModel = Provider.of<EstablishmentViewModel>(context);
         
 
     return Padding(
@@ -95,20 +95,25 @@ RichText(
 
 const SizedBox(height: 6,) ,
 
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                const WidgetSpan(
-                                  child: Icon(
-                                    Icons.location_on,
-                                    color: kMainColor,
-                                    size: 15.0,
+                         RichText(
+                              text: TextSpan(
+                                children: [
+                                  const WidgetSpan(
+                                    child: Icon(
+                                      Icons.location_on,
+                                      color: kMainColor,
+                                      size: 15.0,
+                                    ),
                                   ),
-                                ),
-                              
-                              ],
+                                  TextSpan(
+                                    text: "${establishmentViewModel.distances[index].toStringAsFixed(1)} km",
+                                    style: kTextStyle.copyWith(
+                                      color: kGreyTextColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
                           const SizedBox(height: 6,) ,
                         ],
                       ),

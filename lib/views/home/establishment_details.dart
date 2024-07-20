@@ -215,19 +215,25 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 children: [
                                   Expanded(
                                     child: RichText(
-                                            text: const TextSpan(
-                                                children: [
-                                                   WidgetSpan(
-                                                    child: Icon(
-                                                      Icons.location_on,
-                                                      color: kMainColor,
-                                                      size: 18.0,
-                                                    ),
-                                                  ),
-                                                
-                                                ],
-                                              ),
-                                            ),    
+   text: TextSpan(
+      children: [
+        const WidgetSpan(
+          child: Icon(
+            Icons.location_on,
+            color: kMainColor,
+            size: 18.0,
+          ),
+        ),
+        TextSpan(
+          text: "${establishmentViewModel.distances![widget.index].toStringAsFixed(1)} km", 
+          style: kTextStyle.copyWith(
+            fontWeight: FontWeight.bold,
+            color: kTitleColor,
+          ),
+        ),
+      ],
+    ),
+  ),
                                   ),
                                   
                                Expanded(
@@ -403,7 +409,6 @@ Navigator.of(context).push(
     },
   ),
 ),
-
 
                             
                             

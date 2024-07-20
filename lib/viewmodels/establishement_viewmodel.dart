@@ -18,6 +18,7 @@ class EstablishmentViewModel extends ChangeNotifier {
   List<Establishment> recommendedEstablishments = [];
   bool isLoading = false;
   bool _isSorting = false;
+    bool _isCalculating = false;
   final UserViewModel _userViewModel = UserViewModel();
 
   String? _address;
@@ -26,11 +27,16 @@ class EstablishmentViewModel extends ChangeNotifier {
   int? _lengthEstablishments;
   int? get lengthEstablishments => _lengthEstablishments;
 
-  double? _distance;
-  double? get distance => _distance;
+    double _distance = 0.0;
 
-  List<double>? _distances;
-  List<double>? get distances => _distances;
+
+    List<double> _distances = [];
+    bool get isCalculating => _isCalculating;
+  bool get isSorting => _isSorting;
+  double get distance => _distance;
+  List<double> get distances => _distances;
+
+
 
    List<Food>? _foodbyestablishment;
   List<Food>? get foodbyestablishment => _foodbyestablishment;
@@ -131,6 +137,7 @@ class EstablishmentViewModel extends ChangeNotifier {
 
     // Fetch foods using the establishment ID
     _foodbyestablishment = await _service.getProductsByEstablishmentID(establishementID);
+     notifyListeners();
 
     print('Fetched foods: $_foodbyestablishment');
   } catch (error) {
@@ -167,7 +174,7 @@ class EstablishmentViewModel extends ChangeNotifier {
     }
   }
 
-  double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+ double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
     const R = 6371.0; // Radius of the earth in km
 
     final lat1Rad = lat1 * pi / 180;
@@ -185,29 +192,48 @@ class EstablishmentViewModel extends ChangeNotifier {
     return R * c; // Distance in km
   }
 
-  void calculateDistance(Establishment establishement) {
-    User user = _userViewModel.userData!;
-    double lat1 = user.latitude.toDouble();
-    double lon1 = user.longitude.toDouble();
-    double lat2 = establishement.latitude;
-    double lon2 = establishement.longitude;
-    _distance = _calculateDistance(lat1, lon1, lat2, lon2);
+  void calculateAllDistances() async {
+  _isCalculating = true;
+  notifyListeners();
+
+  // Ensure this runs after the current frame
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    try {
+      User user = _userViewModel.userData!;
+      double userLat = user.latitude.toDouble();
+      double userLon = user.longitude.toDouble();
+
+      // Simulate a delay for distance calculation
+      await Future.delayed(Duration(milliseconds: 500));
+
+      _distances = establishments.map((establishment) {
+        return _calculateDistance(userLat, userLon, establishment.latitude, establishment.longitude);
+      }).toList();
+    } catch (e) {
+      print('Error calculating distances: $e');
+    } finally {
+      _isCalculating = false;
+      notifyListeners();
+    }
+  });
+}
+
+void sortByDistance() async {
+  if (_userViewModel.userData == null || establishments == null) {
+    print('User data or establishments are null.');
+    return;
   }
 
-  void sortByDistance() async {
-    if (_userViewModel.userData == null || establishments == null) {
-      print('User data or establishments are null.');
-      return;
-    }
+  _isSorting = true;
+  notifyListeners();
 
-    _isSorting = true;
-    notifyListeners();
-
+  try {
     User user = _userViewModel.userData!;
     double userLat = user.latitude.toDouble();
     double userLon = user.longitude.toDouble();
 
-    await Future.delayed(Duration(seconds: 1)); // Simulate loading delay
+    // Simulate a delay for sorting
+    await Future.delayed(Duration(milliseconds: 500));
 
     _distances = establishments.map((establishment) {
       return _calculateDistance(userLat, userLon, establishment.latitude, establishment.longitude);
@@ -218,12 +244,15 @@ class EstablishmentViewModel extends ChangeNotifier {
       double distanceB = _calculateDistance(userLat, userLon, b.latitude, b.longitude);
       return distanceA.compareTo(distanceB);
     });
-
+  } catch (e) {
+    print('Error sorting by distance: $e');
+  } finally {
     _isSorting = false;
     notifyListeners();
   }
+}
 
-  bool get isSorting => _isSorting;
+
 
   void launchMaps(double latitude, double longitude) async {
     if (_userViewModel.userData == null) {

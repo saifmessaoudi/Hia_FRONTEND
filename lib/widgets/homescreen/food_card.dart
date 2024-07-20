@@ -46,7 +46,7 @@ class FoodCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Image(
-                        image: AssetImage(food.image),
+                        image: NetworkImage(food.image ?? ''),
                         width: 100.0,
                         height: 100.0,
                       ),

@@ -6,7 +6,7 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class EstablishmentService {
-  final String baseUrl = 'http://10.0.2.2:3030';
+  final String baseUrl = 'http://192.168.7.145:3030';
   static const String cacheKey = 'establishmentCache';
 
   Future<List<Establishment>> fetchEstablishments() async {
@@ -61,7 +61,7 @@ Future <List<Establishment>> getAllEstablishments() async {
       throw Exception('Failed to load establishments');
     }
   }
-   Future<List<Food>> getProductsByEstablishmentID(String id) async {
+    Future<List<Food>> getProductsByEstablishmentID(String id) async {
     final url = Uri.parse('$baseUrl/establishement/getProductsByEstablishmentID');
 
     // Create the request body

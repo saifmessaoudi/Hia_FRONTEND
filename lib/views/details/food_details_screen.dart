@@ -231,7 +231,7 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                                               ),
                                             ),
                                             TextSpan(
-                                              text: "${widget.food.reviews!.length }  Reviews", 
+                                              text: "${0}  Reviews", 
                                               style: kTextStyle.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 color: kTitleColor,
@@ -346,14 +346,32 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 100.0),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: MediaQuery.of(context).size.width / 4,
-                      child: Image.asset(widget.food.image),
-                    ),
-                  ),
+                   Padding(
+  padding: const EdgeInsets.only(top: 100.0),
+  child: CircleAvatar(
+    backgroundColor: kMainColor,
+    radius: MediaQuery.of(context).size.width / 4,
+    child: ClipOval(
+      child: FadeInImage.assetNetwork(
+        placeholder: 'images/offline_icon.png', // Placeholder image asset
+        image: widget.food.image!,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        fadeInDuration: Duration(milliseconds: 300),
+        fadeOutDuration: Duration(milliseconds: 300),
+        imageErrorBuilder: (context, error, stackTrace) {
+          return Image.asset(
+            'images/offline_icon.png', // Fallback image in case of error
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          );
+        },
+      ),
+    ),
+  ),
+                 ),
                 ],
               ),
             ),

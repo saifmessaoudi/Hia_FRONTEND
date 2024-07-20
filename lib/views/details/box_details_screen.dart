@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:hia/models/offer.model.dart';
 import 'package:hia/views/details/establishment.details.dart';
 import 'package:hia/views/global_components/button_global.dart';
+import 'package:lottie/lottie.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../constant.dart';
@@ -70,6 +71,7 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                       ),
                       Container(
                         width: context.width(),
+                        height: context.height()-200,
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(30.0),
@@ -186,14 +188,14 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                                     'Price: ',
                                     style: kTextStyle.copyWith(
                                       color: kTitleColor,
-                                      fontSize: 18.0,
+                                      fontSize: 15.0,
                                     ),
                                   ),
                                   Text(
                                     '${widget.box.price} TND',
                                     style: kTextStyle.copyWith(
                                       color: kMainColor,
-                                      fontSize: 20.0,
+                                      fontSize: 15.0,
                                     ),
                                   ),
                                 ],
@@ -228,12 +230,12 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
                       radius: MediaQuery.of(context).size.width / 4,
-                      child: Image.asset(
-                        "images/boxfood.jpg",
-                        width: 130.0,
-                        height: 130.0,
-                        fit: BoxFit.cover,
-                      ),
+                      child: Lottie.asset(
+                    'images/box.json', // Replace with your Lottie animation file path
+                    height: 500, // Adjust height as needed
+                    width: 500, // Take full width
+                    fit: BoxFit.contain, // Adjust fit as needed
+                  ),
                     ),
                   ),
                 ],

@@ -35,10 +35,9 @@ class Food extends HiveObject {
   @HiveField(9)
   final DateTime remiseDeadline;
 
-  @HiveField(10)
-  final List<Review>? reviews;
+  
 
-  @HiveField(11)
+  @HiveField(10)
   final Establishment establishment; // Correct field name
 
   Food({
@@ -52,7 +51,7 @@ class Food extends HiveObject {
     required this.isAvailable,
     required this.remise,
     required this.remiseDeadline,
-    required this.reviews,
+
     required this.establishment, // Correct field name
   });
 
@@ -68,9 +67,6 @@ class Food extends HiveObject {
       isAvailable: json['isAvailable'],
       remise: json['remise'],
       remiseDeadline: DateTime.parse(json['remiseDeadline']),
-      reviews: (json['reviews'] as List<dynamic>?)
-          ?.map((e) => Review.fromJson(e as Map<String, dynamic>))
-          .toList(),
       establishment: Establishment.fromJson(json['etablishment']), // Correct key name
     );
   }
@@ -87,7 +83,6 @@ class Food extends HiveObject {
       'isAvailable': isAvailable,
       'remise': remise,
       'remiseDeadline': remiseDeadline.toIso8601String(),
-      'reviews': reviews?.map((e) => e.toJson()).toList(),
       'etablishment': establishment.toJson(), // Correct key name
     };
   }

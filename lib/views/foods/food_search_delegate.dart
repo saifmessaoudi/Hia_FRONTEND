@@ -39,7 +39,6 @@ class FoodSearchDelegate extends SearchDelegate<Food> {
       remise: 0, 
       isAvailable: true, 
       remiseDeadline: DateTime.now(),
-      reviews: [],
       establishment: Establishment(
         name: '',
         address: '',
