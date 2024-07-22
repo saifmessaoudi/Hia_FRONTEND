@@ -11,6 +11,10 @@ const kTextStyle =   TextStyle(
   fontFamily: "NotoSans",
   color: Colors.white,
 );
+const kTextStyleBlack =   TextStyle(
+  fontFamily: "NotoSans",
+  color: Colors.black,
+);
 const kButtonDecoration = BoxDecoration(
   color: kMainColor,
   borderRadius: BorderRadius.all(

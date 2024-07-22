@@ -68,7 +68,7 @@ class EstablishmentAdapter extends TypeAdapter<Establishment> {
       phone: fields[8] as String?,
       isOpened: fields[9] as bool,
       preferences: (fields[10] as List?)?.cast<String>(),
-      foods: (fields[11] as List?)?.cast<String>(),
+      foods: (fields[11] as List?)?.cast<Food>(),
       reviews: (fields[12] as List?)?.cast<Review>(),
     );
   }

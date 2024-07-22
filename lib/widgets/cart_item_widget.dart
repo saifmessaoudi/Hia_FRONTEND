@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CartItemWidget extends StatelessWidget {
   final String imageUrl;
@@ -31,18 +33,35 @@ class CartItemWidget extends StatelessWidget {
         ),
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 40.0,
-              backgroundColor: kMainColor,
-              backgroundImage: NetworkImage(imageUrl),
-            ),
+             ClipOval(
+                  child: CachedNetworkImage(
+                    width: 70.0,
+                    height: 70.0,
+                    imageUrl: imageUrl,
+                    fit: BoxFit.cover, // Ensure the image covers the circle
+                    placeholder: (context, url) => Shimmer(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Colors.grey, Colors.white],
+                      ),
+                      child: Container(
+                        width: 70.0, // Match the width and height of the image
+                        height: 70.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
+                ),
+            
             const SizedBox(width: 10.0),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   name,
-                  style: kTextStyle.copyWith(color: kTitleColor),
+                  style: kTextStyle.copyWith(color: kTitleColor ,fontSize: 16),
                 ),
                 Text(
                   '\$$price',

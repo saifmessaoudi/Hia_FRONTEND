@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:hia/constant.dart';
 import 'package:hia/models/food.model.dart';
+import 'package:hia/viewmodels/cart_viewmodel.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
-import 'package:hia/widgets/shimmer_loading_image.dart';
+import 'package:hia/widgets/custom_toast.dart';
 
 class FoodCard extends StatelessWidget {
   final Food food;
@@ -16,6 +15,7 @@ class FoodCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartViewModel = Provider.of<CartViewModel>(context);
     return Stack(
       children: [
         SizedBox(
@@ -51,8 +51,8 @@ class FoodCard extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
                         child: CachedNetworkImage(
-                           width: 100.0,
-                          height: 100.0,
+                           width: 110.0,
+                          height: 110.0,
                           imageUrl: food.image,
                           placeholder: (context, url) => Shimmer(
                             gradient: const LinearGradient(
@@ -122,13 +122,19 @@ class FoodCard extends StatelessWidget {
                           ),
                         ),
                         const Spacer(),
-                        const CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          radius: 16.0,
-                          child: Icon(
-                            Icons.shopping_cart_outlined,
-                            color: kMainColor,
-                            size: 16.0,
+                        GestureDetector(
+                          onTap: () {
+                            cartViewModel.addItem(food,1);
+                            showCustomToast(context, "${food.name} added to cart");
+                          },
+                          child: const CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            radius: 16.0,
+                            child: Icon(
+                              Icons.shopping_cart_outlined,
+                              color: kMainColor,
+                              size: 16.0,
+                            ),
                           ),
                         ),
                       ],

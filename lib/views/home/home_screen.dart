@@ -235,7 +235,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   index: i,
               ).onTap(
             () {
-              establishmentViewModel.fetchFoodsFromEstablishment(establishmentViewModel.establishments[i].id);
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => ProductDetails(

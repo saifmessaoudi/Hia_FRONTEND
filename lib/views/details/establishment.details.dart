@@ -1,20 +1,15 @@
 // ignore_for_file: use_key_in_widget_constructors
 
-import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:hia/models/establishement.model.dart';
-import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:hia/views/global_components/button_global.dart';
+import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/views/offers/offers_establishment.dart';
 
 
 
 import 'package:nb_utils/nb_utils.dart' as nb_utils;
-import 'package:provider/provider.dart';
-import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../constant.dart';
 
 class EstablishmentDetailsScreen extends StatefulWidget {
   const EstablishmentDetailsScreen({required this.establishment});
@@ -285,28 +280,80 @@ Expanded(
                                 style: kTextStyle.copyWith(color: kTitleColor),
                                 trimCollapsedText: 'Show more',
                                 trimExpandedText: 'Show less',
-                                moreStyle:
-                                    kTextStyle.copyWith(color: kMainColor),
+                                
                               ),
                             ),
                             const SizedBox(height: 20.0,),
+
+                            //Our products with see all row
+                            Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20.0, right: 20.0, bottom: 10.0),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'Our Products',
+                                        style: kTextStyle.copyWith(
+                                            color: kTitleColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0),
+                                      ),
+                                      const Spacer(),
+                                      GestureDetector(
+                                        onTap: () {
+                                          // Navigator.push(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //     builder: (context) => ProductListScreen(),
+                                          //   ),
+                                          // );
+                                        },
+                                        child: Text(
+                                          'See all',
+                                          style: kTextStyle.copyWith(
+                                              color: kMainColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16.0),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10.0,
+                                ),
+                                //Product list
+                                //ProductList(),
+                              ],
+                            ),
+
+                            // list builder food card 
+                          HorizontalList(
+                      spacing: 10,
+                      itemCount: widget.establishment.foods!.length,
+                      itemBuilder: (_, i) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FoodDetailsScreen(food: widget.establishment.foods![i]),
+                              ),
+                            );
+                          },
+                          child: FoodCard(food: widget.establishment.foods![i]),
+                        );
+                      },
+                    ),
+
+                             
                             
                             
                             Row(
                               children: [
-                               /* Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: ButtonGlobal(
-                                      buttontext: 'Add To Cart',
-                                      buttonDecoration:
-                                          kButtonDecoration.copyWith(color: kMainColor),
-                                      onPressed: (){
-                                        ///const CartScreen().launch(context);
-                                      },
-                                    ),
-                                  ),
-                                ),*/
+
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.all(10.0),

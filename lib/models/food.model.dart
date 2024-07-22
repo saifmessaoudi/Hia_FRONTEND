@@ -77,6 +77,30 @@ class Food extends HiveObject {
     required this.establishment, // Correct field name
   });
 
+  //factory from json without establishment 
+  factory Food.fromJsonWithoutEstablishment(Map<String, dynamic> json) {
+    return Food(
+      id: json['_id'],
+      name: json['name'],
+      description: json['description'],
+      price: json['price'],
+      image: json['image'],
+      category: List<String>.from(json['category']),
+      averageRating: json['averageRating'],
+      ingredients: List<String>.from(json['ingredients']),
+      isAvailable: json['isAvailable'],
+      remise: json['remise'],
+      remiseDeadline: DateTime.parse(json['remiseDeadline']),
+      reviews: (json['reviews'] as List<dynamic>?)
+          ?.map((e) => Review.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      establishment: Establishment.empty(), // Correct key name
+
+    );
+  }
+
+
+
   factory Food.fromJson(Map<String, dynamic> json) {
     return Food(
       id: json['_id'],
@@ -93,7 +117,7 @@ class Food extends HiveObject {
       reviews: (json['reviews'] as List<dynamic>?)
           ?.map((e) => Review.fromJson(e as Map<String, dynamic>))
           .toList(),
-      establishment: Establishment.fromJson(json['etablishment']), // Correct key name
+      establishment: Establishment.fromJsonWithoutFoods(json['etablishment']), // Correct key name
     );
   }
 

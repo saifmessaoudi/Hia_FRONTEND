@@ -101,32 +101,6 @@ class EstablishmentViewModel extends ChangeNotifier {
 
 
 
-  void fetchFoodsFromEstablishment(String establishementID) async {
-    try {
-      _isFetchingFoods = true;
-      notifyListeners();
-
-      // Ensure the index i is within the bounds of the establishments list
-
-      // Assuming establishments is a list of objects that have an 'id' field
-      //String establishmentId = establishments[i].id; // Ensure this is the correct field
-
-      // Debug prints
-      // print('Fetching foods for establishment ID: $establishmentId');
-
-      // Fetch foods using the establishment ID
-      _foodbyestablishment =
-          await _service.getProductsByEstablishmentID(establishementID);
-
-      print('Fetched foods: $_foodbyestablishment');
-    } catch (error) {
-      print('Error fetching foods: $error');
-    } finally {
-      _isFetchingFoods = false;
-      notifyListeners();
-    }
-  }
-
 
  
 
