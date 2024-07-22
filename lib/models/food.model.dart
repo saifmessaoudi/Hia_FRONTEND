@@ -41,7 +41,28 @@ class Food extends HiveObject {
   @HiveField(11)
   final Establishment establishment; // Correct field name
 
+  @HiveField(12)
+  final String id;
+
+  //create constructor empty food
+  Food.empty()
+      : id = '',
+        name = '',
+        description = '',
+        price = 0,
+        image = '',
+        category = [],
+        averageRating = 0,
+        ingredients = [],
+        isAvailable = false,
+        remise = 0,
+        remiseDeadline = DateTime.now(),
+        reviews = [],
+        establishment = Establishment.empty();
+         
+
   Food({
+    required this.id,
     required this.name,
     required this.description,
     required this.price,
@@ -58,6 +79,7 @@ class Food extends HiveObject {
 
   factory Food.fromJson(Map<String, dynamic> json) {
     return Food(
+      id: json['_id'],
       name: json['name'],
       description: json['description'],
       price: json['price'],
@@ -77,6 +99,7 @@ class Food extends HiveObject {
 
   Map<String, dynamic> toJson() {
     return {
+      '_id': id,
       'name': name,
       'description': description,
       'price': price,

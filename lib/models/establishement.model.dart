@@ -76,6 +76,21 @@ class Establishment extends HiveObject {
   List<Review>? reviews;
 
 
+  //constructor empty establishment
+  Establishment.empty()
+      : id = '',
+        name = '',
+        description = '',
+        image = '',
+        latitude = 0,
+        longitude = 0,
+        address = '',
+        averageRating = 0,
+        phone = '',
+        isOpened = false,
+        preferences = [],
+        foods = [],
+        reviews = [];
 
   Establishment({
     required this.id,

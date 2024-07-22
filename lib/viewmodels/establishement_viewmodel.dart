@@ -15,7 +15,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class EstablishmentViewModel extends ChangeNotifier {
   final EstablishmentService _service = EstablishmentService();
-  List<Establishment> establishments = [];
+  List<Establishment> _establishments = [];
+  List<Establishment> get establishments => _establishments;
+
   List<Establishment> recommendedEstablishments = [];
   bool isLoading = false;
   bool _isSorting = false;
@@ -41,7 +43,6 @@ class EstablishmentViewModel extends ChangeNotifier {
 
   bool get isFetchingFoods => _isFetchingFoods;
 
-  final String _establishmentsBoxName = 'establishmentsBox';
 
   
   EstablishmentViewModel(this._userViewModel, this._foodPreferenceProvider) {
@@ -52,19 +53,22 @@ class EstablishmentViewModel extends ChangeNotifier {
 
   Future<void> fetchEstablishments() async {
     isLoading = true;
-
+    notifyListeners();
     try {
       Debugger.yellow('Attempting to fetch cached establishments...');
-      establishments = await _service.fetchEstablishments();
-      if (establishments.isEmpty) {
-        Debugger.red('No cached data found, fetching from server...');
-        establishments = await _service.fetchEstablishments();
+      _establishments = (await _service.getCachedData());
+     
+      if (_establishments.isEmpty) {
+        Debugger.red('No cached data establishments found, fetching from server...');
+        _establishments = await _service.fetchEstablishments();
+        await _service.cacheData(_establishments);
       } else {
         Debugger.green('Loaded establishments from cache.');
-        // Fetch new data from server and update cache
-        List<Establishment> newEstablishments =
-            await _service.fetchEstablishments();
+        isLoading = false;
+        notifyListeners();
       }
+
+
       // Filter establishments based on user preferences
       updateRecommendedEstablishments();
     } catch (e) {
@@ -80,20 +84,13 @@ class EstablishmentViewModel extends ChangeNotifier {
       updateRecommendedEstablishments();
     });
   }
-  void updateRecommendedEstablishments() {
+
+  void updateRecommendedEstablishments()async {
     recommendedEstablishments = filterByPreferences(establishments, _userViewModel.foodPreference);
+
     notifyListeners();
   }
-  List<Establishment> mergeEstablishments(
-      List<Establishment> cached, List<Establishment> fetched) {
-    final Map<String, Establishment> establishmentMap = {
-      for (var e in cached) e.id: e
-    };
-    for (var establishment in fetched) {
-      establishmentMap[establishment.id] = establishment;
-    }
-    return establishmentMap.values.toList();
-  }
+
 
   List<Establishment> filterByPreferences(List<Establishment> establishments, List<String> preferences) {
   return establishments.where((establishment) {
@@ -102,34 +99,7 @@ class EstablishmentViewModel extends ChangeNotifier {
 }
 
 
-  Future<void> _initialize() async {
-    try {
-      await Hive.openBox<Establishment>(_establishmentsBoxName);
 
-      establishments = await _fetchEstablishmentsFromCache();
-
-      if (establishments.isEmpty) {
-        await _fetchEstablishmentsFromService();
-      }
-    } catch (e) {
-      print('Error initializing: $e');
-    }
-
-    notifyListeners();
-  }
-
-  Future<List<Establishment>> _fetchEstablishmentsFromCache() async {
-    try {
-      final box = Hive.box<Establishment>(_establishmentsBoxName);
-      if (box.isNotEmpty) {
-        return box.values.toList();
-      }
-      return [];
-    } catch (e) {
-      print('Error fetching from cache: $e');
-      return [];
-    }
-  }
 
   void fetchFoodsFromEstablishment(String establishementID) async {
     try {
@@ -157,32 +127,8 @@ class EstablishmentViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> _fetchEstablishmentsFromService() async {
-    try {
-      List<Establishment> establishments =
-          await _service.getAllEstablishments();
-      establishments = establishments;
-      _lengthEstablishments = establishments.length;
-      notifyListeners();
-      sortByDistance();
-      notifyListeners();
 
-      await _saveEstablishmentsToCache(establishments);
-    } catch (e) {
-      print('Error fetching establishments: $e');
-    }
-  }
-
-  Future<void> _saveEstablishmentsToCache(
-      List<Establishment> establishments) async {
-    try {
-      final box = Hive.box<Establishment>(_establishmentsBoxName);
-      await box.clear(); // Clear existing data (optional)
-      await box.addAll(establishments);
-    } catch (e) {
-      print('Error saving to cache: $e');
-    }
-  }
+ 
 
   double _calculateDistance(
       double lat1, double lon1, double lat2, double lon2) {

@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/models/food.model.dart';
+import 'package:hia/views/home/exports/export_homescreen.dart';
+import 'package:hia/widgets/shimmer_loading_image.dart';
 
 class FoodCard extends StatelessWidget {
   final Food food;
@@ -47,11 +50,23 @@ class FoodCard extends StatelessWidget {
                       padding: const EdgeInsets.all(10.0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
-                        child: Image.network(
-                          food.image,
-                          width: 90.0,
-                          height: 90.0,
-                          fit: BoxFit.cover,
+                        child: CachedNetworkImage(
+                           width: 100.0,
+                          height: 100.0,
+                          imageUrl: food.image,
+                          placeholder: (context, url) => Shimmer(
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [Colors.grey, Colors.white],
+                            ),
+                            child: Container(
+                              width: 100.0,
+                              height: 100.0,
+                              color: Colors.white,
+                            ),
+                            ),
+                          errorWidget: (context, url, error) => Icon(Icons.error),
                         ),
                       ),
                     ),

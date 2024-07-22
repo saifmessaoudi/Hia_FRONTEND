@@ -6,6 +6,7 @@ import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/views/home/home.dart';
 import 'package:hia/widgets/custom_toast.dart';
+import 'package:hia/widgets/smart_scaffold.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
@@ -45,8 +46,7 @@ class _FoodPreferencePageState extends State<FoodPreferencePage> {
   Widget build(BuildContext context) {
     final foodPreferenceProvider = Provider.of<FoodPreferenceProvider>(context);
 
-    return SafeArea(
-      child: Scaffold(
+    return  SmartScaffold(
         resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
@@ -216,7 +216,6 @@ class _FoodPreferencePageState extends State<FoodPreferencePage> {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }

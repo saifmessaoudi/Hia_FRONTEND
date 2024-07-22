@@ -1,10 +1,8 @@
 import 'package:gap/gap.dart';
 import 'package:hia/constant.dart';
-import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/views/home/home.dart';
 import 'package:hia/widgets/smart_scaffold.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 class EmptyCard extends StatelessWidget {
@@ -14,9 +12,7 @@ class EmptyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SmartScaffold(
       backgroundColor: kMainColor,
-      body: Consumer<UserViewModel>(
-        builder: (context, controller, _) => Center(
-          child: Column(
+      body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Gap(120),
@@ -44,14 +40,12 @@ class EmptyCard extends StatelessWidget {
                      color: Colors.white,
                     ),
                     onPressed: () {
-                    Home.of(context)?.updateSelectedIndex(0);
+                      
                   },
                 ),  
                 const Spacer()
             ],
-          ),
-        ),
-      ),
+          )
     );
   }
 }

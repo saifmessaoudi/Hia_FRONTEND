@@ -17,6 +17,7 @@ class FoodAdapter extends TypeAdapter<Food> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Food(
+      id: fields[12] as String,
       name: fields[0] as String,
       description: fields[1] as String,
       price: fields[2] as int,
@@ -28,14 +29,14 @@ class FoodAdapter extends TypeAdapter<Food> {
       remise: fields[8] as int,
       remiseDeadline: fields[9] as DateTime,
       reviews: (fields[10] as List?)?.cast<Review>(),
-      establishment: fields[11] as Establishment, // Correct field type
+      establishment: fields[11] as Establishment,
     );
   }
 
   @override
   void write(BinaryWriter writer, Food obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -59,7 +60,9 @@ class FoodAdapter extends TypeAdapter<Food> {
       ..writeByte(10)
       ..write(obj.reviews)
       ..writeByte(11)
-      ..write(obj.establishment);
+      ..write(obj.establishment)
+      ..writeByte(12)
+      ..write(obj.id);
   }
 
   @override

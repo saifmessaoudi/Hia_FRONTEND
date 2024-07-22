@@ -30,22 +30,17 @@ class FoodViewModel extends ChangeNotifier {
 
     try {
       Debugger.yellow('Attempting to fetch cached foods...');
-      _foods = (await _service.getCachedData()) ?? [];
+      _foods = (await _service.getCachedData()) ;
+     
       if (_foods.isEmpty) {
-        Debugger.red('No cached data found, fetching from server...');
+        Debugger.red('No food cached data found, fetching from server...');
         _foods = await _service.fetchFoods();
         await _service.cacheData(_foods);  // Cache the fetched data
+
       } else {
         Debugger.green('Loaded foods from cache.');
-        // Fetch new data from server and update cache
-        if (await _service.hasInternetConnection()) {
-          List<Food> newFoods = await _service.fetchFoods();
-          _foods = mergeFoods(_foods, newFoods);
-          await _service.cacheData(_foods);
-        }
-        else {
-          Debugger.yellow('No internet connection, using cached data.');
-        }
+        isLoading = false;
+        notifyListeners();
       }
     } catch (e) {
       Debugger.red('Error fetching foods: $e');

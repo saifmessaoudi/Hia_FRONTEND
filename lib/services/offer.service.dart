@@ -16,7 +16,7 @@ class OfferService {
         return Offer.fromJson(e as Map<String, dynamic>);
       }).toList();
       await cacheData(offers);
-      Debugger.green('Establishments fetched successfully');
+      Debugger.green('Offers fetched successfully');
       return offers;
     } else {
       throw Exception('Failed to load establishments');

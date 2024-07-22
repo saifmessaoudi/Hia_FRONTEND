@@ -68,14 +68,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 child: Icon(
                                                   Icons.location_on_outlined,
                                                   color: white,
-                                                  size: 15.0,
+                                                  size: 16.0,
                                                 ),
                                               ),
                                               TextSpan(
                                                 text: userViewModel.userData?.address,
                                                 style: kTextStyle.copyWith(
                                                   color: white,
-                                                  fontSize: 14.0,
+                                                  fontSize: 15.0,
                                                 ),
                                               ),
                                             ],

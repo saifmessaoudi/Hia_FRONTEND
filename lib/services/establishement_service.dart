@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:hia/models/food.model.dart';
@@ -25,20 +26,26 @@ class EstablishmentService {
   }
 
   Future<void> cacheData(List<Establishment> data) async {
-    var box = Hive.box('establishmentBox');
-    box.put(cacheKey, data.map((e) => e.toJson()).toList());
-    Debugger.green('Data cached successfully');
-  }
+    var box = Hive.box<Establishment>('establishmentsBox');
+     await box.clear();
+     await box.addAll(data);
+    Debugger.green('Establishments cached successfully');
 
+  }
   Future<List<Establishment>> getCachedData() async {
-    var box = Hive.box('establishmentBox');
-    List<dynamic> cachedData = box.get(cacheKey, defaultValue: []);
-    Debugger.green('Retrieved cached data');
-    return cachedData.map((e) {
-      return Establishment.fromJson(Map<String, dynamic>.from(e as Map)); // Ensure proper type casting
-    }).toList();
+    var box = Hive.box<Establishment>('establishmentsBox');
+    List<Establishment> cachedData = box.values.toList();
+    Debugger.green('Retrieved cached establishments data');
+    return  cachedData;
+   
   }
 
+
+//hasInternetConnection() method
+  Future<bool> hasInternetConnection() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    return connectivityResult != ConnectivityResult.none;
+  }
 
 
 Future <List<Establishment>> getAllEstablishments() async {

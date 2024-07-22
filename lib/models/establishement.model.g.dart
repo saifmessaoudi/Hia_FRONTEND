@@ -103,7 +103,6 @@ class EstablishmentAdapter extends TypeAdapter<Establishment> {
       ..write(obj.foods)
       ..writeByte(12)
       ..write(obj.reviews);
-
   }
 
   @override

@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/authentication/sign_in.dart';
+import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/views/profile/edit_profile.dart';
 import 'package:hia/widgets/custom_dialog.dart';
 import 'package:hia/widgets/smart_scaffold.dart';
@@ -53,26 +55,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         const SizedBox(
                           height: 20.0,
                         ),
-                        const CircleAvatar(
-                          radius: 20.0,
-                          child: Image(
-                            image: AssetImage('images/h_logo.png'),
+                        Consumer<UserViewModel>(
+                          builder:(context, userViewModel, child) {
+                          final user = userViewModel.userData;
+                          return Column(
+                            children: [
+                              ClipOval(
+                                child: SizedBox(
+                                  height: 80.0,
+                                  width: 80.0,
+                                  child: CachedNetworkImage(
+                                    imageUrl: user?.profileImage ?? 'https://mir-s3-cdn-cf.behance.net/user/276/180d9c144450013.5cde903578dd7.jpg',
+                                    placeholder: (context, url) => Shimmer.fromColors(
+                                      baseColor: Colors.grey[300]!,
+                                      highlightColor: Colors.grey[100]!,
+                                      child: Container(
+                                        height: 80.0,
+                                        width: 80.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) => Icon(Icons.error),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                                    const SizedBox(
+                                      height: 10.0,
+                              ),
+                              Text(
+                                "Welcome, ${user?.firstName}",
+                                style: kTextStyle.copyWith(
+                                  color: kTitleColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 21.0,
+                                ),
+                              ),
+                              Text(
+                                user?.phone  ?? '+21696885412',
+                                style: kTextStyle.copyWith(color: kGreyTextColor),
+                              ),
+                            ],
+                          );
+                        },
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10.0,
-                        ),
-                        Text(
-                          'Hia Team',
-                          style: kTextStyle.copyWith(
-                              color: kTitleColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0),
-                        ),
-                        Text(
-                          '+21696885412',
-                          style: kTextStyle.copyWith(color: kGreyTextColor),
-                        ),
                         const SizedBox(
                           height: 50.0,
                         ),
@@ -270,8 +296,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                                 UserViewModel>(
                                                             context,
                                                             listen: false);
-                                                    await userViewModel
-                                                        .logout();
+                                                   
                                                     Navigator.of(context)
                                                         .pushAndRemoveUntil(
                                                       MaterialPageRoute(
@@ -280,6 +305,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       (Route<dynamic> route) =>
                                                           false, // Remove all routes
                                                     );
+                                                     await userViewModel
+                                                        .logout();
                                                   },
                                                 );
                                               },

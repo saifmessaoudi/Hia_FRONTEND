@@ -25,11 +25,9 @@ class FoodService {
   }
  
     Future<void> cacheData(List<Food> foods) async {
-    var box = await Hive.openBox('foodBox');
+    var box = Hive.box<Food>('foodBox');
     await box.clear();  // Clear old cached data
-    for (var food in foods) {
-      await box.add(food);
-    }
+    await box.addAll(foods);
   }
 
    Future<bool> hasInternetConnection() async {
@@ -38,12 +36,10 @@ class FoodService {
   }
 
   Future<List<Food>> getCachedData() async {
-    var box = Hive.box('foodBox');
-    List<dynamic> cachedData = box.get(FoodService.cacheKey, defaultValue: []);
-    Debugger.green('Retrieved cached data');
-    return cachedData.map((e) {
-      return Food.fromJson(Map<String, dynamic>.from(e as Map)); // Ensure proper type casting
-    }).toList();
+    var box = Hive.box<Food>('foodBox');
+    List<Food> cachedData = box.values.toList();
+    Debugger.green('Retrieved cached food data');
+    return cachedData;
   }
  
 

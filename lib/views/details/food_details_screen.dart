@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:hia/models/food.model.dart';
+import 'package:hia/viewmodels/cart_viewmodel.dart';
 import 'package:hia/views/details/establishment.details.dart';
 import 'package:hia/views/global_components/button_global.dart';
+import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart';
 
 import '../../constant.dart';
 
@@ -22,6 +25,7 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cartViewModel = Provider.of<CartViewModel>(context);
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -326,19 +330,20 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                               height: 20.0,
                             ),
                           
-                          //aa to cart
-
-                             ButtonGlobal(
-                               buttonTextColor: Colors.white,
-                                buttontext: 'Add to Cart',
-                                buttonDecoration: kButtonDecoration.copyWith(
-                                  color: kMainColor,
-                                ),
-                                onPressed: () {
-                                  // Implement add to cart logic
-                                },
-                              ),     
-                          
+                            // Add to Cart Button
+                          ButtonGlobal(
+                          buttonTextColor: Colors.white,
+                          buttontext: 'Add to Cart',
+                          buttonDecoration: kButtonDecoration.copyWith(
+                            color: kMainColor,
+                          ),
+                          onPressed: () async {
+                            
+                            cartViewModel.addItem(widget.food, quantity);
+                            showCustomToast(context, '${widget.food.name} added to cart');
+                            
+                          },
+                        ),
                             const SizedBox(
                               height: 20.0,
                             ),
