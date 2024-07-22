@@ -9,24 +9,22 @@ import 'package:shimmer/shimmer.dart';
 
 class BookTableCard extends StatelessWidget {
   const BookTableCard({
-    Key? key,
+    super.key,
     required this.restaurantData,
     required this.index,
-  }) : super(key: key);
+  });
 
   final Establishment restaurantData;
- final  int index ; 
- 
+  final int index;
 
   @override
   Widget build(BuildContext context) {
     final establishmentViewModel = Provider.of<EstablishmentViewModel>(context);
-        
 
     return Padding(
       padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
       child: Material(
-        color: Colors.white ,
+        color: Colors.white,
         elevation: 2.0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -35,31 +33,32 @@ class BookTableCard extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: SizedBox(
             width: 230.0,
-            
             child: Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: CachedNetworkImage(
-                           width: 120.0,
-                          height: 120.0,
-                          imageUrl: restaurantData.image ?? "",
-                          placeholder: (context, url) => Shimmer(
-                            gradient: const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [Colors.grey, Colors.white],
-                            ),
-                            child: Container(
-                              width: 100.0,
-                              height: 100.0,
-                              color: Colors.white,
-                            ),
-                            ),
-                          errorWidget: (context, url, error) => Icon(Icons.error),
-                        ),
+                    width: 120.0,
+                    height: 120.0,
+                    imageUrl: restaurantData.image ?? "",
+                    placeholder: (context, url) => Shimmer(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Colors.grey, Colors.white],
+                      ),
+                      child: Container(
+                        width: 100.0,
+                        height: 100.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
                 ),
-                const SizedBox(height: 10,) ,
+                const SizedBox(
+                  height: 10,
+                ),
                 Row(
                   children: [
                     Padding(
@@ -67,23 +66,22 @@ class BookTableCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          
- Text(
-  restaurantData.name.length > 12 
-    ? '${restaurantData.name.substring(0, 12)}...' 
-    : restaurantData.name.toUpperCase(),
-  style: kTextStyle.copyWith(
-    color: kTitleColor,
-    fontWeight: FontWeight.bold,
-    fontSize: 14,
-  ),
-),
-
-const SizedBox(height: 5,) ,
-RichText(
+                          Text(
+                            restaurantData.name.length > 12
+                                ? '${restaurantData.name.substring(0, 12)}...'
+                                : restaurantData.name.toUpperCase(),
+                            style: kTextStyle.copyWith(
+                              color: kTitleColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          RichText(
                             text: TextSpan(
                               children: [
-                               
                                 const WidgetSpan(
                                   child: SizedBox(
                                     width: 5.0,
@@ -97,87 +95,98 @@ RichText(
                                 ),
                                 const WidgetSpan(
                                   child: Icon(
-                                              Icons.star,
-                                              color: Colors.amber,
-                                              size: 18.0,
-                                            ),
+                                    Icons.star,
+                                    color: Colors.amber,
+                                    size: 18.0,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-
-
-const SizedBox(height: 6,) ,
-
-                         RichText(
-                              text: TextSpan(
-                                children: [
-                                  const WidgetSpan(
-                                    child: Icon(
-                                      Icons.location_on,
-                                      color: kMainColor,
-                                      size: 15.0,
-                                    ),
+                          const SizedBox(
+                            height: 6,
+                          ),
+                           establishmentViewModel.isCalculating ? 
+                           const SizedBox(
+                            height: 10,
+                          ) :
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                const WidgetSpan(
+                                  child: Icon(
+                                    Icons.location_on,
+                                    color: kMainColor,
+                                    size: 15.0,
                                   ),
-                                  TextSpan(
-                                    text: "${establishmentViewModel.distances[index].toStringAsFixed(1)} km",
-                                    style: kTextStyle.copyWith(
-                                      color: kGreyTextColor,
-                                    ),
+                                ),
+                                TextSpan(
+                                  text:
+                                      "${establishmentViewModel.distances[index].toStringAsFixed(1)} km",
+                                  style: kTextStyle.copyWith(
+                                    color: kGreyTextColor,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          const SizedBox(height: 6,) ,
+                          ),
+                          const SizedBox(
+                            height: 6,
+                          ),
                         ],
                       ),
                     ),
                     const Spacer(),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-  const SizedBox(height: 15),
-  Padding(
-    padding: const EdgeInsets.only(right: 10.0, bottom: 4.0),
-    child: Row(
-      children: [
-        Icon(
-          Icons.access_time,
-          color: restaurantData.isOpened ? kMainColor: Colors.red,
-          size: 16,
-        ),
-        const SizedBox(width: 5),
-        Text(
-          restaurantData.isOpened ? 'Opened' : 'Closed',
-          style: kTextStyle.copyWith(
-            color: restaurantData.isOpened ? Colors.green : Colors.red,
-            fontWeight: FontWeight.bold,
-            
-          ),
-        ),
-      ],
-    ),
-  ),
-  const SizedBox(height: 10),
-  Padding(
-    padding: const EdgeInsets.only(right: 4.0, bottom: 4.0),
-    child: Container(
-      padding: const EdgeInsets.all(5.0),
-      decoration: BoxDecoration(
-        color: kMainColor,
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      child: Text(
-        'Checkout',
-        style: kTextStyle.copyWith(color: Colors.white),
-      ),
-    ).onTap(() {
-      establishmentViewModel.launchMaps(restaurantData.latitude, restaurantData.longitude);
-    }),
-  ),
-],
-
-
+                      children: [
+                        const SizedBox(height: 15),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(right: 10.0, bottom: 4.0),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.access_time,
+                                color: restaurantData.isOpened
+                                    ? kMainColor
+                                    : Colors.red,
+                                size: 16,
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                restaurantData.isOpened ? 'Opened' : 'Closed',
+                                style: kTextStyle.copyWith(
+                                  color: restaurantData.isOpened
+                                      ? Colors.green
+                                      : Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(right: 4.0, bottom: 4.0),
+                          child: Container(
+                            padding: const EdgeInsets.all(5.0),
+                            decoration: BoxDecoration(
+                              color: kMainColor,
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            child: Text(
+                              'Checkout',
+                              style: kTextStyle.copyWith(color: Colors.white),
+                            ),
+                          ).onTap(() {
+                            establishmentViewModel.launchMaps(
+                                restaurantData.latitude,
+                                restaurantData.longitude);
+                          }),
+                        ),
+                      ],
                     ),
                   ],
                 ),

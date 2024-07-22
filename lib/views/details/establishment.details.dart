@@ -6,33 +6,33 @@ import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/views/offers/offers_establishment.dart';
 import 'package:hia/widgets/homescreen/food_card.dart';
 
-
-
 import 'package:nb_utils/nb_utils.dart' as nb_utils;
 import 'package:url_launcher/url_launcher.dart';
-
 
 class EstablishmentDetailsScreen extends StatefulWidget {
   const EstablishmentDetailsScreen({required this.establishment});
 
   final Establishment establishment;
 
-  static const IconData contact_phone = IconData(0xe18c, fontFamily: 'MaterialIcons');
+  static const IconData contact_phone =
+      IconData(0xe18c, fontFamily: 'MaterialIcons');
 
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
 }
 
 class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
-  int quantity = 1;
+          
+  
 
   @override
-  Widget build(BuildContext context) {
-
+  Widget build(BuildContext context) {  
+    final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: true);
+    //get index establishment 
+    int index = establishmentViewModel.establishments.indexWhere((element) => element.id == widget.establishment.id);
     return SafeArea(
       child: Scaffold(
-                 resizeToAvoidBottomInset: false,
-
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             Container(
@@ -44,7 +44,6 @@ class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
               ),
             ),
             SingleChildScrollView(
-               
               child: Stack(
                 alignment: Alignment.topCenter,
                 children: [
@@ -79,10 +78,9 @@ class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
                       const SizedBox(
                         height: 150,
                       ),
-                      
                       Container(
                         width: context.width(),
-                        height: context.height()+300,
+                        height: context.height() + 300,
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(30.0),
@@ -94,78 +92,91 @@ class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
                             const SizedBox(
                               height: 100.0,
                             ),
-                            
-                            Padding(
-                                padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-                                child: IconButton(
-                                  icon:const  Icon(Icons.phone_in_talk_sharp, color:  Color.fromARGB(255, 0, 26, 48)),
-                                  onPressed: () async {
-                                    String phoneNumber = 'tel:${widget.establishment.phone}';
-                                    if (await canLaunch(phoneNumber)) {
-                                      await launch(phoneNumber);
-                                    } else {
-                                      throw 'Could not launch $phoneNumber';
-                                    }
-                                  },
-                                ),
-                              ),
-                              const Gap(20),
-                                Text(
-                                    widget.establishment.name,
-                                    style: kTextStyle.copyWith(
-                                        color: kTitleColor,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20.0),
-                                  ),
-                                  const Gap(15),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const SizedBox(width: 15),
-                                  Text(
-                                    widget.establishment.isOpened ? 'Opened' : 'Closed',
-                                    style: kTextStyle.copyWith(
-                                      color: widget.establishment.isOpened ? kMainColor : Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 7),
-                                  Icon(
-                                    Icons.access_time,
-                                    color: widget.establishment.isOpened ? kMainColor : const Color.fromARGB(255, 114, 26, 19),
-                                    size: 16,
-                                  ),
-                                  const Spacer(),
-                                  // Add your title and icon here
-                                  GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(context, 
-                                        MaterialPageRoute(builder: (context) =>  OffersEstablishmentScreen(id:widget.establishment.id)
-                                        ));
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            'Browse Offer',
-                                            style: kTextStyle.copyWith(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          SizedBox(width: 5), // Adjust spacing
-                                          Icon(
-                                            Icons.shopping_bag,
-                                            color: kMainColor,
-                                            size: 20,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
 
-                                  const SizedBox(width: 15), // Adjust spacing
-                                ],
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 10.0, right: 10.0),
+                              child: IconButton(
+                                icon: const Icon(Icons.phone_in_talk_sharp,
+                                    color: Color.fromARGB(255, 0, 26, 48)),
+                                onPressed: () async {
+                                  String phoneNumber =
+                                      'tel:${widget.establishment.phone}';
+                                  if (await canLaunch(phoneNumber)) {
+                                    await launch(phoneNumber);
+                                  } else {
+                                    throw 'Could not launch $phoneNumber';
+                                  }
+                                },
                               ),
-                              const Gap(10),
+                            ),
+                            const Gap(20),
+                            Text(
+                              widget.establishment.name,
+                              style: kTextStyle.copyWith(
+                                  color: kTitleColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.0),
+                            ),
+                            const Gap(15),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const SizedBox(width: 15),
+                                Text(
+                                  widget.establishment.isOpened
+                                      ? 'Opened'
+                                      : 'Closed',
+                                  style: kTextStyle.copyWith(
+                                    color: widget.establishment.isOpened
+                                        ? kMainColor
+                                        : Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(width: 7),
+                                Icon(
+                                  Icons.access_time,
+                                  color: widget.establishment.isOpened
+                                      ? kMainColor
+                                      : const Color.fromARGB(255, 114, 26, 19),
+                                  size: 16,
+                                ),
+                                const Spacer(),
+                                // Add your title and icon here
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                OffersEstablishmentScreen(
+                                                    id: widget
+                                                        .establishment.id)));
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'Browse Offer',
+                                        style: kTextStyle.copyWith(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(width: 5), // Adjust spacing
+                                      Icon(
+                                        Icons.shopping_bag,
+                                        color: kMainColor,
+                                        size: 20,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                const SizedBox(width: 15), // Adjust spacing
+                              ],
+                            ),
+                            const Gap(10),
 
                             Padding(
                               padding: const EdgeInsets.only(
@@ -177,72 +188,80 @@ class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
                                 children: [
                                   Expanded(
                                     child: RichText(
-    text:const  TextSpan(
-      children: [
-         WidgetSpan(
-          child: Icon(
-            Icons.location_on,
-            color: kMainColor,
-            size: 18.0,
-          ),
-        ),
-        
-      ],
-    ),
-  ),
+                                      text: TextSpan(
+                                        children: [
+                                          const WidgetSpan(
+                                            child: Icon(
+                                              Icons.location_on,
+                                              color: kMainColor,
+                                              size: 18.0,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text:
+                                                "${establishmentViewModel.distances![index].toStringAsFixed(1)} km",
+                                            style: kTextStyle.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: kTitleColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                  
-                               Expanded(
-  child: RichText(
-    text: TextSpan(
-      children: [
-        const WidgetSpan(
-          child: Icon(
-            Icons.star,
-            color: Colors.amber,
-            size: 18.0,
-          ),
-        ),
-        TextSpan(
-          text: widget.establishment.averageRating.toString(), 
-          style: kTextStyle.copyWith(
-            fontWeight: FontWeight.bold,
-            color: kTitleColor,
-          ),
-        ),
-      ],
-    ),
-  ),
-),
-Expanded(
-  child: Padding(
-    padding: const EdgeInsets.only(
-                                  left: 15.0,
+                                  Expanded(
+                                    child: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          const WidgetSpan(
+                                            child: Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                              size: 18.0,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: widget
+                                                .establishment.averageRating
+                                                .toString(),
+                                            style: kTextStyle.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: kTitleColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-    
-  child: RichText(
-    text: TextSpan(
-      children: [
-        const WidgetSpan(
-          child: Icon(
-            Icons.reviews,
-            color: Color.fromARGB(255, 5, 32, 54),
-            size: 18.0,
-          ),
-        ),
-        TextSpan(
-          text: "${widget.establishment.reviews?.length}  Reviews", 
-          style: kTextStyle.copyWith(
-            fontWeight: FontWeight.bold,
-            color: kTitleColor,
-          ),
-        ),
-      ],
-    ),
-  ),
-),
-),
-
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 15.0,
+                                      ),
+                                      child: RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            const WidgetSpan(
+                                              child: Icon(
+                                                Icons.reviews,
+                                                color: Color.fromARGB(
+                                                    255, 5, 32, 54),
+                                                size: 18.0,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text:
+                                                  "${widget.establishment.reviews?.length}  Reviews",
+                                              style: kTextStyle.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: kTitleColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
 
                                   /*Expanded(
                                     child: RichText(
@@ -270,7 +289,7 @@ Expanded(
                                 ],
                               ),
                             ),
-                           Padding(
+                            Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: ReadMoreText(
                                 widget.establishment.description!,
@@ -280,10 +299,11 @@ Expanded(
                                 style: kTextStyle.copyWith(color: kTitleColor),
                                 trimCollapsedText: 'Show more',
                                 trimExpandedText: 'Show less',
-                                
                               ),
                             ),
-                            const SizedBox(height: 20.0,),
+                            const SizedBox(
+                              height: 20.0,
+                            ),
 
                             //Our products with see all row
                             Column(
@@ -329,41 +349,40 @@ Expanded(
                               ],
                             ),
 
-                            // list builder food card 
-                          HorizontalList(
-                      spacing: 10,
-                      itemCount: widget.establishment.foods?.length ?? 0,
-                      itemBuilder: (_, i) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FoodDetailsScreen(food: widget.establishment.foods![i]),
-                              ),
-                            );
-                          },
-                          child: FoodCard(food: widget.establishment.foods![i]),
-                        );
-                      },
-                    ),
+                            // list builder food card
+                            HorizontalList(
+                              spacing: 10,
+                              itemCount:
+                                  widget.establishment.foods?.length ?? 0,
+                              itemBuilder: (_, i) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => FoodDetailsScreen(
+                                            food:
+                                                widget.establishment.foods![i]),
+                                      ),
+                                    );
+                                  },
+                                  child: FoodCard(
+                                      food: widget.establishment.foods![i]),
+                                );
+                              },
+                            ),
 
-                             
-                            
-                            
                             Row(
                               children: [
-
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: ButtonGlobal(
                                       buttonTextColor: Colors.white,
                                       buttontext: 'Checkout',
-                                      buttonDecoration:
-                                      kButtonDecoration.copyWith(color: kMainColor),
-                                      onPressed: (){
-                                      },
+                                      buttonDecoration: kButtonDecoration
+                                          .copyWith(color: kMainColor),
+                                      onPressed: () {},
                                     ),
                                   ),
                                 ),
@@ -374,35 +393,33 @@ Expanded(
                       ),
                     ],
                   ),
-                 Padding(
-  padding: const EdgeInsets.only(top: 100.0),
-  child: CircleAvatar(
-    backgroundColor: kMainColor,
-    radius: MediaQuery.of(context).size.width / 4,
-    child: ClipOval(
-      child: FadeInImage.assetNetwork(
-        placeholder: 'images/offline_icon.png', // Placeholder image asset
-        image: widget.establishment.image!,
-        fit: BoxFit.cover,
-        width: double.infinity,
-        height: double.infinity,
-        fadeInDuration: Duration(milliseconds: 300),
-        fadeOutDuration: Duration(milliseconds: 300),
-        imageErrorBuilder: (context, error, stackTrace) {
-          return Image.asset(
-            'images/offline_icon.png', // Fallback image in case of error
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-          );
-        },
-      ),
-    ),
-  ),
-                 ),
-                
-
-
+                  Padding(
+                    padding: const EdgeInsets.only(top: 100.0),
+                    child: CircleAvatar(
+                      backgroundColor: kMainColor,
+                      radius: MediaQuery.of(context).size.width / 4,
+                      child: ClipOval(
+                        child: FadeInImage.assetNetwork(
+                          placeholder:
+                              'images/offline_icon.png', // Placeholder image asset
+                          image: widget.establishment.image!,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                          fadeInDuration: Duration(milliseconds: 300),
+                          fadeOutDuration: Duration(milliseconds: 300),
+                          imageErrorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'images/offline_icon.png', // Fallback image in case of error
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
