@@ -5,7 +5,7 @@ import 'package:nb_utils/nb_utils.dart';
 import '../../constant.dart';
 
 class OnBoard extends StatefulWidget {
-  const OnBoard({Key? key}) : super(key: key);
+  const OnBoard({super.key});
 
   @override
   _OnBoardState createState() => _OnBoardState();
@@ -129,7 +129,13 @@ class _OnBoardState extends State<OnBoard> {
                                           duration: const Duration(
                                               microseconds: 1000),
                                           curve: Curves.bounceInOut)
-                                      : const SignIn().launch(context);
+                                      : 
+                                      Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => const SignIn()),
+                                          (route) => false,
+                                        );
                                 },
                               );
                             },

@@ -89,7 +89,7 @@ class BookTableCardGrid extends StatelessWidget {
                 ),
                 const SizedBox(height: 10,),
                 RichText(
-                  text: TextSpan(
+                  text: const TextSpan(
                     children: [
                       const WidgetSpan(
                         child: Icon(
@@ -98,12 +98,7 @@ class BookTableCardGrid extends StatelessWidget {
                           size: 15.0,
                         ),
                       ),
-                      TextSpan(
-                        text: "${establishmentViewModel.distances![index].toStringAsFixed(1)} km",
-                        style: kTextStyle.copyWith(
-                          color: kGreyTextColor,
-                        ),
-                      ),
+                     
                     ],
                   ),
                 ),

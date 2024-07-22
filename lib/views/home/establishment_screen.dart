@@ -31,7 +31,7 @@ class _ProductScreenState extends State<ProductScreen> {
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("images/hiaauthbg.png"),
+                  image: AssetImage("images/hiaauthbgg.png"),
                   fit: BoxFit.cover,
                 ),
               ),

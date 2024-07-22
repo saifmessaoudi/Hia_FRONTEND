@@ -12,6 +12,7 @@ import 'package:hia/views/authentication/phone_auth.dart';
 import 'package:hia/views/authentication/registration/sign_up.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/views/location/location_permission.dart';
+import 'package:hia/widgets/smart_scaffold.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
@@ -65,12 +66,12 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
+    return SmartScaffold(
+    
         body: Stack(
           children: [
             Container(
+              height: MediaQuery.of(context).size.height / 2.5,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("images/hiaauthbgg.png"),
@@ -89,8 +90,8 @@ class _SignInState extends State<SignIn> {
                     width: MediaQuery.of(context).size.width / 2,
                     child: Image.asset(
                       'images/h_logo_white.png',
-                      height: 50.0,
-                      width: 50.0,
+                      height: 60.0,
+                      width: 60.0,
                     ),
                   ),
                  
@@ -158,7 +159,7 @@ class _SignInState extends State<SignIn> {
             ),
           ],
         ),
-      ),
+      
     );
   }
 
@@ -196,6 +197,7 @@ class _SignInState extends State<SignIn> {
       controller: passwordController,
       cursorColor: kMainColor,
       textFieldType: TextFieldType.PASSWORD,
+    
       decoration: InputDecoration(
         labelText: 'Password',
         hintText: 'Password',
@@ -256,49 +258,55 @@ class _SignInState extends State<SignIn> {
   }
 
   Widget _buildLoginButton(BuildContext context) {
-    return ButtonGlobal(
-      buttonTextColor: Colors.white,
-      buttontext: 'Log In',
-      buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
-      onPressed: () async {
-        setState(() {
-          emailError = emailController.text.isEmpty
-              ? 'Please enter your email'
-              : !RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
-                      .hasMatch(emailController.text)
-                  ? 'Please enter a valid email'
-                  : null;
-          passwordError = passwordController.text.isEmpty
-              ? 'Please enter your password'
-              : passwordController.text.length < 6
-                  ? 'Password must be at least 6 characters long'
-                  : null;
-        });
+  return Consumer<UserViewModel>(
+    builder: (context, authViewModel, child) {
+      return authViewModel.isLoading
+          ? const LoadingWidget(color: kMainColor,)
+          : ButtonGlobal(
+              buttonTextColor: Colors.white,
+              buttontext: 'Log In',
+              buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+              onPressed: () async {
+                setState(() {
+                  emailError = emailController.text.isEmpty
+                      ? 'Please enter your email'
+                      : !RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+                              .hasMatch(emailController.text)
+                          ? 'Please enter a valid email'
+                          : null;
+                  passwordError = passwordController.text.isEmpty
+                      ? 'Please enter your password'
+                      : passwordController.text.length < 6
+                          ? 'Password must be at least 6 characters long'
+                          : null;
+                });
 
-        if (emailError == null && passwordError == null) {
-          final authViewModel =
-              Provider.of<UserViewModel>(context, listen: false);
-          bool success = await authViewModel.login(
-            emailController.text,
-            passwordController.text,
-          );
+                if (emailError == null && passwordError == null) {
+                  bool success = await authViewModel.login(
+                    emailController.text,
+                    passwordController.text,
+                  );
 
-          if (success) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const LocationPermission()),
+                  if (success) {
+                    Navigator.push(
+                      // ignore: use_build_context_synchronously
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LocationPermission()),
+                    );
+                  } else {
+                    setState(() {
+                      emailError = 'Invalid email or password';
+                      passwordError = 'Invalid email or password';
+                    });
+                  }
+                }
+              },
             );
-          } else {
-            setState(() {
-              emailError = 'Invalid email or password';
-              passwordError = 'Invalid email or password';
-            });
-          }
-        }
-      },
-    );
-  }
+    },
+  );
+}
+
 
   Widget _buildSignUpRow(BuildContext context) {
     return Padding(
@@ -318,7 +326,7 @@ class _SignInState extends State<SignIn> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SignUp()),
+                MaterialPageRoute(builder: (context) => const SignUp()),
               );
             },
             child: const Text(

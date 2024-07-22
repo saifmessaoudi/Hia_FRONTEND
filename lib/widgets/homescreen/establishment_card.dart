@@ -1,10 +1,12 @@
 
 
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:shimmer/shimmer.dart';
 
 
 class EstablishmentCard extends StatelessWidget {
@@ -33,12 +35,24 @@ class EstablishmentCard extends StatelessWidget {
               children: [
                  Padding(
                   padding:  const EdgeInsets.only(top: 8.0),
-                  child: Image(
-                    image: NetworkImage(establishment.image ?? ''),
-                    fit: BoxFit.cover,
-                    height: 110,
-                    width: 110,
-                  ),
+                  child:  CachedNetworkImage(
+                           width: 100.0,
+                          height: 100.0,
+                          imageUrl: establishment?.image ?? "",
+                          placeholder: (context, url) => Shimmer(
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [Colors.grey, Colors.white],
+                            ),
+                            child: Container(
+                              width: 100.0,
+                              height: 100.0,
+                              color: Colors.white,
+                            ),
+                            ),
+                          errorWidget: (context, url, error) => Icon(Icons.error),
+                        ),
                 ),
                 Row(
                   children: [

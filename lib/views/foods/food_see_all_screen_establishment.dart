@@ -24,8 +24,6 @@ class _FoodSeeAllScreenEstablishmentState extends State<FoodSeeAllScreenEstablis
     // TODO: implement initState
     super.initState();
         final establishmentviewmodel = Provider.of<EstablishmentViewModel>(context, listen: false);
-        establishmentviewmodel.fetchFoodsFromEstablishment(widget.product.id) ; 
-
 
   }
 

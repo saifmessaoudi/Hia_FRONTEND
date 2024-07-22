@@ -29,6 +29,7 @@ class FoodSearchDelegate extends SearchDelegate<Food> {
   icon: const Icon(Icons.arrow_back),
   onPressed: () {
     close(context, Food(
+      id: '',
       name: '',
       image: '',
       price: 0,
@@ -47,7 +48,7 @@ class FoodSearchDelegate extends SearchDelegate<Food> {
         averageRating: 0,
         foods: [],
         reviews: [], id: '', latitude: 0.0, longitude: 0.0, isOpened: false,
-      ),
+      ), reviews: [],
     ));
   },
 );

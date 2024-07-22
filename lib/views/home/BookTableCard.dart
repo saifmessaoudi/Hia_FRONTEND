@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class BookTableCard extends StatelessWidget {
   const BookTableCard({
@@ -38,12 +40,24 @@ class BookTableCard extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Image.network(
-                    restaurantData.image ?? '',
-                    fit: BoxFit.cover,
-                    height: 130,
-                    width: 130,
-                  ),
+                  child: CachedNetworkImage(
+                           width: 120.0,
+                          height: 120.0,
+                          imageUrl: restaurantData.image ?? "",
+                          placeholder: (context, url) => Shimmer(
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [Colors.grey, Colors.white],
+                            ),
+                            child: Container(
+                              width: 100.0,
+                              height: 100.0,
+                              color: Colors.white,
+                            ),
+                            ),
+                          errorWidget: (context, url, error) => Icon(Icons.error),
+                        ),
                 ),
                 const SizedBox(height: 10,) ,
                 Row(

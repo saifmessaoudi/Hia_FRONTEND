@@ -72,7 +72,7 @@ class Offer extends HiveObject {
       description: json['description'],
       image: json['image'],
       food: (json['food'] as List).map((item) => Food.fromJson(item)).toList(),
-      etablishment: Establishment.fromJson(json['etablishment']),
+      etablishment: Establishment.fromJsonWithoutFoods(json['etablishment']),
       remise: json['remise'],
       validFrom: DateTime.parse(json['validFrom']),
       validUntil: DateTime.parse(json['validUntil']),

@@ -1,13 +1,17 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hia/models/cart/cart.model.dart';
+import 'package:hia/models/cart/cart_item.model.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hia/models/offer.model.dart';
 import 'package:hia/utils/connectivity_manager.dart';
 import 'package:hia/utils/navigation_service.dart';
+import 'package:hia/viewmodels/cart_viewmodel.dart';
 import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:hia/viewmodels/food_viewmodel.dart';
+import 'package:hia/viewmodels/home/navigation_provider.dart';
 import 'package:hia/viewmodels/offer.viewmodel.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_pref_provider.dart';
@@ -16,19 +20,25 @@ import 'package:hia/views/splash/on_board_screen.dart';
 import 'package:hia/views/splash/splash_screen.dart';
 import 'package:hia/views/splash/splash_view.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
+  final appDocumentDir = await getApplicationDocumentsDirectory();
+  await Hive.initFlutter(appDocumentDir.path);
   
   Hive.registerAdapter(FoodAdapter());
   Hive.registerAdapter(OfferAdapter());
   Hive.registerAdapter(EstablishmentAdapter());
+  Hive.registerAdapter(CartItemAdapter());
+  Hive.registerAdapter(CartAdapter());
 
-  Hive.openBox('foodBox');
-  Hive.openBox('establishmentBox');
-  Hive.openBox('offerBox');
+  await Hive.openBox<Food>('foodBox');
+  await Hive.openBox<Establishment>('establishmentsBox');
+  await Hive.openBox('offerBox');
+  await Hive.openBox<Cart>('cartBox');
+  await Hive.openBox<CartItem>('cartItemBox');
   
   
 
@@ -38,7 +48,10 @@ void main() async {
     
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ConnectivityManager()),
+        ChangeNotifierProvider(
+          create: (_) => ConnectivityManager(),
+          child: const MyApp(),
+        ),
 
         ChangeNotifierProvider(create: (_) => UserViewModel()),
         ChangeNotifierProvider(
@@ -62,7 +75,9 @@ void main() async {
             return establishmentViewModel;
           },
         ),
-
+        ChangeNotifierProvider(create: (context) => CartViewModel()),
+        ChangeNotifierProvider(
+          create: (_) => NavigationModel(),)
 
       ],
       child: DevicePreview(

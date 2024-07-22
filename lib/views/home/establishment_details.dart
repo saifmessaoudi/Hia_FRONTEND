@@ -339,79 +339,27 @@ Expanded(
                       'See all',
                       style: kTextStyle.copyWith(color: kGreyTextColor),
                     ).onTap(() {
-Navigator.of(context).push(
-  MaterialPageRoute(
-    builder: (context) => FoodSeeAllScreenEstablishment(product: widget.product),
-  ),
-);
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => FoodSeeAllScreenEstablishment(product: widget.product),
+            ),
+          );
                    }),
                   ],
                 ),
               ),
-                            
-                        Padding(
-  padding: const EdgeInsets.all(10.0),
-  child: Consumer<EstablishmentViewModel>(
-    builder: (context, viewModel, child) {
-      if (viewModel.isFetchingFoods) {
-        return Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          child: SizedBox(
-            height: 170, // Specify a fixed height for the ListView
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: 5,
-              itemBuilder: (_, __) => Container(
-                width: 300,
-                margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
+              SizedBox(
+                height: 200.0,
+                child: ListView.builder(
+                  itemCount: widget.product.foods!.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return FoodCard(
+                      food: widget.product.foods![index],
+                    );
+                  },
                 ),
-              ),
-            ),
-          ),
-        );
-      } else if (viewModel.foodbyestablishment == null || viewModel.foodbyestablishment!.isEmpty) {
-        return Center(
-          child: Text(
-            'No available products',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey,
-            ),
-          ),
-        );
-      } else {
-        return HorizontalList(
-          spacing: 10,
-          itemCount: viewModel.foodbyestablishment!.length,
-          itemBuilder: (_, i) {
-            return FoodCard(
-              food: viewModel.foodbyestablishment![i],
-            ).onTap(
-              () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FoodDetailsScreen(
-                      food: viewModel.foodbyestablishment![i],
-                    ),
-                  ),
-                );
-              },
-              highlightColor: context.cardColor,
-            );
-          },
-        );
-      }
-    },
-  ),
-),
-
-                            
-                            
+              ),                        
                             Row(
                               children: [
                                /* Expanded(

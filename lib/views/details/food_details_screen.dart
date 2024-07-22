@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:hia/models/food.model.dart';
+import 'package:hia/viewmodels/cart_viewmodel.dart';
 import 'package:hia/views/details/establishment.details.dart';
 import 'package:hia/views/global_components/button_global.dart';
+import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart';
 
 import '../../constant.dart';
 
@@ -22,6 +25,7 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cartViewModel = Provider.of<CartViewModel>(context);
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -326,19 +330,20 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                               height: 20.0,
                             ),
                           
-                          //aa to cart
-
-                             ButtonGlobal(
-                               buttonTextColor: Colors.white,
-                                buttontext: 'Add to Cart',
-                                buttonDecoration: kButtonDecoration.copyWith(
-                                  color: kMainColor,
-                                ),
-                                onPressed: () {
-                                  // Implement add to cart logic
-                                },
-                              ),     
-                          
+                            // Add to Cart Button
+                          ButtonGlobal(
+                          buttonTextColor: Colors.white,
+                          buttontext: 'Add to Cart',
+                          buttonDecoration: kButtonDecoration.copyWith(
+                            color: kMainColor,
+                          ),
+                          onPressed: () async {
+                            
+                            cartViewModel.addItem(widget.food, quantity);
+                            showCustomToast(context, '${widget.food.name} added to cart');
+                            
+                          },
+                        ),
                             const SizedBox(
                               height: 20.0,
                             ),
@@ -347,32 +352,22 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                       ),
                     ],
                   ),
-                   Padding(
-  padding: const EdgeInsets.only(top: 100.0),
-  child: CircleAvatar(
-    backgroundColor: kMainColor,
-    radius: MediaQuery.of(context).size.width / 4,
-    child: ClipOval(
-      child: FadeInImage.assetNetwork(
-        placeholder: 'images/offline_icon.png', // Placeholder image asset
-        image: widget.food.image!,
-        fit: BoxFit.cover,
-        width: double.infinity,
-        height: double.infinity,
-        fadeInDuration: Duration(milliseconds: 300),
-        fadeOutDuration: Duration(milliseconds: 300),
-        imageErrorBuilder: (context, error, stackTrace) {
-          return Image.asset(
-            'images/offline_icon.png', // Fallback image in case of error
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-          );
-        },
-      ),
-    ),
-  ),
-                 ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 100.0),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: MediaQuery.of(context).size.width / 4,
+                      child: ClipRect(
+                        child: Image.network(
+                          widget.food.image,
+                          fit: BoxFit.cover,
+                          width: MediaQuery.of(context).size.width / 4,
+                          height: MediaQuery.of(context).size.width / 4,
+                        ),
+                      ),
+                      
+                    ),
+                  ),
                 ],
               ),
             ),

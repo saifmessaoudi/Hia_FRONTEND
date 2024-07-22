@@ -82,9 +82,6 @@ class FoodPreferenceProvider with ChangeNotifier {
         .map((entry) => entry.key)
         .toList();
 
-    
-  
-
     if (userId != null) {
       final success = await _userViewModel.userService.saveUserPreferences(userId, selectedPrefs);
 

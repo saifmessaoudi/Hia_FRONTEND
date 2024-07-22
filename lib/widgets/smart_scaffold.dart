@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hia/utils/connectivity_manager.dart';
+import 'package:hia/widgets/custom_toast.dart';
 import 'package:hia/widgets/offline_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/rendering.dart';
@@ -68,12 +69,12 @@ class SmartScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<ConnectivityManager>(
-      builder: (_, connectivityManager, __) {
-        final bool isConnected = connectivityManager.isConnected;
+      builder: (context, connectivityManager, __) {
 
-        return !isConnected
-            ? const DisconnectedWidget()
-            : GestureDetector(
+        if (!connectivityManager.isConnected) {
+          return const DisconnectedWidget();
+        }
+        return GestureDetector(
                 onTap: FocusScope.of(context).unfocus,
                 child: Scaffold(
                   extendBody: extendBody,

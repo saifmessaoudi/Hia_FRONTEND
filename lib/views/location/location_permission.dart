@@ -52,7 +52,7 @@ class _LocationPermissionState extends State<LocationPermission> {
         MaterialPageRoute(builder: (context) => const FoodPreferencePage()),
       );
 
-      const CustomToastWidget( isError: false, message: 'Location updated successfully',);
+       CustomToastWidget( isError:  false, message: 'Location updated successfully',);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Failed to update location: $e'),

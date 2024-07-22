@@ -1,17 +1,22 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_preferences_screen.dart';
+import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/views/home/home.dart';
+import 'package:hia/views/profile/profile_bottom_sheet.dart';
 import 'package:hia/widgets/back_row.dart';
 import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../constant.dart';
 
 class EditProfile extends StatefulWidget {
@@ -107,8 +112,7 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
 
-    return SafeArea(
-      child: Scaffold(
+    return  SmartScaffold(
         resizeToAvoidBottomInset: false,
         bottomNavigationBar: Card(
           elevation: 0.0,
@@ -237,20 +241,43 @@ class _EditProfileState extends State<EditProfile> {
                               ),
                               child: ClipOval(
                                 child: SizedBox(
-                                  width: 10.0, // Set the width of the logo
-                                  height: 10.0, // Set the height of the logo
-                                  child: Image.asset(
-                                    'images/h_logo.png',
+                                  height: 10.0,
+                                  width: 10.0,
+                                  child: CachedNetworkImage(
+                                    imageUrl:  'https://mir-s3-cdn-cf.behance.net/user/276/180d9c144450013.5cde903578dd7.jpg',
+                                    placeholder: (context, url) => Shimmer.fromColors(
+                                      baseColor: Colors.grey[300]!,
+                                      highlightColor: Colors.grey[100]!,
+                                      child: Container(
+                                        height: 80.0,
+                                        width: 80.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) => Icon(Icons.error),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
                             ),
-                            Positioned(
-                              bottom: 0.0,
-                              right: 0.0,
-                              child: Image.asset('images/editpicicon.png'),
-                            ),
+                           
+                              Positioned(
+                                bottom: 0.0,
+                                right: 0.0,
+                                child: GestureDetector(
+                                  
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      backgroundColor: kMainColor,
+                                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+                                      context: context,
+                                      builder: (context) => const ProfileBottomSheet(),
+                                    );
+                                  },
+                                  child: Image.asset('images/editpicicon.png')
+                                  ),
+                              ),
+                          
                           ],
                         ),
                         const SizedBox(
@@ -524,7 +551,6 @@ class _EditProfileState extends State<EditProfile> {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }

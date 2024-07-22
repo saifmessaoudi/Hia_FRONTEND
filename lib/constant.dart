@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 // const kMainColor = Color(0xFF3F8CFF);
 const kMainColor = Color(0xFF00643C);
@@ -8,8 +7,13 @@ const kGreyTextColor = Color(0xFF707070);
 const kBorderColorTextField = Color(0xFFC2C2C2);
 const kDarkWhite = Color(0xFFF1F7F7);
 const kTitleColor = Color.fromARGB(255, 35, 35, 35);
-final kTextStyle = GoogleFonts.notoSans(
+const kTextStyle =   TextStyle(
+  fontFamily: "NotoSans",
   color: Colors.white,
+);
+const kTextStyleBlack =   TextStyle(
+  fontFamily: "NotoSans",
+  color: Colors.black,
 );
 const kButtonDecoration = BoxDecoration(
   color: kMainColor,

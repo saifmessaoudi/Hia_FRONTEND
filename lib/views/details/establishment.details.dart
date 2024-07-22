@@ -1,25 +1,16 @@
 // ignore_for_file: use_key_in_widget_constructors
 
-import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:hia/models/establishement.model.dart';
-import 'package:hia/viewmodels/establishement_viewmodel.dart';
-import 'package:hia/views/details/food_details_screen.dart';
-import 'package:hia/views/foods/food_see_all_screen_establishment.dart';
 import 'package:hia/views/global_components/button_global.dart';
+import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/views/offers/offers_establishment.dart';
 import 'package:hia/widgets/homescreen/food_card.dart';
 
 
 
 import 'package:nb_utils/nb_utils.dart' as nb_utils;
-import 'package:nb_utils/nb_utils.dart';
-import 'package:provider/provider.dart';
-import 'package:readmore/readmore.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../constant.dart';
 
 class EstablishmentDetailsScreen extends StatefulWidget {
   const EstablishmentDetailsScreen({required this.establishment});
@@ -37,7 +28,6 @@ class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-            final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
 
     return SafeArea(
       child: Scaffold(
@@ -280,120 +270,90 @@ Expanded(
                                 ],
                               ),
                             ),
-                            Padding(
-  padding: const EdgeInsets.all(20.0),
-  child: Text(
-    widget.establishment.description ?? '',
-    style: kTextStyle.copyWith(color: kTitleColor),
-  ),
-),
-                           const SizedBox(height: 20.0,),
-                            Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                child: Row(
-                  children: [
-                    Text(
-                      'Our Products :',
-                      style: kTextStyle.copyWith(
-                        color: kTitleColor,
-                        fontSize: 18.0,
-                      ),
+                           Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: ReadMoreText(
+                                widget.establishment.description!,
+                                trimLines: 10,
+                                colorClickableText: kMainColor,
+                                trimMode: TrimMode.Line,
+                                style: kTextStyle.copyWith(color: kTitleColor),
+                                trimCollapsedText: 'Show more',
+                                trimExpandedText: 'Show less',
+                                
+                              ),
+                            ),
+                            const SizedBox(height: 20.0,),
+
+                            //Our products with see all row
+                            Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20.0, right: 20.0, bottom: 10.0),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'Our Products',
+                                        style: kTextStyle.copyWith(
+                                            color: kTitleColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0),
+                                      ),
+                                      const Spacer(),
+                                      GestureDetector(
+                                        onTap: () {
+                                          // Navigator.push(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //     builder: (context) => ProductListScreen(),
+                                          //   ),
+                                          // );
+                                        },
+                                        child: Text(
+                                          'See all',
+                                          style: kTextStyle.copyWith(
+                                              color: kMainColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16.0),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10.0,
+                                ),
+                                //Product list
+                                //ProductList(),
+                              ],
+                            ),
+
+                            // list builder food card 
+                          HorizontalList(
+                      spacing: 10,
+                      itemCount: widget.establishment.foods?.length ?? 0,
+                      itemBuilder: (_, i) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FoodDetailsScreen(food: widget.establishment.foods![i]),
+                              ),
+                            );
+                          },
+                          child: FoodCard(food: widget.establishment.foods![i]),
+                        );
+                      },
                     ),
-                    const Spacer(),
-                    Text(
-                      'See all',
-                      style: kTextStyle.copyWith(color: kGreyTextColor),
-                    ).onTap(() {
-Navigator.of(context).push(
-  MaterialPageRoute(
-    builder: (context) => FoodSeeAllScreenEstablishment(product: widget.establishment),
-  ),
-);
-                   }),
-                  ],
-                ),
-              ),
-                            
-                        Padding(
-  padding: const EdgeInsets.all(10.0),
-  child: Consumer<EstablishmentViewModel>(
-    builder: (context, viewModel, child) {
-      if (viewModel.isFetchingFoods) {
-        return Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          child: SizedBox(
-            height: 170, // Specify a fixed height for the ListView
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: 5,
-              itemBuilder: (_, __) => Container(
-                width: 300,
-                margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-              ),
-            ),
-          ),
-        );
-      } else if (viewModel.foodbyestablishment == null || viewModel.foodbyestablishment!.isEmpty) {
-        return Center(
-          child: Text(
-            'No available products',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey,
-            ),
-          ),
-        );
-      } else {
-        return HorizontalList(
-          spacing: 10,
-          itemCount: viewModel.foodbyestablishment!.length,
-          itemBuilder: (_, i) {
-            return FoodCard(
-              food: viewModel.foodbyestablishment![i],
-            ).onTap(
-              () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FoodDetailsScreen(
-                      food: viewModel.foodbyestablishment![i],
-                    ),
-                  ),
-                );
-              },
-              highlightColor: context.cardColor,
-            );
-          },
-        );
-      }
-    },
-  ),
-),
-const SizedBox(height: 20.0,),
-                            
- 
+
+                             
                             
                             
                             Row(
                               children: [
-                               /* Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: ButtonGlobal(
-                                      buttontext: 'Add To Cart',
-                                      buttonDecoration:
-                                          kButtonDecoration.copyWith(color: kMainColor),
-                                      onPressed: (){
-                                        ///const CartScreen().launch(context);
-                                      },
-                                    ),
-                                  ),
-                                ),*/
+
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.all(10.0),
