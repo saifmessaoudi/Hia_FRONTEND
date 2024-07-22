@@ -203,10 +203,10 @@ bool isAuthenticated() {
     }
   }
 
-  Future<void> verifFoodFavourite(String idFood, String userId) async {
+ Future<void> verifFoodFavourite(String foodId, String userId) async {
     try {
-      bool isFavourite = await userService.verifFoodFavourite(idFood, userId);
-      _favouritesMap[idFood] = isFavourite;
+      bool isFavourite = await userService.verifFoodFavourite(userId, foodId);
+      _favouritesMap[foodId] = isFavourite;
       notifyListeners();
     } catch (e) {
       print('Error verifying favourite status: $e');

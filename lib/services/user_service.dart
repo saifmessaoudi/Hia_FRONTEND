@@ -7,7 +7,7 @@ import 'package:hia/models/user.model.dart';
 import 'package:http/http.dart' as http;
 
 class UserService extends ChangeNotifier {
-  final String baseUrl = 'http://192.168.8.145:3030';
+  final String baseUrl = 'http://192.168.152.145:3030';
   
 
   Future<bool> verifyEmail(String email) async {
@@ -398,7 +398,7 @@ class UserService extends ChangeNotifier {
   }
   Future<bool> verifFoodFavourite(String userId, String foodId) async {
     final url = Uri.parse('$baseUrl/user/verifFoodFavourite');
-    final response = await http.put(
+    final response = await http.post(
       url,
       headers: {
         'Content-Type': 'application/json',
