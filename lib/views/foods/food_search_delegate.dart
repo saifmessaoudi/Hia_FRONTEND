@@ -29,6 +29,7 @@ class FoodSearchDelegate extends SearchDelegate<Food> {
   icon: const Icon(Icons.arrow_back),
   onPressed: () {
     close(context, Food(
+      id: '',
       name: '',
       image: '',
       price: 0,

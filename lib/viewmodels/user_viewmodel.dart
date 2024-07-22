@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:hia/models/food.model.dart';
 import 'package:hia/models/user.model.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +20,19 @@ class UserViewModel with ChangeNotifier {
 
   String? _address;
   String? get address => _address;
+
+    bool _isFavourite = false;  
+    bool get isFavourite => _isFavourite;
+
+ List<Food> _favouriteFood = [];
+  List<Food>? get favouritefood => _favouriteFood;
+
+
+Map<String, bool> _favouritesMap = {}; // Map to track favorite status
+
+  bool getFavouriteStatus(String foodId) {
+    return _favouritesMap[foodId] ?? false;
+  }
 
   
 
@@ -189,5 +203,44 @@ bool isAuthenticated() {
     }
   }
 
+  Future<void> verifFoodFavourite(String idFood, String userId) async {
+    try {
+      bool isFavourite = await userService.verifFoodFavourite(idFood, userId);
+      _favouritesMap[idFood] = isFavourite;
+      notifyListeners();
+    } catch (e) {
+      print('Error verifying favourite status: $e');
+    }
+  }
+
+  Future<void> addFoodsToFavourites(String idFood, String userId) async {
+    try {
+      await userService.addFoodsToFavourites(idFood, userId);
+      _favouritesMap[idFood] = true;
+      notifyListeners();
+    } catch (e) {
+      print('Error adding to favourites: $e');
+    }
+  }
+
+  Future<void> removeFoodsFromFavourites(String idFood, String userId) async {
+    try {
+      await userService.removeFoodsFromFavourites(idFood, userId);
+      _favouritesMap[idFood] = false;
+      notifyListeners();
+    } catch (e) {
+      print('Error removing from favourites: $e');
+    }
+  }
+
+   Future<void> getFavouriteFood(String userId) async {
+    try {
+      _favouriteFood = await userService.getFavouriteFoodsByUserId(userId);
+      notifyListeners();
+    } catch (e) {
+      print('Failed to load favourite foods: $e');
+    }
+  }
 
 }
+

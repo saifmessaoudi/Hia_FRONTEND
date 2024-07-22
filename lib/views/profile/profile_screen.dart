@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/authentication/sign_in.dart';
+import 'package:hia/views/foods/food_see_all_favourites.dart';
 import 'package:hia/views/profile/edit_profile.dart';
 import 'package:hia/widgets/custom_dialog.dart';
 
@@ -191,7 +192,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                         child: ListTile(
                                           onTap: () {
-                                            // const WishList().launch(context);
+                                           
+                                            const FoodScreenFavourites().launch(context);
+                                          
                                           },
                                           leading: const CircleAvatar(
                                             backgroundColor: Color(0xFFF5F5F5),
@@ -200,11 +203,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               color: kMainColor,
                                             ),
                                           ),
+                                          
                                           title: Text(
                                             'Wishlist',
                                             style: kTextStyle.copyWith(
                                                 color: kGreyTextColor),
                                           ),
+                                          
                                           trailing: const Icon(
                                             Icons.arrow_forward_ios,
                                             color: kGreyTextColor,

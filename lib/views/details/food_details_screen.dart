@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:hia/models/food.model.dart';
+import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/details/establishment.details.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:nb_utils/nb_utils.dart';
-
+import 'package:provider/provider.dart';
 import '../../constant.dart';
 
 class FoodDetailsScreen extends StatefulWidget {
@@ -21,206 +22,219 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
   int quantity = 1;
 
   @override
+  void initState() {
+    super.initState();
+    // Verify the food favorite status when the widget is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+      await userViewModel.verifFoodFavourite(widget.food.id, userViewModel.userData!.id);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Stack(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("images/hiaauthbgg.png"),
-                  fit: BoxFit.cover,
+        body: Consumer<UserViewModel>(
+          builder: (context, userViewModel, child) {
+            final isFavourite = userViewModel.getFavouriteStatus(widget.food.id);
+
+            return Stack(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("images/hiaauthbgg.png"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            SingleChildScrollView(
-              child: Stack(
-                alignment: Alignment.topCenter,
-                children: [
-                  Column(
+                SingleChildScrollView(
+                  child: Stack(
+                    alignment: Alignment.topCenter,
                     children: [
-                      Row(
+                      Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: const Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            ).onTap(() {
-                              Navigator.pop(context);
-                            }),
-                          ),
-                          const Spacer(),
-                          CircleAvatar(
-                            backgroundColor: Colors.red.withOpacity(0.1),
-                            radius: 16.0,
-                            child: const Icon(
-                              Icons.favorite_rounded,
-                              color: Colors.red,
-                              size: 16.0,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10.0,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 150,
-                      ),
-                      Container(
-                        width: context.width(),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30.0),
-                              topRight: Radius.circular(30.0)),
-                          color: Colors.white,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const SizedBox(
-                              height: 100.0,
-                            ),
-                            SizedBox(
-                              width: 100.0,
-                              height: 50.0,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: kMainColor,
-                                  borderRadius: BorderRadius.circular(50.0),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          quantity > 1
-                                              ? quantity -= 1
-                                              : quantity = 1;
-                                        });
-                                      },
-                                      child: const Icon(
-                                        Icons.remove,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 10.0, right: 10.0),
-                                      child: Text(
-                                        quantity.toString(),
-                                        style: kTextStyle.copyWith(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          quantity += 1;
-                                        });
-                                      },
-                                      child: const Icon(
-                                        Icons.add,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const Gap(20),
-                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => EstablishmentDetailsScreen(establishment: widget.food.establishment)));
-                                },
-                                child: Text(
-                                  widget.food.establishment.name,
-                                  style: kTextStyle.copyWith(
-                                    color: kMainColor,
-                                    fontSize: 17.0,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Gap(20),
-                            RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          WidgetSpan(
-                                            child: Icon(
-                                              Icons.lock_clock,
-                                              color: widget.food.isAvailable ? kMainColor : Colors.red,
-                                              size: 18.0,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: widget.food.isAvailable ? ' Available' : ' Not Available',
-                                            style: kTextStyle.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: kTitleColor,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                            const Gap(20),
-                             Text(
-                                    widget.food.name,
-                                    style: kTextStyle.copyWith(
-                                      color: kTitleColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 22.0,
-                                    ),
-                                  ),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
+                          Row(
+                            children: [
                               Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 10.0),
-                              child: Row(
-                                children: [
-                                 
-                                  const Gap(10),
-                                  Text(
-                                    '${widget.food.price} TND',
-                                    style: kTextStyle.copyWith(
-                                      color: kMainColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0,
-                                    ),
+                                padding: const EdgeInsets.all(20.0),
+                                child: const Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.white,
+                                ).onTap(() {
+                                  Navigator.pop(context);
+                                }),
+                              ),
+                              const Spacer(),
+                              GestureDetector(
+                                onTap: () async {
+                                  if (isFavourite) {
+                                    await userViewModel.removeFoodsFromFavourites(widget.food.id, userViewModel.userData!.id);
+                                  } else {
+                                    await userViewModel.addFoodsToFavourites(widget.food.id, userViewModel.userData!.id);
+                                  }
+                                  setState(() {}); // Refresh the state
+                                },
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.red.withOpacity(0.1),
+                                  radius: 20.0,
+                                  child: Icon(
+                                    Icons.favorite_rounded,
+                                    color: isFavourite ? Colors.red : Colors.grey,
+                                    size: 20.0,
                                   ),
-                                  const Spacer(),
-                                  RichText(
-                                    text: TextSpan(
+                                ),
+                              ),
+                              const SizedBox(width: 10.0),
+                            ],
+                          ),
+                          const SizedBox(height: 150),
+                          Container(
+                            width: context.width(),
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(30.0),
+                                topRight: Radius.circular(30.0),
+                              ),
+                              color: Colors.white,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(height: 100.0),
+                                SizedBox(
+                                  width: 100.0,
+                                  height: 50.0,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: kMainColor,
+                                      borderRadius: BorderRadius.circular(50.0),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        const WidgetSpan(
-                                          child: Icon(
-                                            Icons.star,
-                                            color: Colors.amber,
-                                            size: 18.0,
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              quantity > 1 ? quantity -= 1 : quantity = 1;
+                                            });
+                                          },
+                                          child: const Icon(
+                                            Icons.remove,
+                                            color: Colors.white,
                                           ),
                                         ),
-                                        TextSpan(
-                                          text: widget.food.averageRating
-                                              .toString(),
-                                          style: kTextStyle.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: kTitleColor,
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                                          child: Text(
+                                            quantity.toString(),
+                                            style: kTextStyle.copyWith(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              quantity += 1;
+                                            });
+                                          },
+                                          child: const Icon(
+                                            Icons.add,
+                                            color: Colors.white,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  const Gap(30),
-                                  RichText(
+                                ),
+                                const Gap(20),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) => EstablishmentDetailsScreen(establishment: widget.food.establishment)
+                                      ));
+                                    },
+                                    child: Text(
+                                      widget.food.establishment.name,
+                                      style: kTextStyle.copyWith(
+                                        color: kMainColor,
+                                        fontSize: 17.0,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const Gap(20),
+                                RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      WidgetSpan(
+                                        child: Icon(
+                                          Icons.lock_clock,
+                                          color: widget.food.isAvailable ? kMainColor : Colors.red,
+                                          size: 18.0,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: widget.food.isAvailable ? ' Available' : ' Not Available',
+                                        style: kTextStyle.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: kTitleColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const Gap(20),
+                                Text(
+                                  widget.food.name,
+                                  style: kTextStyle.copyWith(
+                                    color: kTitleColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 22.0,
+                                  ),
+                                ),
+                                const SizedBox(height: 10.0),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                                  child: Row(
+                                    children: [
+                                      const Gap(10),
+                                      Text(
+                                        '${widget.food.price} TND',
+                                        style: kTextStyle.copyWith(
+                                          color: kMainColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18.0,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            const WidgetSpan(
+                                              child: Icon(
+                                                Icons.star,
+                                                color: Colors.amber,
+                                                size: 18.0,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: widget.food.averageRating.toString(),
+                                              style: kTextStyle.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: kTitleColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const Gap(30),
+                                      RichText(
                                         text: TextSpan(
                                           children: [
                                             const WidgetSpan(
@@ -231,7 +245,7 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                                               ),
                                             ),
                                             TextSpan(
-                                              text: "${0}  Reviews", 
+                                              text: "${0} Reviews",
                                               style: kTextStyle.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 color: kTitleColor,
@@ -239,144 +253,130 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                                             ),
                                           ],
                                         ),
-  ),
-
-                                ],
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20.0,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0),
-                              child: Text(
-                                widget.food.description,
-                                style: kTextStyle.copyWith(
-                                  color: kTitleColor,
-                                  fontSize: 16.0,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20.0,
-                            ),
-                            //title center ingredients 
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'Ingredients',
+                                const SizedBox(height: 20.0),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                  child: Text(
+                                    widget.food.description,
                                     style: kTextStyle.copyWith(
                                       color: kTitleColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0,
+                                      fontSize: 16.0,
                                     ),
                                   ),
-                                  const Spacer(),
-                                  GestureDetector(
-                                    onTap: () {
-                                      // Implement show all ingredients logic
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Show All',
-                                          style: kTextStyle.copyWith(
-                                            color: kMainColor,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12.0,
-                                          ),
-                                        ),
-                                        const Icon(
-                                          FontAwesomeIcons.chevronRight,
-                                          color: kMainColor,
-                                          size: 12.0,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0),
-                              child: Row(
-                                children: widget.food.ingredients.map((ingredient) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 10.0),
-                                    child: Chip(
-                                      label: Text(
-                                        ingredient,
+                                ),
+                                const SizedBox(height: 20.0),
+                                // Title center ingredients
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'Ingredients',
                                         style: kTextStyle.copyWith(
                                           color: kTitleColor,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18.0,
                                         ),
                                       ),
-                                      backgroundColor: Colors.white,
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20.0,
-                            ),
-                          
-                          //aa to cart
-
-                             ButtonGlobal(
-                               buttonTextColor: Colors.white,
-                                buttontext: 'Add to Cart',
-                                buttonDecoration: kButtonDecoration.copyWith(
-                                  color: kMainColor,
+                                      const Spacer(),
+                                      GestureDetector(
+                                        onTap: () {
+                                          // Implement show all ingredients logic
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              'Show All',
+                                              style: kTextStyle.copyWith(
+                                                color: kMainColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12.0,
+                                              ),
+                                            ),
+                                            const Icon(
+                                              FontAwesomeIcons.chevronRight,
+                                              color: kMainColor,
+                                              size: 12.0,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                onPressed: () {
-                                  // Implement add to cart logic
-                                },
-                              ),     
-                          
-                            const SizedBox(
-                              height: 20.0,
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                  child: Row(
+                                    children: widget.food.ingredients.map((ingredient) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(right: 10.0),
+                                        child: Chip(
+                                          label: Text(
+                                            ingredient,
+                                            style: kTextStyle.copyWith(
+                                              color: kTitleColor,
+                                            ),
+                                          ),
+                                          backgroundColor: Colors.white,
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                                const SizedBox(height: 20.0),
+                                ButtonGlobal(
+                                  buttonTextColor: Colors.white,
+                                  buttontext: 'Add to Cart',
+                                  buttonDecoration: kButtonDecoration.copyWith(
+                                    color: kMainColor,
+                                  ),
+                                  onPressed: () {
+                                    // Implement add to cart logic
+                                  },
+                                ),
+                                const SizedBox(height: 20.0),
+                              ],
                             ),
-                          ],
+                          ),
+                        ],
+                      ),
+                         Padding(
+                    padding: const EdgeInsets.only(top: 100.0),
+                    child: CircleAvatar(
+                      backgroundColor: kMainColor,
+                      radius: MediaQuery.of(context).size.width / 4,
+                      child: ClipOval(
+                        child: FadeInImage.assetNetwork(
+                          placeholder: 'images/offline_icon.png',
+                          image: widget.food.image!,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                          fadeInDuration: Duration(milliseconds: 300),
+                          fadeOutDuration: Duration(milliseconds: 300),
+                          imageErrorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'images/offline_icon.png',
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
+                            );
+                          },
                         ),
                       ),
+                    ),
+                         ),
                     ],
                   ),
-                   Padding(
-  padding: const EdgeInsets.only(top: 100.0),
-  child: CircleAvatar(
-    backgroundColor: kMainColor,
-    radius: MediaQuery.of(context).size.width / 4,
-    child: ClipOval(
-      child: FadeInImage.assetNetwork(
-        placeholder: 'images/offline_icon.png', // Placeholder image asset
-        image: widget.food.image!,
-        fit: BoxFit.cover,
-        width: double.infinity,
-        height: double.infinity,
-        fadeInDuration: Duration(milliseconds: 300),
-        fadeOutDuration: Duration(milliseconds: 300),
-        imageErrorBuilder: (context, error, stackTrace) {
-          return Image.asset(
-            'images/offline_icon.png', // Fallback image in case of error
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-          );
-        },
-      ),
-    ),
-  ),
-                 ),
-                ],
-              ),
-            ),
-          ],
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

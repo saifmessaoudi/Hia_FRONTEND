@@ -5,7 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class OfferService {
-  final String baseUrl = 'http://192.168.183.145:3030';
+  final String baseUrl = 'http://192.168.8.145:3030';
   static const String cacheKey = 'offerCache';
 
   Future<List<Offer>> fetchOffers() async {

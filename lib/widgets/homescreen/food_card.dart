@@ -2,14 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/models/food.model.dart';
+import 'package:hia/viewmodels/user_viewmodel.dart';
+import 'package:provider/provider.dart';
 
-class FoodCard extends StatelessWidget {
+class FoodCard extends StatefulWidget  {
   final Food food;
 
   const FoodCard({
     super.key,
     required this.food,
   });
+   @override
+  _FoodCardState createState() => _FoodCardState();
+
+}
+
+class _FoodCardState extends State<FoodCard> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+      await userViewModel.verifFoodFavourite(widget.food.id, userViewModel.userData!.id);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +62,7 @@ class FoodCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Image(
-                        image: NetworkImage(food.image ?? ''),
+                        image: NetworkImage(widget.food.image ?? ''),
                         width: 100.0,
                         height: 100.0,
                       ),
@@ -54,7 +70,7 @@ class FoodCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          food.name,
+                          widget.food.name,
                           style: kTextStyle.copyWith(color: kTitleColor),
                         ),
                       ],
@@ -62,7 +78,7 @@ class FoodCard extends StatelessWidget {
                     Row(
                       children: [
                         RatingBarIndicator(
-                          rating: food.averageRating.toDouble(),
+                          rating: widget.food.averageRating.toDouble(),
                           itemBuilder: (context, index) => const Icon(
                             Icons.star,
                             color: Colors.amber,
@@ -72,7 +88,7 @@ class FoodCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 5.0),
                         Text(
-                          food.averageRating.toString(),
+                          widget.food.averageRating.toString(),
                           style: kTextStyle.copyWith(color: kGreyTextColor),
                         ),
                       ],
@@ -93,7 +109,7 @@ class FoodCard extends StatelessWidget {
                                 ),
                               ),
                               TextSpan(
-                                text: food.price.toString(),
+                                text: widget.food.price.toString(),
                                 style: kTextStyle.copyWith(
                                   color: kTitleColor,
                                   fontSize: 16.0,
@@ -120,19 +136,35 @@ class FoodCard extends StatelessWidget {
             ),
           ),
         ),
-        const Positioned(
-          top: 10.0,
-          right: 10.0,
-          child: CircleAvatar(
-            backgroundColor: Colors.transparent,
-            radius: 16.0,
-            child: Icon(
-              Icons.favorite_border,
-              color: kMainColor,
-              size: 16.0,
-            ),
-          ),
-        ),
+       Consumer<UserViewModel>(
+  builder: (context, userViewModel, child) {
+    final isFavourite = userViewModel.getFavouriteStatus(widget.food.id);
+    
+    return Positioned(
+      top: 10.0,
+      right: 10.0,
+      child: GestureDetector(
+        onTap: () async {
+          if (isFavourite) {
+            await userViewModel.removeFoodsFromFavourites(widget.food.id, userViewModel.userData!.id);
+          } else {
+            await userViewModel.addFoodsToFavourites(widget.food.id, userViewModel.userData!.id);
+          }
+        },
+        child: CircleAvatar(
+                                  backgroundColor: Colors.red.withOpacity(0.1),
+                                  radius: 12.0,
+                                  child: Icon(
+                                    Icons.favorite_rounded,
+                                    color: isFavourite ? Colors.red : Colors.grey,
+                                    size: 18.0,
+                                  ),
+                                ),
+      ),
+    );
+  }
+)
+
       ],
     );
   }

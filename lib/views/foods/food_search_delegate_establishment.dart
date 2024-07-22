@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:hia/models/food.model.dart';
@@ -28,6 +29,7 @@ class FoodSearchDelegateEstablishment extends SearchDelegate<Food> {
   icon: const Icon(Icons.arrow_back),
   onPressed: () {
     close(context, Food(
+      id:'' ,
       name: '',
       image: '',
       price: 0,

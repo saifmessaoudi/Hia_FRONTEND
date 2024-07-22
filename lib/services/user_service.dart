@@ -1,11 +1,13 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:hia/helpers/debugging_printer.dart';
+import 'package:hia/models/food.model.dart';
 import 'package:hia/models/user.model.dart';
 import 'package:http/http.dart' as http;
 
 class UserService extends ChangeNotifier {
-  final String baseUrl = 'http://192.168.183.145:3030';
+  final String baseUrl = 'http://192.168.8.145:3030';
   
 
   Future<bool> verifyEmail(String email) async {
@@ -334,4 +336,101 @@ class UserService extends ChangeNotifier {
       return false;
     }
   }
+ Future<void> addFoodsToFavourites(String idFood, String userId) async {
+    final url = Uri.parse('$baseUrl/user/addFoodsToFavourites'); // Adjust the endpoint as needed
+
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'Idfood': idFood,
+        'userId': userId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print('Food added to favorites: ${data['message']}');
+      print('Favorite foods: ${data['favoriteFood']}');
+    } else if (response.statusCode == 400) {
+      final data = jsonDecode(response.body);
+      print('Error: ${data['message']}');
+    } else if (response.statusCode == 404) {
+      final data = jsonDecode(response.body);
+      print('Error: ${data['message']}');
+    } else {
+      // Other errors
+      print('Error: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
+  }
+  Future<void> removeFoodsFromFavourites(String idFood, String userId) async {
+    final url = Uri.parse('$baseUrl/user/removeFoodsFromFavourites'); // Adjust the endpoint as needed
+
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'Idfood': idFood,
+        'userId': userId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print('Food removed from favorites: ${data['message']}');
+      print('Favorite foods: ${data['favoriteFood']}');
+    } else if (response.statusCode == 400) {
+      final data = jsonDecode(response.body);
+      print('Error: ${data['message']}');
+    } else if (response.statusCode == 404) {
+      final data = jsonDecode(response.body);
+      print('Error: ${data['message']}');
+    } else {
+      // Other errors
+      print('Error: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
+  }
+  Future<bool> verifFoodFavourite(String userId, String foodId) async {
+    final url = Uri.parse('$baseUrl/user/verifFoodFavourite');
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'iduser': userId,
+        'idfood': foodId,
+      }),
+    );
+    if (response.statusCode == 200) {
+      return false ;
+    } 
+
+    else if ( response.statusCode == 201) {
+       return true ; 
+    } else {
+      throw Exception('Failed to verify food favourite: ${response.statusCode}');
+    }
+  }
+Future<List<Food>> getFavouriteFoodsByUserId(String userId) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/user/getFavouriteProductsByUserID'),
+      body: jsonEncode({'iduser': userId}),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      return data.map((item) => Food.fromJson(item)).toList();
+    } else {
+      throw Exception('Failed to load favourite foods');
+    }
+  }
+
 }

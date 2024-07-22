@@ -3,8 +3,10 @@ import 'package:hive/hive.dart';
 
 part 'food.model.g.dart';
 
-@HiveType(typeId: 0)
+  @HiveType(typeId: 1) 
+
 class Food extends HiveObject {
+
   @HiveField(0)
   final String name;
 
@@ -34,13 +36,15 @@ class Food extends HiveObject {
 
   @HiveField(9)
   final DateTime remiseDeadline;
-
+@HiveField(10)
+  final String id;
   
 
-  @HiveField(10)
+  @HiveField(11)
   final Establishment establishment; // Correct field name
 
   Food({
+    required this.id,
     required this.name,
     required this.description,
     required this.price,
@@ -57,6 +61,7 @@ class Food extends HiveObject {
 
   factory Food.fromJson(Map<String, dynamic> json) {
     return Food(
+      id: json['_id'],
       name: json['name'],
       description: json['description'],
       price: json['price'],
@@ -73,6 +78,7 @@ class Food extends HiveObject {
 
   Map<String, dynamic> toJson() {
     return {
+      "_id": id,
       'name': name,
       'description': description,
       'price': price,
