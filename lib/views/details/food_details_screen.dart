@@ -87,7 +87,7 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const SizedBox(
-                              height: 100.0,
+                              height: 110.0,
                             ),
                             SizedBox(
                               width: 100.0,
@@ -367,11 +367,11 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                     padding: const EdgeInsets.only(top: 100.0),
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
-                      radius: MediaQuery.of(context).size.width / 3,
+                      radius: MediaQuery.of(context).size.width / 4,
                       child: ClipOval(
                         child: SizedBox(
-                          width: MediaQuery.of(context).size.width / 1.5,
-                          height: MediaQuery.of(context).size.width / 1.5,
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: MediaQuery.of(context).size.width / 2,
                           child: CachedNetworkImage(
                             imageUrl: widget.food.image,
                             placeholder: (context, url) => Shimmer.fromColors(

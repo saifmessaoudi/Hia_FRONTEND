@@ -50,7 +50,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(
           create: (_) => ConnectivityManager(),
-          child: const MyApp(),
+          child: const Home(),
         ),
 
         ChangeNotifierProvider(create: (_) => UserViewModel()),

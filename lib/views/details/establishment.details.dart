@@ -1,5 +1,6 @@
 // ignore_for_file: use_key_in_widget_constructors
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
@@ -399,25 +400,24 @@ class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
                       backgroundColor: kMainColor,
                       radius: MediaQuery.of(context).size.width / 4,
                       child: ClipOval(
-                        child: FadeInImage.assetNetwork(
-                          placeholder:
-                              'images/offline_icon.png', // Placeholder image asset
-                          image: widget.establishment.image!,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          height: double.infinity,
-                          fadeInDuration: Duration(milliseconds: 300),
-                          fadeOutDuration: Duration(milliseconds: 300),
-                          imageErrorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                              'images/offline_icon.png', // Fallback image in case of error
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                            );
-                          },
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: MediaQuery.of(context).size.width / 2,
+                          child: CachedNetworkImage(
+                            imageUrl: widget.establishment.image!,
+                            placeholder: (context, url) => Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                color: Colors.white,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
+                      )
                     ),
                   ),
                 ],
