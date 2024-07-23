@@ -1,6 +1,5 @@
 import "package:hia/views/home/exports/export_homescreen.dart";
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -10,26 +9,30 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   @override
-void initState() {
-  super.initState();
-  final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
+  void initState() {
+    super.initState();
+    final establishmentViewModel =
+        Provider.of<EstablishmentViewModel>(context, listen: false);
 
-  //post frame callback
-  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    establishmentViewModel.calculateAllDistances();
-  });
-}
+    //post frame callback
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      establishmentViewModel.calculateAllDistances();
+    });
+  }
+
   List<String> banner = ['images/banner1.png', 'images/banner2.png'];
-
-
 
   @override
   Widget build(BuildContext context) {
     return SmartScaffold(
-     
-        body: SingleChildScrollView(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          Provider.of<EstablishmentViewModel>(context, listen: false)
+              .refreshEstablishments();
+              
+        },
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +54,6 @@ void initState() {
                         ),
                       ),
                       child: Column(
-
                         children: [
                           const SizedBox(
                             height: 20.0,
@@ -84,7 +86,8 @@ void initState() {
                                                 ),
                                               ),
                                               TextSpan(
-                                                text: userViewModel.userData?.address,
+                                                text: userViewModel
+                                                    .userData?.address,
                                                 style: kTextStyle.copyWith(
                                                   color: white,
                                                   fontSize: 15.0,
@@ -101,60 +104,71 @@ void initState() {
                             ],
                           ),
                           Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 4,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFF7F5F2),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      showSearch(
-                                        context: context,
-                                        delegate: EstablishmentSearchDelegate(
-                                          Provider.of<EstablishmentViewModel>(context, listen: false),
+                            padding: const EdgeInsets.all(10.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF7F5F2),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        showSearch(
+                                          context: context,
+                                          delegate: EstablishmentSearchDelegate(
+                                            Provider.of<EstablishmentViewModel>(
+                                                context,
+                                                listen: false),
+                                          ),
+                                        );
+                                      },
+                                      child: AppTextField(
+                                        textFieldType: TextFieldType.NAME,
+                                        enabled: false,
+                                        decoration: const InputDecoration(
+                                          prefixIcon: Icon(
+                                            Icons.search,
+                                            color: kTitleColor,
+                                          ),
+                                          border: InputBorder.none,
+                                          fillColor: Color(0xFFF7F5F2),
+                                          contentPadding: EdgeInsets.all(10.0),
+                                          hintText: 'Search',
                                         ),
-                                      );
-                                    },
-                                    child: AppTextField(
-                                      textFieldType: TextFieldType.NAME,
-                                      enabled: false,
-                                      decoration: const InputDecoration(
-                                        prefixIcon: Icon(
-                                          Icons.search,
-                                          color: kTitleColor,
-                                        ),
-                                        border: InputBorder.none,
-                                        fillColor: Color(0xFFF7F5F2),
-                                        contentPadding: EdgeInsets.all(10.0),
-                                        hintText: 'Search',
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                                 Expanded(
-                          flex: 1,
-                          child: IconButton( 
-                            icon: const Image( image: AssetImage('images/filter.png'),
-                            ),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) { return FilterDialog(
-                                     initialSelectedFilters: Provider.of<FoodViewModel>(context, listen: false).selectedFilters,
-                                    onApply: (selectedFilters) {  Provider.of<FoodViewModel>(context, listen: false).applyFilters(selectedFilters);
+                                Expanded(
+                                  flex: 1,
+                                  child: IconButton(
+                                    icon: const Image(
+                                      image: AssetImage('images/filter.png'),
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return FilterDialog(
+                                            initialSelectedFilters:
+                                                Provider.of<FoodViewModel>(
+                                                        context,
+                                                        listen: false)
+                                                    .selectedFilters,
+                                            onApply: (selectedFilters) {
+                                              Provider.of<FoodViewModel>(context,
+                                                      listen: false)
+                                                  .applyFilters(selectedFilters);
+                                            },
+                                          );
+                                        },
+                                      );
                                     },
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -162,127 +176,125 @@ void initState() {
                       ),
                     ),
                   ),
-                    
-                        ],
-                      ),
-
-                  Consumer<FoodViewModel>(
-                            builder: (context, foodViewModel, child) {
-                              List<FilterData> selectedFilterData = foodViewModel.selectedFilters
-                                .map((filter) => catData.firstWhere(
-                                    (data) => data.catTitle.toLowerCase() == filter.toLowerCase()))
-                                .toList();
-                               return selectedFilterData.isNotEmpty
-                                  ? Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                                      child: Wrap(
-                                        spacing: 14.0,
-                                        children: selectedFilterData.map((filterData) {
-                                          return FilterChipElement(catList: filterData , onRemove:() {
-                                            foodViewModel.removeFilter(filterData.catTitle);
-                                          },);
-                                        }).toList(),
-                                      ),
-                                    )
-                                  : Container();
-                            },
-                          ), 
-                  ////// ----------- Offers Section ----------- ///////         
-                const Gap(10),
-                const OffersSection(),
-
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Nearly establishments:',
-                    style: kTextStyle.copyWith(
-                      color: kTitleColor,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const ProductScreen(
-                              
-                            ),
-                          ),
-                        );                    },
-                    child: Text(
-                      'See All',
-                      style: kTextStyle.copyWith(
-                        color: kMainColor,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                  ),
                 ],
               ),
-            ),
-             Consumer<EstablishmentViewModel>(
-            builder: (context, establishmentViewModel, child) {
-              if (establishmentViewModel.isLoading || establishmentViewModel.isSorting) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: kMainColor,
-                  ),
-                );
-              }
-
-          if (establishmentViewModel.establishments != null && establishmentViewModel.establishments.isNotEmpty) {
-            return HorizontalList(
-              spacing: 10,
-              itemCount: establishmentViewModel.establishments.length,
-              itemBuilder: (_, i) {
-               
-
-              return BookTableCard(
-                restaurantData: establishmentViewModel.establishments[i],
-                  index: i,
-              ).onTap(
-            () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => EstablishmentDetailsScreen(
-                    establishment: establishmentViewModel.establishments[i],
-                  
-                  ),
-                ),
-              );
-            },
-            highlightColor: context.cardColor,
-              );
-            },
-          );
-        }   
-                          return const Center(
-                            child: Text(
-                              'There is no available data',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          );
-                        },
+        
+              Consumer<FoodViewModel>(
+                builder: (context, foodViewModel, child) {
+                  List<FilterData> selectedFilterData = foodViewModel
+                      .selectedFilters
+                      .map((filter) => catData.firstWhere((data) =>
+                          data.catTitle.toLowerCase() == filter.toLowerCase()))
+                      .toList();
+                  return selectedFilterData.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Wrap(
+                            spacing: 14.0,
+                            children: selectedFilterData.map((filterData) {
+                              return FilterChipElement(
+                                catList: filterData,
+                                onRemove: () {
+                                  foodViewModel.removeFilter(filterData.catTitle);
+                                },
+                              );
+                            }).toList(),
+                          ),
+                        )
+                      : Container();
+                },
+              ),
+              ////// ----------- Offers Section ----------- ///////
+              const Gap(10),
+              const OffersSection(),
+        
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                child: Row(
+                  children: [
+                    Text(
+                      'Nearly Establishments',
+                      style: kTextStyle.copyWith(
+                        color: kTitleColor,
+                        fontSize: 18.0,
                       ),
-
-
+                    ),
+                    const Spacer(),
+                    Text(
+                      'See all',
+                      style: kTextStyle.copyWith(color: kGreyTextColor),
+                    ).onTap(() {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProductScreen(),
+                        ),
+                      );
+                    }),
+                  ],
+                ),
+              ),
+        
+              Consumer<EstablishmentViewModel>(
+                builder: (context, establishmentViewModel, child) {
+                  if (establishmentViewModel.isLoading ||
+                      establishmentViewModel.isSorting) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: kMainColor,
+                      ),
+                    );
+                  }
+        
+                  if (establishmentViewModel.establishments.isNotEmpty) {
+                    return HorizontalList(
+                      spacing: 10,
+                      itemCount: establishmentViewModel.establishments.length,
+                      itemBuilder: (_, i) {
+                        return BookTableCard(
+                          restaurantData:
+                              establishmentViewModel.establishments[i],
+                          index: i,
+                        ).onTap(
+                          () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => EstablishmentDetailsScreen(
+                                  establishment:
+                                      establishmentViewModel.establishments[i],
+                                ),
+                              ),
+                            );
+                          },
+                          highlightColor: context.cardColor,
+                        );
+                      },
+                    );
+                  }
+                  return const Center(
+                    child: Text(
+                      'There is no available data',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  );
+                },
+              ),
+        
               ////// ----------- Recommended Section ----------- ///////
-              
+        
               const RecommendedSection(),
-
+        
               ////// ----------- Popular Deals Section ----------- ///////
               const PopularDealsSection(),
-
+        
               const Gap(20.0),
             ],
           ),
-        ), 
+        ),
+      ),
     );
   }
 }

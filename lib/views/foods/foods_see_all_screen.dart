@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hia/viewmodels/food_viewmodel.dart';
+import 'package:hia/views/details/food_details_screen.dart';
 import 'package:hia/views/foods/food_search_delegate.dart';
 import 'package:hia/views/foods/food_search_delegate_establishment.dart';
 import 'package:hia/widgets/homescreen/food_card.dart';
@@ -69,6 +70,7 @@ class _FoodScreenState extends State<FoodScreen> {
                   ),
                   Container(
                     width: context.width(),
+                    height:  context.height(),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30.0),
@@ -85,7 +87,7 @@ class _FoodScreenState extends State<FoodScreen> {
                           child: GridView.count(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            childAspectRatio: 0.75,
+                            childAspectRatio: 0.85,
                             crossAxisCount: 2,
                             children: List.generate(
                               foodViewModel.foods.length,
@@ -93,7 +95,8 @@ class _FoodScreenState extends State<FoodScreen> {
                                 child: FoodCard(
                                   food: foodViewModel.foods[index],
                                 ).onTap(() {
-                                  // Handle tap
+                                  // Navigate to the food details screen
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => FoodDetailsScreen(food: foodViewModel.foods[index],)));
                                 }),
                               ),
                             ),

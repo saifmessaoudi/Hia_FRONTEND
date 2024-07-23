@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
@@ -8,6 +9,7 @@ import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../constant.dart';
 
@@ -137,11 +139,18 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                               ),
                             ),
                             const Gap(20),
-                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => EstablishmentDetailsScreen(establishment: widget.food.establishment)));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              EstablishmentDetailsScreen(
+                                                  establishment: widget
+                                                      .food.establishment)));
                                 },
                                 child: Text(
                                   widget.food.establishment.name,
@@ -155,43 +164,46 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                             ),
                             const Gap(20),
                             RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          WidgetSpan(
-                                            child: Icon(
-                                              Icons.lock_clock,
-                                              color: widget.food.isAvailable ? kMainColor : Colors.red,
-                                              size: 18.0,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: widget.food.isAvailable ? ' Available' : ' Not Available',
-                                            style: kTextStyle.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: kTitleColor,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                            const Gap(20),
-                             Text(
-                                    widget.food.name,
-                                    style: kTextStyle.copyWith(
-                                      color: kTitleColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 22.0,
+                              text: TextSpan(
+                                children: [
+                                  WidgetSpan(
+                                    child: Icon(
+                                      Icons.lock_clock,
+                                      color: widget.food.isAvailable
+                                          ? kMainColor
+                                          : Colors.red,
+                                      size: 18.0,
                                     ),
                                   ),
+                                  TextSpan(
+                                    text: widget.food.isAvailable
+                                        ? ' Available'
+                                        : ' Not Available',
+                                    style: kTextStyle.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: kTitleColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Gap(20),
+                            Text(
+                              widget.food.name,
+                              style: kTextStyle.copyWith(
+                                color: kTitleColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22.0,
+                              ),
+                            ),
                             const SizedBox(
                               height: 10.0,
                             ),
-                              Padding(
+                            Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 20.0, vertical: 10.0),
                               child: Row(
                                 children: [
-                                 
                                   const Gap(10),
                                   Text(
                                     '${widget.food.price} TND',
@@ -225,26 +237,25 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                                   ),
                                   const Gap(30),
                                   RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            const WidgetSpan(
-                                              child: Icon(
-                                                Icons.reviews,
-                                                color: kTitleColor,
-                                                size: 18.0,
-                                              ),
-                                            ),
-                                            TextSpan(
-                                              text: "${0}  Reviews", 
-                                              style: kTextStyle.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: kTitleColor,
-                                              ),
-                                            ),
-                                          ],
+                                    text: TextSpan(
+                                      children: [
+                                        const WidgetSpan(
+                                          child: Icon(
+                                            Icons.reviews,
+                                            color: kTitleColor,
+                                            size: 18.0,
+                                          ),
                                         ),
-  ),
-
+                                        TextSpan(
+                                          text: "${0}  Reviews",
+                                          style: kTextStyle.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: kTitleColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -252,8 +263,8 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                               height: 20.0,
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
                               child: Text(
                                 widget.food.description,
                                 style: kTextStyle.copyWith(
@@ -265,10 +276,10 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                             const SizedBox(
                               height: 20.0,
                             ),
-                            //title center ingredients 
+                            //title center ingredients
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
                               child: Row(
                                 children: [
                                   Text(
@@ -307,10 +318,11 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                             ),
                             SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
                               child: Row(
-                                children: widget.food.ingredients.map((ingredient) {
+                                children:
+                                    widget.food.ingredients.map((ingredient) {
                                   return Padding(
                                     padding: const EdgeInsets.only(right: 10.0),
                                     child: Chip(
@@ -329,21 +341,20 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                             const SizedBox(
                               height: 20.0,
                             ),
-                          
+
                             // Add to Cart Button
-                          ButtonGlobal(
-                          buttonTextColor: Colors.white,
-                          buttontext: 'Add to Cart',
-                          buttonDecoration: kButtonDecoration.copyWith(
-                            color: kMainColor,
-                          ),
-                          onPressed: () async {
-                            
-                            cartViewModel.addItem(widget.food, quantity);
-                            showCustomToast(context, '${widget.food.name} added to cart');
-                            
-                          },
-                        ),
+                            ButtonGlobal(
+                              buttonTextColor: Colors.white,
+                              buttontext: 'Add to Cart',
+                              buttonDecoration: kButtonDecoration.copyWith(
+                                color: kMainColor,
+                              ),
+                              onPressed: () async {
+                                cartViewModel.addItem(widget.food, quantity);
+                                showCustomToast(context,
+                                    '${widget.food.name} added to cart');
+                              },
+                            ),
                             const SizedBox(
                               height: 20.0,
                             ),
@@ -356,16 +367,26 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                     padding: const EdgeInsets.only(top: 100.0),
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
-                      radius: MediaQuery.of(context).size.width / 4,
-                      child: ClipRect(
-                        child: Image.network(
-                          widget.food.image,
-                          fit: BoxFit.cover,
-                          width: MediaQuery.of(context).size.width / 4,
-                          height: MediaQuery.of(context).size.width / 4,
+                      radius: MediaQuery.of(context).size.width / 3,
+                      child: ClipOval(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width / 1.5,
+                          height: MediaQuery.of(context).size.width / 1.5,
+                          child: CachedNetworkImage(
+                            imageUrl: widget.food.image,
+                            placeholder: (context, url) => Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                color: Colors.white,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                      
                     ),
                   ),
                 ],

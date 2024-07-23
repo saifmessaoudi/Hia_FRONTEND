@@ -50,6 +50,14 @@ class EstablishmentViewModel extends ChangeNotifier {
   bool get isFetchingFoods => _isFetchingFoods;
 
 
+  //pull down refresh function
+  Future<void> refreshEstablishments() async {
+    await fetchEstablishments();
+    calculateAllDistances();
+    
+  }
+ 
+
   
   EstablishmentViewModel(this._userViewModel, this._foodPreferenceProvider) {
     _userViewModel.addListener(updateRecommendedEstablishments);
