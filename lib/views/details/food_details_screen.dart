@@ -6,6 +6,7 @@ import 'package:hia/models/food.model.dart';
 import 'package:hia/viewmodels/cart_viewmodel.dart';
 import 'package:hia/views/details/establishment.details.dart';
 import 'package:hia/views/global_components/button_global.dart';
+import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
@@ -28,8 +29,7 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final cartViewModel = Provider.of<CartViewModel>(context);
-    return SafeArea(
-      child: Scaffold(
+  return SmartScaffold(
         body: Stack(
           children: [
             Container(
@@ -394,7 +394,6 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }

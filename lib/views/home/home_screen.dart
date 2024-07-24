@@ -1,4 +1,7 @@
+import "package:google_maps_flutter/google_maps_flutter.dart";
 import "package:hia/views/home/exports/export_homescreen.dart";
+import "package:hia/views/home/sections/nearly_section.dart";
+import "package:hia/views/location/map_screen.dart";
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return SmartScaffold(
       body: RefreshIndicator(
         onRefresh: () async {
@@ -75,25 +79,37 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     Consumer<UserViewModel>(
                                       builder: (context, userViewModel, child) {
-                                        return RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              const WidgetSpan(
-                                                child: Icon(
-                                                  Icons.location_on_outlined,
-                                                  color: white,
-                                                  size: 16.0,
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>  CustomMapScreen(
+                                                  initialPosition: LatLng(userViewModel.userData!.latitude.toDouble(), userViewModel.userData!.longitude.toDouble()),
                                                 ),
                                               ),
-                                              TextSpan(
-                                                text: userViewModel
-                                                    .userData?.address,
-                                                style: kTextStyle.copyWith(
-                                                  color: white,
-                                                  fontSize: 15.0,
+                                            );
+                                          },
+                                          child: RichText(
+                                            text: TextSpan(
+                                              children: [
+                                                const WidgetSpan(
+                                                  child: Icon(
+                                                    Icons.location_on_outlined,
+                                                    color: white,
+                                                    size: 16.0,
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                                TextSpan(
+                                                  text: userViewModel
+                                                      .userData?.address,
+                                                  style: kTextStyle.copyWith(
+                                                    color: white,
+                                                    fontSize: 15.0,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         );
                                       },
@@ -208,80 +224,9 @@ class _HomeScreenState extends State<HomeScreen> {
               const Gap(10),
               const OffersSection(),
         
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                child: Row(
-                  children: [
-                    Text(
-                      'Nearly Establishments',
-                      style: kTextStyle.copyWith(
-                        color: kTitleColor,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      'See all',
-                      style: kTextStyle.copyWith(color: kGreyTextColor),
-                    ).onTap(() {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ProductScreen(),
-                        ),
-                      );
-                    }),
-                  ],
-                ),
-              ),
-        
-              Consumer<EstablishmentViewModel>(
-                builder: (context, establishmentViewModel, child) {
-                  if (establishmentViewModel.isLoading ||
-                      establishmentViewModel.isSorting) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: kMainColor,
-                      ),
-                    );
-                  }
-        
-                  if (establishmentViewModel.establishments.isNotEmpty) {
-                    return HorizontalList(
-                      spacing: 10,
-                      itemCount: establishmentViewModel.establishments.length,
-                      itemBuilder: (_, i) {
-                        return BookTableCard(
-                          restaurantData:
-                              establishmentViewModel.establishments[i],
-                          index: i,
-                        ).onTap(
-                          () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => EstablishmentDetailsScreen(
-                                  establishment:
-                                      establishmentViewModel.establishments[i],
-                                ),
-                              ),
-                            );
-                          },
-                          highlightColor: context.cardColor,
-                        );
-                      },
-                    );
-                  }
-                  return const Center(
-                    child: Text(
-                      'There is no available data',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  );
-                },
-              ),
+              ////// ----------- Nearly Section ----------- ///////
+              
+              const NearlySection(),
         
               ////// ----------- Recommended Section ----------- ///////
         

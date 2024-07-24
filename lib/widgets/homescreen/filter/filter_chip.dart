@@ -20,7 +20,7 @@ class FilterChipElement extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircleAvatar(
-              backgroundColor: Colors.white,
+              backgroundColor: kSecondaryColor.withOpacity(0.2),
               radius: 30.0,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
