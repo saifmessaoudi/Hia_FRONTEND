@@ -81,7 +81,7 @@ class EstablishmentViewModel extends ChangeNotifier {
         isLoading = false;
         notifyListeners();
       }
-
+     updateMarkers(_establishments) ; 
 
       // Filter establishments based on user preferences
       updateRecommendedEstablishments();
@@ -115,7 +115,7 @@ class EstablishmentViewModel extends ChangeNotifier {
 
 
  
-void _updateMarkers(List<Establishment> establishments) {
+void updateMarkers(List<Establishment> establishments) {
   _markers = establishments.map((establishment) {
     return MapMarker(
       image: establishment.image,

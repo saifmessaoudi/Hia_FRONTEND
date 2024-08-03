@@ -3,6 +3,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hia/map_box_constants.dart';
 import 'package:hia/models/map_marker.dart';
+import 'package:hia/viewmodels/establishement_viewmodel.dart';
+import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapPage extends StatefulWidget {
@@ -27,7 +29,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    
+          final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
+
     return Scaffold(
       
       body: Stack(
@@ -51,9 +54,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
               MarkerLayer(
                 markers: [
-                  for (int i = 0; i < mapMarkers.length; i++)
+                  for (int i = 0; i < establishmentViewModel.markers.length; i++)
                     Marker(
-  point: mapMarkers[i].location ?? AppConstants.myLocation,
+  point: establishmentViewModel.markers[i].location ?? AppConstants.myLocation,
   width: 40,
   height: 40,
   child: GestureDetector(
@@ -64,7 +67,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
         curve: Curves.easeInOut,
       );
       selectedIndex = i;
-      currentLocation = mapMarkers[i].location ?? AppConstants.myLocation;
+      currentLocation = establishmentViewModel.markers[i].location ?? AppConstants.myLocation;
       _animatedMapMove(currentLocation, 11.5);
       setState(() {});
     },
@@ -96,13 +99,13 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
               onPageChanged: (value) {
                 selectedIndex = value;
                 currentLocation =
-                    mapMarkers[value].location ?? AppConstants.myLocation;
+                    establishmentViewModel.markers[value].location ?? AppConstants.myLocation;
                 _animatedMapMove(currentLocation, 11.5);
                 setState(() {});
               },
-              itemCount: mapMarkers.length,
+              itemCount: establishmentViewModel.markers.length,
               itemBuilder: (_, index) {
-                final item = mapMarkers[index];
+                final item = establishmentViewModel.markers[index];
                 return Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Card(
@@ -165,7 +168,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                             padding: const EdgeInsets.all(4.0),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: Image.asset(
+                              child: Image.network(
                                 item.image ?? '',
                                 fit: BoxFit.cover,
                               ),
