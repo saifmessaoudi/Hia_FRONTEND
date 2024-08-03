@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hia/viewmodels/cart_viewmodel.dart';
+import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/details/establishment.details.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/widgets/custom_toast.dart';
@@ -22,13 +23,25 @@ class FoodDetailsScreen extends StatefulWidget {
 
 class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
   int quantity = 1;
+    @override
+  void initState() {
+    super.initState();
+    // Verify the food favorite status when the widget is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+      await userViewModel.verifFoodFavourite(widget.food.id, userViewModel.userData!.id);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final cartViewModel = Provider.of<CartViewModel>(context);
     return SafeArea(
       child: Scaffold(
-        body: Stack(
+         body: Consumer<UserViewModel>(
+          builder: (context, userViewModel, child) {
+            final isFavourite = userViewModel.getFavouriteStatus(widget.food.id);
+        return Stack(
           children: [
             Container(
               decoration: const BoxDecoration(
@@ -56,23 +69,29 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                             }),
                           ),
                           const Spacer(),
-                          CircleAvatar(
-                            backgroundColor: Colors.red.withOpacity(0.1),
-                            radius: 16.0,
-                            child: const Icon(
-                              Icons.favorite_rounded,
-                              color: Colors.red,
-                              size: 16.0,
-                            ),
+                          GestureDetector(
+                                onTap: () async {
+                                  if (isFavourite) {
+                                    await userViewModel.removeFoodsFromFavourites(widget.food.id, userViewModel.userData!.id);
+                                  } else {
+                                    await userViewModel.addFoodsToFavourites(widget.food.id, userViewModel.userData!.id);
+                                  }
+                                  setState(() {}); // Refresh the state
+                                },
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.red.withOpacity(0.1),
+                                  radius: 20.0,
+                                  child: Icon(
+                                    Icons.favorite_rounded,
+                                    color: isFavourite ? Colors.red : Colors.grey,
+                                    size: 20.0,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10.0),
+                            ],
                           ),
-                          const SizedBox(
-                            width: 10.0,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 150,
-                      ),
+                          const SizedBox(height: 150),
                       Container(
                         width: context.width(),
                         decoration: const BoxDecoration(
@@ -355,25 +374,38 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 100.0),
                     child: CircleAvatar(
-                      backgroundColor: Colors.white,
+                      backgroundColor: kMainColor,
                       radius: MediaQuery.of(context).size.width / 4,
-                      child: ClipRect(
-                        child: Image.network(
-                          widget.food.image,
+                      child: ClipOval(
+                        child: FadeInImage.assetNetwork(
+                          placeholder: 'images/offline_icon.png',
+                          image: widget.food.image!,
                           fit: BoxFit.cover,
-                          width: MediaQuery.of(context).size.width / 4,
-                          height: MediaQuery.of(context).size.width / 4,
+                          width: double.infinity,
+                          height: double.infinity,
+                          fadeInDuration: Duration(milliseconds: 300),
+                          fadeOutDuration: Duration(milliseconds: 300),
+                          imageErrorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'images/offline_icon.png',
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
+                            );
+                          },
                         ),
                       ),
-                      
                     ),
-                  ),
+                         ),
                 ],
               ),
             ),
           ],
-        ),
+        );
+          }
       ),
+      )
     );
+  
   }
 }

@@ -41,7 +41,7 @@ class BookTableCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: CachedNetworkImage(
-                           width: 120.0,
+                           width: context.width(),
                           height: 120.0,
                           imageUrl: restaurantData.image ?? "",
                           placeholder: (context, url) => Shimmer(

@@ -36,7 +36,7 @@ class EstablishmentSearchDelegate extends SearchDelegate<Establishment> {
       latitude: 0.0,
       address: '',
       phone: '',
-      averageRating: 0.0,
+      averageRating: 0,
       foods: [],
       isOpened: true,
       reviews: [],  // Provide an empty list for the required 'reviews' parameter

@@ -64,7 +64,7 @@ class EstablishmentAdapter extends TypeAdapter<Establishment> {
       latitude: fields[4] as double,
       longitude: fields[5] as double,
       address: fields[6] as String?,
-      averageRating: fields[7] as double?,
+      averageRating: fields[7] as int?,
       phone: fields[8] as String?,
       isOpened: fields[9] as bool,
       preferences: (fields[10] as List?)?.cast<String>(),

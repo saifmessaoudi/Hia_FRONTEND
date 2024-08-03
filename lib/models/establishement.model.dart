@@ -59,7 +59,7 @@ class Establishment extends HiveObject {
   String? address;
 
   @HiveField(7)
-  double? averageRating;
+  int? averageRating;
 
   @HiveField(8)
   String? phone;
@@ -119,7 +119,7 @@ class Establishment extends HiveObject {
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['langitude'] as num).toDouble(),
       address: json['address'] as String?,
-      averageRating: (json['averageRating'] as num?)?.toDouble(),
+      averageRating: (json['averageRating'] as num?)?.toInt(),
       phone: json['phone'] as String?,
       isOpened: json['isOpened'] as bool,
       preferences: (json['preferences'] as List<dynamic>?)?.map((e) => e as String).toList(),
@@ -138,7 +138,7 @@ class Establishment extends HiveObject {
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['langitude'] as num).toDouble(),
       address: json['address'] as String?,
-      averageRating: (json['averageRating'] as num?)?.toDouble(),
+      averageRating: (json['averageRating'] as num?)?.toInt(),
       phone: json['phone'] as String?,
       isOpened: json['isOpened'] as bool,
       preferences: (json['preferences'] as List<dynamic>?)?.map((e) => e as String).toList(),

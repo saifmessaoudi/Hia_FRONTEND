@@ -14,11 +14,21 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
 void initState() {
   super.initState();
+   WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+     userViewModel.getFavouriteFood(userViewModel.userData!.id) ; 
+    });
+
+
+    
   // Trigger distance calculation on initialization
   final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
   establishmentViewModel.calculateAllDistances();
 }
   List<String> banner = ['images/banner1.png', 'images/banner2.png'];
+
+
+
 
 
 

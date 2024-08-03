@@ -1,4 +1,5 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hia/models/cart/cart.model.dart';
@@ -20,6 +21,7 @@ import 'package:hia/views/splash/on_board_screen.dart';
 import 'package:hia/views/splash/splash_screen.dart';
 import 'package:hia/views/splash/splash_view.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:map_location_picker/map_location_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -40,7 +42,9 @@ void main() async {
   await Hive.openBox<Cart>('cartBox');
   await Hive.openBox<CartItem>('cartItemBox');
   
-  
+  if (defaultTargetPlatform == TargetPlatform.android) {
+AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
+}
 
   
 

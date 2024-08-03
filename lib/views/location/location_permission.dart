@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_preferences_screen.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/constant.dart';
-import 'package:hia/views/home/home.dart';
+import 'package:hia/views/location/map_picker_bottom_sheet.dart';
 import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class LocationPermission extends StatefulWidget {
@@ -21,13 +23,132 @@ class LocationPermission extends StatefulWidget {
 class _LocationPermissionState extends State<LocationPermission> {
   final UserService userService = UserService();
   bool isLoading = false;
+  String selectedOption = '';
 
   String? userId;
-  Position? position;
+Position? position = Position(
+  latitude: 36.068298,
+  longitude: 10.3381, // Updated Longitude for Hammam Chatt
+  timestamp: DateTime.now(),
+  accuracy: 1.0,
+  altitude: 1.0,
+  heading: 1.0,
+  speed: 1.0,
+  speedAccuracy: 1.0,
+  altitudeAccuracy: 1.0,
+  headingAccuracy: 1.0,
+);
 
   @override
   void initState() {
     super.initState();
+  }
+
+Future<void> requestLocationPermission() async {
+  var status = await Permission.location.status;
+  if (status.isDenied) {
+    await Permission.location.request();
+  }
+}
+  void showMapBottomSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    builder: (context) {
+      return MapPickerBottomSheet(
+        onLocationPicked: (LatLng position) {
+          Navigator.pop(context); // Close the bottom sheet
+          // Save the picked position
+          setState(() {
+            this.position = Position(
+              latitude: position.latitude,
+              longitude: position.longitude,
+              timestamp: DateTime.now(),
+              accuracy: 1.0,
+              altitude: 1.0,
+              heading: 1.0,
+              speed: 1.0,
+              speedAccuracy: 1.0, 
+              altitudeAccuracy: 1.0, 
+              headingAccuracy: 1.0,
+            );
+          });
+          print('Picked position: ${position.latitude}, ${position.longitude}');
+        },
+      );
+    },
+  );
+}
+
+
+  Future<void> showLocationOptions(BuildContext context) async {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              padding: EdgeInsets.all(16.0),
+              height: 250,
+              child: Column(
+                children: [
+                  ListTile(
+                    title: Text('Manual Position'),
+                    leading: Checkbox(
+                      hoverColor: kMainColor,
+                      focusColor: kMainColor,
+                      value: selectedOption == 'manual',
+                      onChanged: (bool? value) {
+                        setState(() {
+                          selectedOption = 'manual';
+                        });
+                      },
+                    ),
+                    onTap: () {
+                      setState(() {
+                        selectedOption = 'manual';
+                      });
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Current Position'),
+                    leading: Checkbox(
+                      hoverColor: kMainColor,
+                      focusColor: kMainColor,
+                      value: selectedOption == 'current',
+                      onChanged: (bool? value) {
+                        setState(() {
+                          selectedOption = 'current';
+                        });
+                      },
+                    ),
+                    onTap: () {
+                      setState(() {
+                        selectedOption = 'current';
+                      });
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (selectedOption == 'current') {
+                        saveUserLocation();
+                      } else if (selectedOption == 'manual') {
+                        Navigator.pop(context);
+                        showMapBottomSheet(context);
+                      }
+                    },
+                    child: Text('Validate'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: kMainColor,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   Future<void> saveUserLocation() async {
@@ -38,12 +159,22 @@ class _LocationPermissionState extends State<LocationPermission> {
       final userViewModel = Provider.of<UserViewModel>(context, listen: false);
       userViewModel.initSession();
 
-      position = await userViewModel.determinePosition();
-      String? addresse = await userViewModel.getAddressFromCoordinates(
-          position!.latitude, position!.longitude);
+      if (selectedOption == 'current') {
+        position = await userViewModel.determinePosition();
+        String? address = await userViewModel.getAddressFromCoordinates(
+            position!.latitude, position!.longitude);
 
-      userService.updateUserLocation(userViewModel.userId!, addresse!,
-          position!.longitude, position!.latitude);
+        userService.updateUserLocation(userViewModel.userId!, address!,
+            position!.longitude, position!.latitude);
+      } else if (selectedOption == 'manual' && position != null) {
+        // Handle manual location input
+        String? address = await userViewModel.getAddressFromCoordinates(
+            position!.latitude, position!.longitude);
+
+        userService.updateUserLocation(userViewModel.userId!, address!,
+            position!.longitude, position!.latitude);
+      }
+
       setState(() {
         isLoading = false;
       });
@@ -52,8 +183,14 @@ class _LocationPermissionState extends State<LocationPermission> {
         MaterialPageRoute(builder: (context) => const FoodPreferencePage()),
       );
 
-       CustomToastWidget( isError:  false, message: 'Location updated successfully',);
+      CustomToastWidget(
+        isError: false,
+        message: 'Location updated successfully',
+      );
     } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Failed to update location: $e'),
       ));
@@ -109,8 +246,7 @@ class _LocationPermissionState extends State<LocationPermission> {
                           height: 20.0,
                         ),
                         Padding(
-                          padding:
-                              const EdgeInsets.only(left: 30.0, right: 30.0),
+                          padding: const EdgeInsets.only(left: 30.0, right: 30.0),
                           child: Text(
                             'Find restaurants and your Favorite food',
                             textAlign: TextAlign.center,
@@ -145,7 +281,7 @@ class _LocationPermissionState extends State<LocationPermission> {
                                 buttonDecoration: kButtonDecoration.copyWith(
                                     color: kMainColor),
                                 onPressed: () {
-                                  saveUserLocation();
+                                  showLocationOptions(context);
                                 },
                               ),
                         Padding(
