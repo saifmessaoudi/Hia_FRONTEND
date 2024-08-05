@@ -190,17 +190,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                         child: ListTile(
                                           onTap: () {
-                                            // const NotificationScreen().launch(context);
+                                      const MapPage().launch(context);
+
                                           },
                                           leading: const CircleAvatar(
                                             backgroundColor: Color(0xFFF5F5F5),
                                             child: Icon(
-                                              Icons.notifications_none,
+                                              Icons.map,
                                               color: kMainColor,
                                             ),
                                           ),
                                           title: Text(
-                                            'Notification',
+                                            'Map',
                                             style: kTextStyle.copyWith(
                                                 color: kGreyTextColor),
                                           ),
@@ -221,7 +222,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                         child: ListTile(
                                           onTap: () {
-                                            const MapPage().launch(context);
+                                            const FoodScreenFavourites().launch(context);
                                             
                                           },
                                           leading: const CircleAvatar(

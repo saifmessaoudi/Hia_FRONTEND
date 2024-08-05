@@ -15,22 +15,28 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
+
   final pageController = PageController();
   int selectedIndex = 0;
-  var currentLocation = AppConstants.myLocation;
+  
+
 
   late final MapController mapController;
+    late UserViewModel userViewModel;
+
 
   @override
   void initState() {
     super.initState();
     mapController = MapController();
+    userViewModel = Provider.of<UserViewModel>(context, listen: false);
+
   }
 
   @override
   Widget build(BuildContext context) {
           final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
-
+      var currentLocation = AppConstants.myLocation ; 
     return Scaffold(
       
       body: Stack(
@@ -40,7 +46,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
             options: MapOptions(
               minZoom: 5,
               maxZoom: 18,
-              initialZoom: 11,
+              initialZoom: 11.5,
               initialCenter: currentLocation,
             ),
             children: [
@@ -56,7 +62,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                 markers: [
                   for (int i = 0; i < establishmentViewModel.markers.length; i++)
                     Marker(
-  point: establishmentViewModel.markers[i].location ?? AppConstants.myLocation,
+  point: establishmentViewModel.markers[i].location ?? currentLocation,
   width: 40,
   height: 40,
   child: GestureDetector(
@@ -67,8 +73,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
         curve: Curves.easeInOut,
       );
       selectedIndex = i;
-      currentLocation = establishmentViewModel.markers[i].location ?? AppConstants.myLocation;
-      _animatedMapMove(currentLocation, 11.5);
+      currentLocation = establishmentViewModel.markers[i].location ?? currentLocation;
+      _animatedMapMove(currentLocation, 12.5);
       setState(() {});
     },
     child: AnimatedScale(
@@ -99,8 +105,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
               onPageChanged: (value) {
                 selectedIndex = value;
                 currentLocation =
-                    establishmentViewModel.markers[value].location ?? AppConstants.myLocation;
-                _animatedMapMove(currentLocation, 11.5);
+                    establishmentViewModel.markers[value].location ?? currentLocation;
+                _animatedMapMove(currentLocation, 12.5);
                 setState(() {});
               },
               itemCount: establishmentViewModel.markers.length,
@@ -192,10 +198,10 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     // Create some tweens. These serve to split up the transition from one location to another.
     // In our case, we want to split the transition be<tween> our current map center and the destination.
     final latTween = Tween<double>(
-        begin: currentLocation.latitude, end: destLocation.latitude);
+        begin: AppConstants.myLocation.latitude, end: destLocation.latitude);
     final lngTween = Tween<double>(
-        begin: currentLocation.longitude, end: destLocation.longitude);
-    final zoomTween = Tween<double>(begin: 11, end: destZoom);
+        begin: AppConstants.myLocation.longitude, end: destLocation.longitude);
+    final zoomTween = Tween<double>(begin: 11.5, end: destZoom);
 
     // Create a animation controller that has a duration and a TickerProvider.
     var controller = AnimationController(

@@ -11,6 +11,7 @@ import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_preferences_screen.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/views/home/home.dart';
+import 'package:hia/views/location/map_picker_bottom_sheet.dart';
 import 'package:hia/views/profile/profile_bottom_sheet.dart';
 import 'package:hia/widgets/back_row.dart';
 import 'package:hia/widgets/custom_toast.dart';
@@ -18,6 +19,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../constant.dart';
+import 'package:latlong2/latlong.dart' as latLng;
+
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -45,6 +48,7 @@ class _EditProfileState extends State<EditProfile> {
   Position? position;
   bool isLoading = false;
   bool isLoadingPosition = false;
+  String selectedOption = '';
 
   @override
   void initState() {
@@ -75,6 +79,97 @@ class _EditProfileState extends State<EditProfile> {
     passwordController.dispose();
     super.dispose();
   }
+  void showMapBottomSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    builder: (context) {
+      return MapPickerBottomSheet(
+        onLocationPicked: (latLng.LatLng position) {
+          // Handle the picked location here
+          print('Picked position: ${position.latitude}, ${position.longitude}');
+        },
+        initialLocation: const latLng.LatLng(0.0, 0.0), // Example initial location
+      );
+    },
+  );
+}
+
+
+
+
+  Future<void> showLocationOptions(BuildContext context) async {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              padding: EdgeInsets.all(16.0),
+              height: 250,
+              child: Column(
+                children: [
+                  ListTile(
+                    title: Text('Manual Position'),
+                    leading: Checkbox(
+                      hoverColor: kMainColor,
+                      focusColor: kMainColor,
+                      value: selectedOption == 'manual',
+                      onChanged: (bool? value) {
+                        setState(() {
+                          selectedOption = 'manual';
+                        });
+                      },
+                    ),
+                    onTap: () {
+                      setState(() {
+                        selectedOption = 'manual';
+                      });
+                    },
+                  ),
+                  ListTile(
+                    title: Text('Current Position'),
+                    leading: Checkbox(
+                      hoverColor: kMainColor,
+                      focusColor: kMainColor,
+                      value: selectedOption == 'current',
+                      onChanged: (bool? value) {
+                        setState(() {
+                          selectedOption = 'current';
+                        });
+                      },
+                    ),
+                    onTap: () {
+                      setState(() {
+                        selectedOption = 'current';
+                      });
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (selectedOption == 'current') {
+                        saveUserLocation();
+                      } else if (selectedOption == 'manual') {
+                                          Navigator.pop(context);
+
+                        
+showMapBottomSheet(context) ; 
+
+                      }
+                    },
+                    child: Text('Validate'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: kMainColor,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   Future<void> saveUserLocation() async {
     setState(() {
@@ -95,9 +190,9 @@ class _EditProfileState extends State<EditProfile> {
       setState(() {
         isLoadingPosition = false;
       });
-      Navigator.pushReplacement(
+          Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const Home()),
+        MaterialPageRoute(builder: (context) => const FoodPreferencePage()),
       );
 
       showCustomToast(context, 'Location updated successfully');
@@ -498,7 +593,7 @@ class _EditProfileState extends State<EditProfile> {
                               left: 10.0, right: 10.0, top: 60.0),
                           child: GestureDetector(
                             onTap: () {
-                              saveUserLocation();
+                              showLocationOptions(context);
                             },
                             child: Material(
                               borderRadius: BorderRadius.circular(30.0),

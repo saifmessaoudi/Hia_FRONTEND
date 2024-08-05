@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hia/services/user_service.dart';
@@ -12,6 +13,8 @@ import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:latlong2/latlong.dart' as latLng;
+
 
 class LocationPermission extends StatefulWidget {
   const LocationPermission({super.key});
@@ -24,6 +27,7 @@ class _LocationPermissionState extends State<LocationPermission> {
   final UserService userService = UserService();
   bool isLoading = false;
   String selectedOption = '';
+
 
   String? userId;
 Position? position = Position(
@@ -50,34 +54,23 @@ Future<void> requestLocationPermission() async {
     await Permission.location.request();
   }
 }
-  void showMapBottomSheet(BuildContext context) {
+
+void showMapBottomSheet(BuildContext context) {
   showModalBottomSheet(
     context: context,
     builder: (context) {
       return MapPickerBottomSheet(
-        onLocationPicked: (LatLng position) {
-          Navigator.pop(context); // Close the bottom sheet
-          // Save the picked position
-          setState(() {
-            this.position = Position(
-              latitude: position.latitude,
-              longitude: position.longitude,
-              timestamp: DateTime.now(),
-              accuracy: 1.0,
-              altitude: 1.0,
-              heading: 1.0,
-              speed: 1.0,
-              speedAccuracy: 1.0, 
-              altitudeAccuracy: 1.0, 
-              headingAccuracy: 1.0,
-            );
-          });
+        onLocationPicked: (latLng.LatLng position) {
+          // Handle the picked location here
           print('Picked position: ${position.latitude}, ${position.longitude}');
         },
+        initialLocation: const latLng.LatLng(0.0, 0.0), // Example initial location
       );
     },
   );
 }
+
+
 
 
   Future<void> showLocationOptions(BuildContext context) async {
@@ -133,8 +126,11 @@ Future<void> requestLocationPermission() async {
                       if (selectedOption == 'current') {
                         saveUserLocation();
                       } else if (selectedOption == 'manual') {
-                        Navigator.pop(context);
-                        showMapBottomSheet(context);
+                                          Navigator.pop(context);
+
+                        
+showMapBottomSheet(context) ; 
+
                       }
                     },
                     child: Text('Validate'),
