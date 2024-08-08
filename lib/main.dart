@@ -16,6 +16,7 @@ import 'package:hia/viewmodels/offer.viewmodel.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_pref_provider.dart';
 import 'package:hia/views/home/home.dart';
+import 'package:hia/views/reviews/review_screen.dart';
 import 'package:hia/views/splash/on_board_screen.dart';
 import 'package:hia/views/splash/splash_screen.dart';
 import 'package:hia/views/splash/splash_view.dart';

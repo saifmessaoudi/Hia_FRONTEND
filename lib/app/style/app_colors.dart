@@ -5,6 +5,8 @@ class AppColors {
 
 //! BETA VERSION 01
   static const Color scaffold = Color(0xFF00002D);
+  static const Color background = Color(0xFF00643c); 
+  static const secondaryBackground = Color.fromARGB(255, 2, 139, 84);
   static const Color primary = Color(0xFF00FFC5);
   static const Color secondary = Color(0xFF4932D9);
   static const Color accent = Color(0xFFEAA677);

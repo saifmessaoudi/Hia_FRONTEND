@@ -466,7 +466,7 @@ class _SignInState extends State<SignIn> {
         print('Access Token: $accesToken');
 
         final response = await http.post(
-          Uri.parse('http://192.168.1.102:3030/user/facebook-login'),
+          Uri.parse('http://10.0.2.2:3030/user/facebook-login'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },

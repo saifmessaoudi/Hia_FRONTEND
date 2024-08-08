@@ -5,6 +5,7 @@ import 'package:hia/models/establishement.model.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/views/offers/offers_establishment.dart';
+import 'package:hia/views/reviews/review_screen.dart';
 import 'package:hia/widgets/homescreen/food_card.dart';
 
 import 'package:nb_utils/nb_utils.dart' as nb_utils;
@@ -239,26 +240,39 @@ class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
                                       padding: const EdgeInsets.only(
                                         left: 15.0,
                                       ),
-                                      child: RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            const WidgetSpan(
-                                              child: Icon(
-                                                Icons.reviews,
-                                                color: Color.fromARGB(
-                                                    255, 5, 32, 54),
-                                                size: 18.0,
-                                              ),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                   ReviewScreen( 
+                                                    establishment: widget.establishment,
+                                                  )
                                             ),
-                                            TextSpan(
-                                              text:
-                                                  "${widget.establishment.reviews?.length}  Reviews",
-                                              style: kTextStyle.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: kTitleColor,
+                                          );
+                                        },
+                                        child: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              const WidgetSpan(
+                                                child: Icon(
+                                                  Icons.reviews,
+                                                  color: Color.fromARGB(
+                                                      255, 5, 32, 54),
+                                                  size: 18.0,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                              TextSpan(
+                                                text:
+                                                    "${widget.establishment.reviews?.length}  Reviews",
+                                                style: kTextStyle.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: kTitleColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),

@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:hia/app/style/app_colors.dart';
 import 'package:hia/utils/connectivity_manager.dart';
+import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:provider/provider.dart';
 import 'connectivity_alert.dart'; // Import the new widget
 
@@ -75,7 +77,6 @@ class _SmartScaffoldState extends State<SmartScaffold> {
   @override
   void initState() {
     super.initState();
-    _startConnectivityCheck();
   }
 
   @override

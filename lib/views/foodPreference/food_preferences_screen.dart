@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hia/viewmodels/establishement_viewmodel.dart';
@@ -20,10 +21,10 @@ class FoodPreferencePage extends StatefulWidget {
 
 class _FoodPreferencePageState extends State<FoodPreferencePage> {
   final List<Map<String, String>> preferences = [
-    {"name": "Fast Food", "image": "images/fastfood.png"},
-    {"name": "Vegan", "image": "images/vegan.jpg"},
-    {"name": "Sugar", "image": "images/sugar.png"},
-    {"name": "Nut-Free", "image": "images/fastfood.png"},
+    {"name": "Fast Food", "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0cFleHkr83XTp-0AALLRqiAOs7nZxme-OVQ&s"},
+    {"name": "Vegan", "image": "https://dynaimage.cdn.cnn.com/cnn/c_fill,g_auto,w_1200,h_675,ar_16:9/https%3A%2F%2Fcdn.cnn.com%2Fcnnnext%2Fdam%2Fassets%2F191101102722-vegan-diet-stock.jpg"},
+    {"name": "Sugar", "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgUdYBMUuJ-a-yWuCNnYf6X43CyBVlYrsctQ&s"},
+    {"name": "Nut-Free", "image": "https://www.tastingtable.com/img/gallery/25-most-popular-snacks-in-america-ranked-worst-to-best/intro-1645492743.jpg"},
   ];
 
   @override
@@ -134,9 +135,9 @@ class _FoodPreferencePageState extends State<FoodPreferencePage> {
                                           borderRadius:
                                               const BorderRadius.vertical(
                                                   top: Radius.circular(10.0)),
-                                          child: Image.asset(
-                                            prefImage,
-                                            height: 130,
+                                          child: CachedNetworkImage(
+                                            imageUrl: prefImage,
+                                            height: 100.0,
                                             width: double.infinity,
                                             fit: BoxFit.cover,
                                           ),
