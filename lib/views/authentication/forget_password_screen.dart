@@ -9,6 +9,7 @@ import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/views/authentication/email.verification.dart';
 import 'package:hia/views/global_components/button_global.dart';
+import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/widgets/back_row.dart';
 import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -28,8 +29,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return SmartScaffold(
+     
         body: Stack(
           children: [
             Container(
@@ -43,11 +44,12 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+
                 const BackRow(title: ""),
                 const Gap(10),
                 Padding(
                   padding:
-                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                    const  EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
                   child: SizedBox(
                       width: context.width(),
                       child: Column(
@@ -142,7 +144,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             ),
           ],
         ),
-      ),
+      
     );
   }
 

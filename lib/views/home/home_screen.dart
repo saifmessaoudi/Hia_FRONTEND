@@ -44,9 +44,9 @@ void initState() {
         color: kMainColor,
         backgroundColor: Colors.white,
         onRefresh: () async {
-          Provider.of<FoodViewModel>(context, listen: false).fetchFoods();
+          Provider.of<FoodViewModel>(context, listen: false).refreshFoods();
           Provider.of<EstablishmentViewModel>(context, listen: false)
-              .fetchEstablishments();
+              .refreshEstablishments();
         },
         child: SingleChildScrollView(
           child: Column(

@@ -35,6 +35,12 @@ class UserViewModel with ChangeNotifier {
   Food? _foodById ;
   Food? get foodById => _foodById;
 
+  String? _emailError;
+  String? get emailError => _emailError;
+
+  String? _passwordError;
+  String? get passwordError => _passwordError;
+
 
 
 Map<String, bool> _favouritesMap = {}; // Map to track favorite status
@@ -64,13 +70,23 @@ bool isAuthenticated() {
 
 
 
-  Future<bool> login(String email, String password) async {
+  Future<void> login(String email, String password) async {
     _isLoading = true;
     notifyListeners();
-    try {
+     _emailError = email.isEmpty
+        ? 'Please enter your email'
+        : !RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+                .hasMatch(email)
+            ? 'Please enter a valid email'
+            : null;
+    _passwordError = password.isEmpty
+        ? 'Please enter your password'
+        : password.length < 6
+            ? 'Password must be at least 6 characters long'
+            : null;
+    if (_emailError == null && _passwordError == null) {
       final response = await userService.login(email, password);
-      _isLoading = false;
-      notifyListeners();
+      
       if (response['token'] != null) {
         _token = response['token'];
 
@@ -85,19 +101,19 @@ bool isAuthenticated() {
         notifyListeners();
         await fetchUserById(userId!);
 
-        return true;
       } else {
-        return false;
+         _emailError = response['message'] == 'Invalid email'
+            ? 'Invalid email'
+            : null;
+        _passwordError = response['message'] == 'Invalid password'
+            ? 'Invalid password'
+            : null;
       }
-    } catch (error) {
-      _isLoading = false;
-      Debugger.red ('Error: $error');
-      return false;
     }
-    finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+
+    _isLoading = false;
+    notifyListeners();
+    
   }
 
   Future<void> logout() async {

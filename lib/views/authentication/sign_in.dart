@@ -30,6 +30,10 @@ class _SignInState extends State<SignIn> {
   final TextEditingController passwordController = TextEditingController();
   final UserService userService = UserService();
 
+  //userview model
+  final UserViewModel userViewModel = UserViewModel(); 
+  
+
   String? emailError;
   String? passwordError;
   bool isLoading = false;
@@ -66,104 +70,107 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return SmartScaffold(
-    
-        body: Stack(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height / 2.5,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("images/hiaauthbgg.png"),
-                  fit: BoxFit.cover,
+    return Consumer<UserViewModel>(
+      builder: (context, userViewModel, child) {
+      return Scaffold(
+          body: Stack(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height / 2.5,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("images/hiaauthbgg.png"),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 30.0),
-               Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:[ 
-                    SizedBox(
-                    width: MediaQuery.of(context).size.width / 2,
-                    child: Image.asset(
-                      'images/h_logo_white.png',
-                      height: 60.0,
-                      width: 60.0,
-                    ),
-                  ),
-                 
-                  ]
-                ),
-              const Gap(13),
-                  const Text(
-                    'Welcome to Hia',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                const SizedBox(height: 25.0),
-                Expanded(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width ,
-                    height: MediaQuery.of(context).size.height,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        topRight: Radius.circular(30.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 30.0),
+                 Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children:[ 
+                      SizedBox(
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: Image.asset(
+                        'images/h_logo_white.png',
+                        height: 60.0,
+                        width: 60.0,
                       ),
-                      color: Colors.white,
                     ),
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              children: [
-                                Lottie.asset(
-                                'images/lottie.json', // Replace with your Lottie animation file path
-                                height: 200, // Adjust height as needed
-                                width: double.infinity, // Take full width
-                                fit: BoxFit.contain, // Adjust fit as needed
+                   
+                    ]
+                  ),
+                const Gap(13),
+                    const Text(
+                      'Welcome to Hia',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 26.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  const SizedBox(height: 25.0),
+                  Expanded(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width ,
+                      height: MediaQuery.of(context).size.height,
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.0),
+                          topRight: Radius.circular(30.0),
+                        ),
+                        color: Colors.white,
+                      ),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          return SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Column(
+                                children: [
+                                  Lottie.asset(
+                                  'images/lottie.json', // Replace with your Lottie animation file path
+                                  height: 200, // Adjust height as needed
+                                  width: double.infinity, // Take full width
+                                  fit: BoxFit.contain, // Adjust fit as needed
+                                ),
+                     const SizedBox(height: 8.0),
+                                  _buildEmailField(userViewModel),
+                                  const SizedBox(height: 20.0),
+                                  _buildPasswordField(userViewModel),
+                                  const SizedBox(height: 10.0),
+                                  _buildForgotPasswordRow(context),
+                                  const SizedBox(height: 10.0),
+                                  _buildLoginButton(context,userViewModel),
+                                  const SizedBox(height: 10.0),
+                                  _buildSignUpRow(context),
+                                  const SizedBox(height: 10.0),
+                                  _buildOrDivider(),
+                                  const SizedBox(height: 10.0),
+                                  _buildFacebookButton(),
+                                  const SizedBox(height: 10.0),
+                                  _buildTermsAndPrivacyText(),
+                                ],
                               ),
-                   const SizedBox(height: 8.0),
-                                _buildEmailField(),
-                                const SizedBox(height: 20.0),
-                                _buildPasswordField(),
-                                const SizedBox(height: 10.0),
-                                _buildForgotPasswordRow(context),
-                                const SizedBox(height: 10.0),
-                                _buildLoginButton(context),
-                                const SizedBox(height: 10.0),
-                                _buildSignUpRow(context),
-                                const SizedBox(height: 10.0),
-                                _buildOrDivider(),
-                                const SizedBox(height: 10.0),
-                                _buildFacebookButton(),
-                                const SizedBox(height: 10.0),
-                                _buildTermsAndPrivacyText(),
-                              ],
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      
+                ],
+              ),
+            ],
+          ),
+        );
+        
+      }
     );
   }
 
-  Widget _buildEmailField() {
+  Widget _buildEmailField(UserViewModel userViewModel) {
     return AppTextField(
       controller: emailController,
       cursorColor: kMainColor,
@@ -171,7 +178,7 @@ class _SignInState extends State<SignIn> {
       decoration: InputDecoration(
         labelText: 'Email',
         hintText: 'Email',
-        errorText: emailError,
+        errorText: userViewModel.emailError,
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
         ),
@@ -192,7 +199,7 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Widget _buildPasswordField() {
+  Widget _buildPasswordField(UserViewModel userViewModel) {
     return AppTextField(
       controller: passwordController,
       cursorColor: kMainColor,
@@ -201,7 +208,7 @@ class _SignInState extends State<SignIn> {
       decoration: InputDecoration(
         labelText: 'Password',
         hintText: 'Password',
-        errorText: passwordError,
+        errorText: userViewModel.passwordError,
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
         ),
@@ -257,7 +264,7 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Widget _buildLoginButton(BuildContext context) {
+  Widget _buildLoginButton(BuildContext context , UserViewModel userViewModel) {
   return Consumer<UserViewModel>(
     builder: (context, authViewModel, child) {
       return authViewModel.isLoading
@@ -267,40 +274,23 @@ class _SignInState extends State<SignIn> {
               buttontext: 'Log In',
               buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
               onPressed: () async {
-                setState(() {
-                  emailError = emailController.text.isEmpty
-                      ? 'Please enter your email'
-                      : !RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
-                              .hasMatch(emailController.text)
-                          ? 'Please enter a valid email'
-                          : null;
-                  passwordError = passwordController.text.isEmpty
-                      ? 'Please enter your password'
-                      : passwordController.text.length < 6
-                          ? 'Password must be at least 6 characters long'
-                          : null;
-                });
 
-                if (emailError == null && passwordError == null) {
-                  bool success = await authViewModel.login(
+                
+                 await authViewModel.login(
                     emailController.text,
                     passwordController.text,
                   );
 
-                  if (success) {
-                    Navigator.push(
-                      // ignore: use_build_context_synchronously
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LocationPermission()),
-                    );
-                  } else {
-                    setState(() {
-                      emailError = 'Invalid email or password';
-                      passwordError = 'Invalid email or password';
-                    });
-                  }
+                 if (authViewModel.isAuthenticated()) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LocationPermission(),
+                    ),
+                  );
                 }
+                
+                
               },
             );
     },

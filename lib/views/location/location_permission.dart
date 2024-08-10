@@ -6,6 +6,7 @@ import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_preferences_screen.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/constant.dart';
+import 'package:hia/views/location/bottom_location_sheet.dart';
 import 'package:hia/views/location/map_picker_bottom_sheet.dart';
 import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -53,96 +54,12 @@ Future<void> requestLocationPermission() async {
   }
 }
 
-void showMapBottomSheet(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    builder: (context) {
-      return MapPickerBottomSheet(
-        onLocationPicked: (latLng.LatLng position) {
-          // Handle the picked location here
-        },
-        initialLocation: const latLng.LatLng(0.0, 0.0), // Example initial location
-      );
-    },
-  );
-}
 
 
 
 
-  Future<void> showLocationOptions(BuildContext context) async {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Container(
-              padding: EdgeInsets.all(16.0),
-              height: 250,
-              child: Column(
-                children: [
-                  ListTile(
-                    title: Text('Manual Position'),
-                    leading: Checkbox(
-                      hoverColor: kMainColor,
-                      focusColor: kMainColor,
-                      value: selectedOption == 'manual',
-                      onChanged: (bool? value) {
-                        setState(() {
-                          selectedOption = 'manual';
-                        });
-                      },
-                    ),
-                    onTap: () {
-                      setState(() {
-                        selectedOption = 'manual';
-                      });
-                    },
-                  ),
-                  ListTile(
-                    title: Text('Current Position'),
-                    leading: Checkbox(
-                      hoverColor: kMainColor,
-                      focusColor: kMainColor,
-                      value: selectedOption == 'current',
-                      onChanged: (bool? value) {
-                        setState(() {
-                          selectedOption = 'current';
-                        });
-                      },
-                    ),
-                    onTap: () {
-                      setState(() {
-                        selectedOption = 'current';
-                      });
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (selectedOption == 'current') {
-                        saveUserLocation();
-                      } else if (selectedOption == 'manual') {
-                                          Navigator.pop(context);
 
-                        
-                      showMapBottomSheet(context) ; 
-
-                      }
-                    },
-                    child: Text('Validate'),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: kMainColor,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
+  
 
   Future<void> saveUserLocation() async {
     setState(() {

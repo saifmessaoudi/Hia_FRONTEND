@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class BookTableCard extends StatelessWidget {
-  const BookTableCard({
+  const  BookTableCard({
     super.key,
     required this.restaurantData,
     required this.index,

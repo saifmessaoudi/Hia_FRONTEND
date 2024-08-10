@@ -38,11 +38,29 @@ class NearlySection extends StatelessWidget {
                 builder: (context, establishmentViewModel, child) {
                   if (establishmentViewModel.isLoading ||
                       establishmentViewModel.isSorting) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: kMainColor,
-                      ),
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                     child: Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: SizedBox(
+                              height: 170, // Specify a fixed height for the ListView
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 5,
+                                itemBuilder: (_, __) => Container(
+                                  width: 220,
+                                  margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
                     );
+                    
                   }
         
                   if (establishmentViewModel.establishments.isNotEmpty) {

@@ -36,7 +36,7 @@ class _FilterDialogState extends State<FilterDialog> {
         builder: (context, constraints) {
           return Container(
             width: constraints.maxWidth * 0.8,
-            height: constraints.maxHeight * 0.25,
+            height: constraints.maxHeight * 0.23,
             padding: const EdgeInsets.all(10.0),
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -109,14 +109,8 @@ class _FilterDialogState extends State<FilterDialog> {
                 ),
                 const SizedBox(height: 10.0),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Cancel', style: TextStyle(color: Colors.red)),
-                    ),
                     TextButton(
                       onPressed: () {
                         widget.onApply(selectedFilters);
