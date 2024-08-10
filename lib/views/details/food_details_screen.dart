@@ -4,9 +4,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hia/viewmodels/cart_viewmodel.dart';
+import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/details/establishment.details.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
+import 'package:hia/views/reviews/review_screen.dart';
 import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
@@ -25,12 +27,25 @@ class FoodDetailsScreen extends StatefulWidget {
 
 class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
   int quantity = 1;
+    @override
+  void initState() {
+    super.initState();
+    // Verify the food favorite status when the widget is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+      await userViewModel.verifFoodFavourite(widget.food.id, userViewModel.userData!.id);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final cartViewModel = Provider.of<CartViewModel>(context);
-  return SmartScaffold(
-        body: Stack(
+    return SafeArea(
+      child: SmartScaffold(
+         body: Consumer<UserViewModel>(
+          builder: (context, userViewModel, child) {
+            final isFavourite = userViewModel.getFavouriteStatus(widget.food.id);
+        return Stack(
           children: [
             Container(
               decoration: const BoxDecoration(
@@ -58,23 +73,29 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                             }),
                           ),
                           const Spacer(),
-                          CircleAvatar(
-                            backgroundColor: Colors.red.withOpacity(0.1),
-                            radius: 16.0,
-                            child: const Icon(
-                              Icons.favorite_rounded,
-                              color: Colors.red,
-                              size: 16.0,
-                            ),
+                          GestureDetector(
+                                onTap: () async {
+                                  if (isFavourite) {
+                                    await userViewModel.removeFoodsFromFavourites(widget.food.id, userViewModel.userData!.id);
+                                  } else {
+                                    await userViewModel.addFoodsToFavourites(widget.food.id, userViewModel.userData!.id);
+                                  }
+                                  setState(() {}); // Refresh the state
+                                },
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.red.withOpacity(0.1),
+                                  radius: 20.0,
+                                  child: Icon(
+                                    Icons.favorite_rounded,
+                                    color: isFavourite ? Colors.red : Colors.grey,
+                                    size: 20.0,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10.0),
+                            ],
                           ),
-                          const SizedBox(
-                            width: 10.0,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 150,
-                      ),
+                          const SizedBox(height: 150),
                       Container(
                         width: context.width(),
                         decoration: const BoxDecoration(
@@ -236,24 +257,38 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                                     ),
                                   ),
                                   const Gap(30),
-                                  RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        const WidgetSpan(
-                                          child: Icon(
-                                            Icons.reviews,
-                                            color: kTitleColor,
-                                            size: 18.0,
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Implement show all reviews logic
+                                      Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                   ReviewScreen( 
+                                                    food: widget.food,
+                                                  )
+                                            ),
+                                          );
+                                    },
+                                    child: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          const WidgetSpan(
+                                            child: Icon(
+                                              Icons.reviews,
+                                              color: kTitleColor,
+                                              size: 18.0,
+                                            ),
                                           ),
-                                        ),
-                                        TextSpan(
-                                          text: "${0}  Reviews",
-                                          style: kTextStyle.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: kTitleColor,
+                                          TextSpan(
+                                            text : '${widget.food.reviews!.length} Reviews',
+                                            style: kTextStyle.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: kTitleColor,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -366,7 +401,7 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 100.0),
                     child: CircleAvatar(
-                      backgroundColor: Colors.white,
+                      backgroundColor: kMainColor,
                       radius: MediaQuery.of(context).size.width / 4,
                       child: ClipOval(
                         child: SizedBox(
@@ -388,12 +423,16 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                         ),
                       ),
                     ),
-                  ),
+                         ),
                 ],
               ),
             ),
           ],
-        ),
-      );
+        );
+          }
+      ),
+      )
+    );
+  
   }
 }

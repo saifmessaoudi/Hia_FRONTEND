@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hia/viewmodels/establishement_viewmodel.dart';
+import 'package:hia/views/details/establishment.details.dart';
 import 'package:hia/views/home/BookTableCard.dart';
 import 'package:hia/views/home/establishment_detail_grid.dart';
 import 'package:hia/views/home/establishment_details.dart';
@@ -98,7 +99,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 restaurantData: establishmentViewModel.establishments![index],
                                 index: index,
                               ).onTap(() {
-                                ProductDetails(product: establishmentViewModel.establishments![index],index : index)
+                                EstablishmentDetailsScreen(establishment: establishmentViewModel.establishments![index])
                                     .launch(context);
                               }),
                             ),

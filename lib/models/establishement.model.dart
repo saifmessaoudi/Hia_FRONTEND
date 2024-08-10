@@ -1,5 +1,5 @@
 import 'package:hia/models/food.model.dart';
-import 'package:hia/models/offer.model.dart';
+import 'package:hia/models/user.model.dart';
 import 'package:hive/hive.dart';
 
 part 'establishement.model.g.dart';
@@ -7,7 +7,7 @@ part 'establishement.model.g.dart';
 @HiveType(typeId: 3)
 class Review extends HiveObject {
   @HiveField(0)
-  String? user;
+  User user;
 
   @HiveField(1)
   String? comment;
@@ -15,11 +15,11 @@ class Review extends HiveObject {
   @HiveField(2)
   double rating;
 
-  Review({this.user, this.comment, required this.rating});
+  Review({required this.user, this.comment, required this.rating});
 
   factory Review.fromJson(Map<String, dynamic> json) {
     return Review(
-      user: json['user'] as String?,
+      user: User.fromJson(json['user'] as Map<String, dynamic>),
       comment: json['comment'] as String?,
       rating: (json['rating'] as num).toDouble(),
     );
@@ -59,7 +59,7 @@ class Establishment extends HiveObject {
   String? address;
 
   @HiveField(7)
-  double? averageRating;
+  int? averageRating;
 
   @HiveField(8)
   String? phone;
@@ -119,7 +119,7 @@ class Establishment extends HiveObject {
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['langitude'] as num).toDouble(),
       address: json['address'] as String?,
-      averageRating: (json['averageRating'] as num?)?.toDouble(),
+      averageRating: (json['averageRating'] as num?)?.toInt(),
       phone: json['phone'] as String?,
       isOpened: json['isOpened'] as bool,
       preferences: (json['preferences'] as List<dynamic>?)?.map((e) => e as String).toList(),
@@ -138,7 +138,7 @@ class Establishment extends HiveObject {
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['langitude'] as num).toDouble(),
       address: json['address'] as String?,
-      averageRating: (json['averageRating'] as num?)?.toDouble(),
+      averageRating: (json['averageRating'] as num?)?.toInt(),
       phone: json['phone'] as String?,
       isOpened: json['isOpened'] as bool,
       preferences: (json['preferences'] as List<dynamic>?)?.map((e) => e as String).toList(),

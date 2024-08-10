@@ -242,15 +242,7 @@ class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
                                       ),
                                       child: GestureDetector(
                                         onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                   ReviewScreen( 
-                                                    establishment: widget.establishment,
-                                                  )
-                                            ),
-                                          );
+                                          
                                         },
                                         child: RichText(
                                           text: TextSpan(

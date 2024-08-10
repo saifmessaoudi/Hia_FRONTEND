@@ -2,6 +2,7 @@ import "package:google_maps_flutter/google_maps_flutter.dart";
 import "package:hia/views/home/exports/export_homescreen.dart";
 import "package:hia/views/home/sections/nearly_section.dart";
 import "package:hia/views/location/map_screen.dart";
+import "package:hia/widgets/custom_refresh_indicator.dart";
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,28 +14,39 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-  void initState() {
-    super.initState();
-    final establishmentViewModel =
-        Provider.of<EstablishmentViewModel>(context, listen: false);
+void initState() {
+  super.initState();
 
-    //post frame callback
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      establishmentViewModel.calculateAllDistances();
+   WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+     userViewModel.getFavouriteFood(userViewModel.userData!.id) ; 
+     // Trigger distance calculation on initialization
+  final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
+  establishmentViewModel.calculateAllDistances();
     });
-  }
 
+
+    
+  
+}
   List<String> banner = ['images/banner1.png', 'images/banner2.png'];
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
     
     return SmartScaffold(
       body: RefreshIndicator(
+        color: kMainColor,
+        backgroundColor: Colors.white,
         onRefresh: () async {
+          Provider.of<FoodViewModel>(context, listen: false).fetchFoods();
           Provider.of<EstablishmentViewModel>(context, listen: false)
-              .refreshEstablishments();
-              
+              .fetchEstablishments();
         },
         child: SingleChildScrollView(
           child: Column(

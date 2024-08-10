@@ -24,6 +24,22 @@ class FoodViewModel extends ChangeNotifier {
     fetchFoods();
   }
 
+  Future<void> refreshFoods() async {
+    isLoading = true;
+    notifyListeners();
+     try {
+      _foods = await _service.fetchFoods();
+      await _service.cacheData(_foods);  // Cache the fetched data
+       
+    } catch (e) {
+      Debugger.red('Error fetching foods: $e');
+      // Handle error appropriately here (e.g., show a message to the user)
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
   Future<void> fetchFoods() async {
     isLoading = true;
     notifyListeners();

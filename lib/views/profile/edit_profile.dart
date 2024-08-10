@@ -1,45 +1,22 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
-import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_preferences_screen.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
-import 'package:hia/views/home/home.dart';
+import 'package:hia/views/location/bottom_location_sheet.dart';
 import 'package:hia/views/profile/profile_bottom_sheet.dart';
 import 'package:hia/widgets/back_row.dart';
 import 'package:hia/widgets/custom_toast.dart';
-import 'package:nb_utils/nb_utils.dart';
-import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
-import '../../constant.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:hia/helpers/debugging_printer.dart';
-import 'package:hia/services/user_service.dart';
-import 'package:hia/utils/loading_widget.dart';
-import 'package:hia/viewmodels/user_viewmodel.dart';
-import 'package:hia/views/foodPreference/food_preferences_screen.dart';
-import 'package:hia/views/home/exports/export_homescreen.dart';
-import 'package:hia/views/profile/profile_bottom_sheet.dart';
-import 'package:hia/widgets/back_row.dart';
-import 'package:hia/widgets/custom_toast.dart';
-import 'package:nb_utils/nb_utils.dart';
-import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
-import '../../constant.dart';
+
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _EditProfileState createState() => _EditProfileState();
 }
 
@@ -60,6 +37,7 @@ class _EditProfileState extends State<EditProfile> {
   Position? position;
   bool isLoading = false;
   bool isLoadingPosition = false;
+  String selectedOption = '';
 
   @override
   void initState() {
@@ -81,34 +59,13 @@ class _EditProfileState extends State<EditProfile> {
     phoneController.dispose();
     super.dispose();
   }
+  
 
-  Future<void> saveUserLocation() async {
-    setState(() {
-      isLoadingPosition = true;
-    });
-    try {
-      final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-      userViewModel.initSession();
-      position = await userViewModel.determinePosition();
-      String? address = await userViewModel.getAddressFromCoordinates(
-          position!.latitude, position!.longitude);
-      await userService.updateUserLocation(
-          userViewModel.userId!, address!, position!.longitude, position!.latitude);
-      setState(() {
-        isLoadingPosition = false;
-      });
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Home()),
-      );
-      showCustomToast(context, 'Location updated successfully');
-    } catch (e) {
-      setState(() {
-        isLoadingPosition = false;
-      });
-      showCustomToast(context, 'Failed to update location', isError: true);
-    }
-  }
+
+
+
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -406,45 +363,54 @@ class _EditProfileState extends State<EditProfile> {
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 40.0),
-                            child: GestureDetector(
-                              onTap: saveUserLocation,
-                              child: Material(
-                                borderRadius: BorderRadius.circular(30.0),
-                                color: Colors.white,
-                                elevation: 3.0,
-                                child: Container(
-                                  height: 55.0,
-                                  width: 200.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    border: Border.all(color: kMainColor, width: 2.0),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(Icons.location_on, color: kMainColor),
-                                      const SizedBox(width: 8.0),
-                                      isLoadingPosition
-                                          ? const LoadingWidget(
+                          padding: const EdgeInsets.only(
+                              left: 10.0, right: 10.0, top: 60.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              showLocationOptions(context);
+                            },
+                            child: Material(
+                              borderRadius: BorderRadius.circular(30.0),
+                              color: Colors.white,
+                              elevation: 3.0, // Adds shadow to the container
+                              child: Container(
+                                height: 55.0,
+                                width: 200.0,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  border: Border.all(
+                                      color: kMainColor,
+                                      width:
+                                          2.0), // Border with kMainColor and width 2.0
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.location_on,
+                                        color: kMainColor), // Location icon
+                                    const SizedBox(
+                                        width:
+                                            8.0), // Space between icon and text
+                                    isLoadingPosition
+                                        ? const LoadingWidget(
+                                            color: kMainColor,
+                                            size: 10.0,
+                                            spacing: 10.0,
+                                          )
+                                        : Text(
+                                            'Update Position',
+                                            style: kTextStyle.copyWith(
                                               color: kMainColor,
-                                              size: 10.0,
-                                              spacing: 10.0,
-                                            )
-                                          : Text(
-                                              'Update Position',
-                                              style: kTextStyle.copyWith(
-                                                color: kMainColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18.0,
-                                              ),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18.0,
                                             ),
-                                    ],
-                                  ),
+                                          ),
+                                  ],
                                 ),
                               ),
                             ),
                           ),
+                        ),
                         ],
                       ),
                     ),
@@ -456,5 +422,5 @@ class _EditProfileState extends State<EditProfile> {
         ),
       ),
     );
-  }
+     }
 }

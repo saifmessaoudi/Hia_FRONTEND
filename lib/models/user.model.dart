@@ -1,16 +1,46 @@
+import 'package:hive/hive.dart';
+
+part 'user.model.g.dart';
+
+@HiveType(typeId: 6)
 class User {
+  @HiveField(0)
   final String id;
+
+  @HiveField(1)
   final String firstName;
+
+  @HiveField(2)
   final String lastName;
+
+  @HiveField(3)
   final String email;
+
+  @HiveField(4)
   final String password;
+
+  @HiveField(5)
   final String? phone;
+
+  @HiveField(6)
   final bool isVerified;
+
+  @HiveField(7)
   final String? profileImage;
-   final String? address;
-   final String? longitude;
-   final String? latitude;
+
+  @HiveField(8)
+  final String? address;
+
+  @HiveField(9)
+  final String? longitude;
+
+  @HiveField(10)
+  final String? latitude;
+
+  @HiveField(11)
   final List<String> favoriteFood;
+
+  @HiveField(12)
   final List<String> foodPreference;
 
   User({

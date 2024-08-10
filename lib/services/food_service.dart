@@ -23,6 +23,37 @@ class FoodService {
       throw Exception('Failed to load foods');
     }
   }
+
+  Future<List<Review>> fetchReviews(String foodId) async {
+    final response = await http.get(Uri.parse('$baseUrl/food/getReviewByFoodID/$foodId'));
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      List<Review> reviews = data.map((e) {
+        return Review.fromJson(e as Map<String, dynamic>);
+      }).toList();
+      return reviews;
+    } else {
+      throw Exception('Failed to load reviews');
+    }
+  }
+
+   Future<void> addReview(String foodId, Map<String , dynamic> review) async {
+    final url = Uri.parse('$baseUrl/food/addReview/$foodId');
+    final response = await http.post(url, body: json.encode(review), headers: {
+      'Content-Type': 'application/json',
+    });
+
+     if (response.statusCode == 200) {
+      // Handle successful response
+      return jsonDecode(response.body);
+    } else {
+      // Handle error response
+      throw Exception('Failed to add review');
+    }
+  }
+
+
+
  
     Future<void> cacheData(List<Food> foods) async {
     var box = Hive.box<Food>('foodBox');

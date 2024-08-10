@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/authentication/sign_in.dart';
+import 'package:hia/views/foods/food_see_all_favourites.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
+import 'package:hia/views/map/map_positions.dart';
 import 'package:hia/views/profile/edit_profile.dart';
 import 'package:hia/widgets/custom_dialog.dart';
 import 'package:hia/widgets/smart_scaffold.dart';
@@ -188,17 +190,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                         child: ListTile(
                                           onTap: () {
-                                            // const NotificationScreen().launch(context);
+                                      const MapPage().launch(context);
+
                                           },
                                           leading: const CircleAvatar(
                                             backgroundColor: Color(0xFFF5F5F5),
                                             child: Icon(
-                                              Icons.notifications_none,
+                                              Icons.map,
                                               color: kMainColor,
                                             ),
                                           ),
                                           title: Text(
-                                            'Notification',
+                                            'Map',
                                             style: kTextStyle.copyWith(
                                                 color: kGreyTextColor),
                                           ),
@@ -219,7 +222,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                         child: ListTile(
                                           onTap: () {
-                                            // const WishList().launch(context);
+                                            const FoodScreenFavourites().launch(context);
+                                            
                                           },
                                           leading: const CircleAvatar(
                                             backgroundColor: Color(0xFFF5F5F5),
