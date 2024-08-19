@@ -1,9 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hia/viewmodels/cart_viewmodel.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/widgets/custom_toast.dart';
+import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class FoodCard extends StatefulWidget {
   final Food food;
@@ -12,6 +15,7 @@ class FoodCard extends StatefulWidget {
     super.key,
     required this.food,
   });
+
   @override
   _FoodCardState createState() => _FoodCardState();
 }
@@ -30,21 +34,11 @@ class _FoodCardState extends State<FoodCard> {
   @override
   Widget build(BuildContext context) {
     final cartViewModel = Provider.of<CartViewModel>(context);
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
     return Stack(
       children: [
         SizedBox(
           width: 160.0,
-          child: Card(
-            elevation: 5.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-              side: BorderSide(
-                color: kMainColor.withOpacity(0.5),
-                width: 2.0,
-              ),
-            ),
-            child: Container(
+          child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15.0),
                 boxShadow: const [
@@ -59,30 +53,35 @@ class _FoodCardState extends State<FoodCard> {
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
+                  
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10.0),
-                        child: CachedNetworkImage(
-                          width: 110.0,
-                          height: 110.0,
-                          imageUrl: widget.food.image,
-                          placeholder: (context, url) => Shimmer(
-                            gradient: const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [Colors.grey, Colors.white],
+                    SizedBox(
+                      width: 200.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: CachedNetworkImage(
+                            width: 160.0,
+                            height: 110.0,
+                            imageUrl: widget.food.image,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Shimmer(
+                              gradient: const LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [Colors.grey, Colors.white],
+                              ),
+                              child: Container(
+                                width: 100.0,
+                                height: 100.0,
+                                color: Colors.white,
+                              ),
                             ),
-                            child: Container(
-                              width: 100.0,
-                              height: 100.0,
-                              color: Colors.white,
-                            ),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
                           ),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
                         ),
                       ),
                     ),
@@ -174,7 +173,7 @@ class _FoodCardState extends State<FoodCard> {
               ),
             ),
           ),
-        ),
+       
         Consumer<UserViewModel>(builder: (context, userViewModel, child) {
           final isFavourite = userViewModel.getFavouriteStatus(widget.food.id);
 
@@ -195,11 +194,11 @@ class _FoodCardState extends State<FoodCard> {
               },
               child: CircleAvatar(
                 backgroundColor: Colors.transparent,
-                radius: 12.0,
+                radius: 13.0,
                 child: Icon(
                   Icons.favorite_rounded,
                   color: isFavourite ? Colors.red : Colors.grey,
-                  size: 18.0,
+                  size: 20.0,
                 ),
               ),
             ),
