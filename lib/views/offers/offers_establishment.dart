@@ -100,11 +100,14 @@ class _OffersEstablishmentScreenState extends State<OffersEstablishmentScreen> {
                                   physics: const NeverScrollableScrollPhysics(),
                                   childAspectRatio: 0.75,
                                   crossAxisCount: 2,
+                                  mainAxisSpacing: 10.0,
+                                  crossAxisSpacing: 5.0,
                                   children: List.generate(
                                     offers.length,
                                     (index) => Center(
                                       child: SurpriseBoxCard(
                                         offer: offers[index],
+                                         isGrid: true,
                                       ).onTap(() {
                                         // Handle offer selection 
                                         Navigator.push(

@@ -49,6 +49,8 @@ class Offer extends HiveObject {
   @HiveField(13)
   final int price;
 
+  final String formattedValidUntil;
+
   Offer({
     required this.name,
     required this.description,
@@ -64,7 +66,7 @@ class Offer extends HiveObject {
     required this.createdAt,
     required this.updatedAt,
     required this.price,
-  });
+  }) : formattedValidUntil = DateFormatter.formatDate(validUntil, 'dd MMM yyyy');
 
   factory Offer.fromJson(Map<String, dynamic> json) {
     return Offer(
@@ -103,7 +105,4 @@ class Offer extends HiveObject {
       'price': price,
     };
   }
-
-    String get formattedValidUntil => DateFormatter.formatDate(validUntil);
-
 }
