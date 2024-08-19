@@ -1,19 +1,18 @@
-import 'dart:ui';
-import 'package:flutter/material.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hia/models/reservation.model.dart';
+import 'package:hia/viewmodels/cart_viewmodel.dart';
 import 'package:hia/viewmodels/reservation_viewmodel.dart';
+import 'package:hia/views/card/cart_screen.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
-import 'package:provider/provider.dart';
 import 'package:hia/app/style/app_colors.dart';
 import 'package:hia/app/style/app_constants.dart';
 import 'package:hia/app/style/app_style.dart';
 import 'package:hia/app/style/font_size.dart';
 import 'package:hia/app/style/widget_modifier.dart';
 import 'package:hia/widgets/back_row.dart';
-import 'package:hia/widgets/smart_scaffold.dart';
+import 'package:hia/widgets/loading_scren_cart_order.dart';
 import 'package:hia/widgets/styled_button.dart';
-import 'package:shimmer/shimmer.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   const OrderHistoryScreen({super.key});
@@ -40,59 +39,70 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> with SingleTick
   @override
   Widget build(BuildContext context) {
     final userId = Provider.of<UserViewModel>(context).userData!.id;
-    return ChangeNotifierProvider(
-      create: (_) => ReservationViewModel()..getMyReservations(userId),
-      child: SmartScaffold(
-        backgroundColor: AppColors.background,
-        body: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 5.w, top: 20.h),
-              child: const BackRow(title: "Order History"),
-            ),
-            Gap(AppConstants.verticalSpacing),
-            TabBar(
-              controller: _tabController,
-              tabs: [
-                Tab(text: "Pending Orders"),
-                Tab(text: "Completed Orders"),
-              ],
-              labelColor: AppColors.primary,
-              unselectedLabelColor: AppColors.grey,
-              indicatorColor: AppColors.primary,
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _buildOrderList(context, "Pending"),
-                  _buildOrderList(context, "Completed"),
-                ],
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ReservationViewModel()..getMyReservations(userId)),
+      ],
+      child: Consumer<CartViewModel>(
+        builder: (context, cartViewModel, child) {
+          return Stack(
+            children: [
+              SmartScaffold(
+                backgroundColor: AppColors.background,
+                body: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 5.w, top: 20.h),
+                      child: const BackRow(title: "Order History"),
+                    ),
+                    Gap(AppConstants.verticalSpacing),
+                    TabBar(
+                      controller: _tabController,
+                      tabs: const [
+                        Tab(text: "Pending Orders"),
+                        Tab(text: "Completed Orders"),
+                      ],
+                      labelColor: AppColors.primary,
+                      unselectedLabelColor: AppColors.grey,
+                      indicatorColor: AppColors.primary,
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          _buildOrderList(context, "Pending"),
+                          _buildOrderList(context, "Done"),
+                        ],
+                      ),
+                    ),
+                  ],
+                ).paddingSymmetric(
+                  horizontal: AppConstants.bodyMinSymetricHorizontalPadding,
+                  vertical: AppConstants.minBodyTopPadding,
+                ),
+                floatingActionButton: Consumer<ReservationViewModel>(
+                  builder: (context, orderHistoryViewModel, child) {
+                    return Visibility(
+                      visible: orderHistoryViewModel.myReservation.isEmpty,
+                      child: StyledButton(
+                        style: ButtonStyles.primary,
+                        title: "Go to Marketplace",
+                        onPressed: () {},
+                      ).paddingSymmetric(
+                        horizontal: AppConstants.bodyMinSymetricHorizontalPadding,
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
-        ).paddingSymmetric(
-          horizontal: AppConstants.bodyMinSymetricHorizontalPadding,
-          vertical: AppConstants.minBodyTopPadding,
-        ),
-        floatingActionButton: Consumer<ReservationViewModel>(
-          builder: (context, orderHistoryViewModel, child) {
-            return Visibility(
-              visible: orderHistoryViewModel.myReservation.isEmpty,
-              child: StyledButton(
-                style: ButtonStyles.primary,
-                title: "Go to Marketplace",
-                onPressed: () {},
-              ).paddingSymmetric(
-                horizontal: AppConstants.bodyMinSymetricHorizontalPadding,
-              ),
-            );
-          },
-        ),
+              if (cartViewModel.reOrderLoading)
+                const LoadingScreenCart(),
+            ],
+          );
+        },
       ),
     );
   }
-
   Widget _buildOrderList(BuildContext context, String status) {
     return Consumer<ReservationViewModel>(
       builder: (context, orderHistoryViewModel, child) {
@@ -172,7 +182,6 @@ class _HistoryItem extends StatelessWidget {
 
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 5,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppConstants.historyCardRadius),
         gradient: AppColors.accountGradientClr,
@@ -183,19 +192,35 @@ class _HistoryItem extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                width: AppConstants.orderImageSize,
-                height: AppConstants.orderImageSize,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppConstants.orderImageRadius),
-                  color: Colors.white,
+              ClipOval(
+                child: Container(
+                  width: AppConstants.orderImageSize,
+                  height: AppConstants.orderImageSize,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                  ),
+                  child: FastCachedImage(
+                    url: order.establishment?.image ?? "",
+                    fit: BoxFit.cover,
+                    width: 40.w,
+                    height: 40.h,
+                    loadingBuilder: (context, loadingProgress) {
+                      return loadingProgress.isDownloading && loadingProgress.totalBytes != null
+                          ? Shimmer(
+                              gradient: AppColors.shimmerGradient,
+                              child: Container(
+                                width: 40.w,
+                                height: 40.h,
+                                color: AppColors.unselectedItemShadow,
+                              ),
+                            )
+                          : SizedBox(
+                              width: 40.w,
+                              height: 40.h,
+                            );
+                    },
+                  ),
                 ),
-                child: Image.network(
-                  order.establishment?.image ?? "",
-                  fit: BoxFit.contain,
-                  width: 40.w,
-                  height: 40.h,
-                ).paddingSymmetric(horizontal: 6.w, vertical: 4.h),
               ),
               Gap(16.w),
               Column(
@@ -228,9 +253,80 @@ class _HistoryItem extends StatelessWidget {
               ),
             ],
           ),
-          Gap(12.h),
+          Gap(10.h),
           Divider(color: AppColors.greyRegular, thickness: AppConstants.dividerThickness),
-          Gap(AppConstants.verticalSpacing),
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: order.items!.map((item) => Text(
+                  "* ${item.quantity} x ${item.food.name}",
+                  style: AppStyles.interSemiBoldTextButton.medium().withSize(FontSizes.headline6),
+                )).toList(),
+              ),
+              
+            ],
+          ),
+          
+          if (order.status == "Done") ...[
+            Divider(color: AppColors.greyRegular, thickness: AppConstants.dividerThickness),
+          
+            Gap(AppConstants.verticalSpacing),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                  GestureDetector(
+                  onTap: () async {
+                    final cartViewModel = Provider.of<CartViewModel>(context, listen: false);
+                
+                    cartViewModel.setReOrderLoading(true);
+                    cartViewModel.clearCart();
+                    await cartViewModel.addItems(order.items.map((item) => item.food).toList());
+                    await cartViewModel.overrideEstablishmentId(order.establishment!.id);
+                    Future.delayed(const Duration(seconds: 2), () {
+                      cartViewModel.setReOrderLoading(false);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const CartScreen()));
+                    });
+                    
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.shopping_bag_sharp,
+                          color: AppColors.offWhite,
+                          size: 18), 
+                      const Gap(4),
+                      Text(
+                        "Re-order",
+                        style: AppStyles.interregularTitle
+                            .withSize(16.sp) 
+                            .withColor(AppColors.offWhite)
+                            .bold(),
+                      ),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.star,
+                          color: AppColors.offWhite,
+                          size: 18), 
+                      const Gap(4),
+                      Text(
+                        "Rate",
+                        style: AppStyles.interregularTitle
+                            .withSize(16.sp) 
+                            .withColor(AppColors.offWhite)
+                            .bold(),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ).paddingSymmetric(
         horizontal: AppConstants.bodyMinSymetricHorizontalPadding,

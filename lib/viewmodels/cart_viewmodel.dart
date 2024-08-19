@@ -14,7 +14,15 @@ class CartViewModel extends ChangeNotifier {
 
   int get cartLength => _cart?.items.length ?? 0;
 
+  bool _reOrderLoading = false;
+  bool get reOrderLoading => _reOrderLoading;
 
+
+  void setReOrderLoading (bool value) {
+    Debugger.blue('Setting reOrderLoading to $value');
+    _reOrderLoading = value;
+    notifyListeners();
+  }
 
   CartViewModel() {
     _loadCart();
@@ -51,4 +59,23 @@ class CartViewModel extends ChangeNotifier {
   double getTotalPrice() {
     return _cart?.getTotalPrice() ?? 0.0;
   }
+
+  void clearCart() {
+    _cart?.clearCart();
+    notifyListeners();
+  }
+
+  Future <void> addItems (List<Food> foods) async {
+      
+    for (var food in foods) {
+      await addItem(food, 1);
+    }
+  }
+
+  Future<void> overrideEstablishmentId(String id) async {
+    Future.delayed(const Duration(milliseconds: 2000));
+    _cart?.overrideEstablishmentId(id);
+    notifyListeners();
+  }
+
 }

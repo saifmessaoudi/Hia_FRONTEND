@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 import 'home_screen.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  final int initialIndex;
+  const Home({Key? key, this.initialIndex=0}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -30,6 +31,12 @@ class _HomeState extends State<Home> {
     HomeScreen(),
     ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedItemPosition.value = ValueNotifier<int>(widget.initialIndex).value;
+  }
 
   @override
   Widget build(BuildContext context) {

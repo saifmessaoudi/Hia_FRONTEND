@@ -69,6 +69,7 @@ class OffersSection extends StatelessWidget {
                   
                 ),
               ),
+              const Gap(10),
       ],
     );
   }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hia/app/style/app_colors.dart';
 import 'package:hia/utils/connectivity_manager.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
+import 'package:hia/widgets/offline_screen.dart';
 import 'package:provider/provider.dart';
 import 'connectivity_alert.dart'; // Import the new widget
 
@@ -85,68 +86,68 @@ class _SmartScaffoldState extends State<SmartScaffold> {
     super.dispose();
   }
 
-  void _startConnectivityCheck() {
-    _timer = Timer.periodic(const Duration(seconds: 8), (timer) {
-      final connectivityManager = Provider.of<ConnectivityManager>(context, listen: false);
-      if (!connectivityManager.isConnected) {
-        showConnectivityAlert(context, 'No Internet Connection');
-      }
-    });
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: FocusScope.of(context).unfocus,
-      child: Scaffold(
-        extendBody: widget.extendBody,
-        key: widget.key,
-        body: widget.isAuth
-            ? Stack(
-                children: [
-                  Positioned(
-                    child: Image.asset(
-                      'images/hiaauthbgg.png',
-                      width: 52,
-                      height: 62,
-                    ),
-                  ),
-                  Positioned(
-                    right: 0,
-                    child: Image.asset(
-                      "images/hiaauthbgg.png",
-                      width: 58,
-                      height: 58,
-                    ),
-                  ),
-                  Positioned(
-                    right: 0,
-                    child: Image.asset(
-                      "images/hiaauthbgg.png",
-                      width: 160,
-                      height: 160,
-                    ),
-                  ),
-                  Positioned(
-                    top: 0,
-                    child: Image.asset(
-                      "images/hiaauthbgg.png",
-                      width: 50,
-                      height: 75,
-                    ),
-                  ),
-                  widget.body,
-                ],
-              )
-            : widget.body,
-        floatingActionButton: widget.floatingActionButton,
-        floatingActionButtonLocation: widget.floatingActionButtonLocation ??
-            (Platform.isIOS ? FloatingActionButtonLocation.endDocked : FloatingActionButtonLocation.endFloat),
-        bottomSheet: widget.bottomSheet,
-        backgroundColor: widget.backgroundColor,
-        resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
-        bottomNavigationBar: widget.bottomNavigationBar,
-      ),
+    return Consumer<ConnectivityManager>(
+      builder: (contextn, connectivity, child) {
+        if (!connectivity.isConnected) {
+          return const DisconnectedWidget();
+        }
+        return GestureDetector(
+          onTap: FocusScope.of(context).unfocus,
+          child: Scaffold(
+            extendBody: widget.extendBody,
+            key: widget.key,
+            body: widget.isAuth
+                ? Stack(
+                    children: [
+                      Positioned(
+                        child: Image.asset(
+                          'images/hiaauthbgg.png',
+                          width: 52,
+                          height: 62,
+                        ),
+                      ),
+                      Positioned(
+                        right: 0,
+                        child: Image.asset(
+                          "images/hiaauthbgg.png",
+                          width: 58,
+                          height: 58,
+                        ),
+                      ),
+                      Positioned(
+                        right: 0,
+                        child: Image.asset(
+                          "images/hiaauthbgg.png",
+                          width: 160,
+                          height: 160,
+                        ),
+                      ),
+                      Positioned(
+                        top: 0,
+                        child: Image.asset(
+                          "images/hiaauthbgg.png",
+                          width: 50,
+                          height: 75,
+                        ),
+                      ),
+                      widget.body,
+                    ],
+                  )
+                : widget.body,
+            floatingActionButton: widget.floatingActionButton,
+            floatingActionButtonLocation: widget.floatingActionButtonLocation ??
+                (Platform.isIOS ? FloatingActionButtonLocation.endDocked : FloatingActionButtonLocation.endFloat),
+            bottomSheet: widget.bottomSheet,
+            backgroundColor: widget.backgroundColor,
+            resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+            bottomNavigationBar: widget.bottomNavigationBar,
+          ),
+        );
+      }
     );
   }
 }

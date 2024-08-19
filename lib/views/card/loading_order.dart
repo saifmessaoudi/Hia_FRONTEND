@@ -51,8 +51,6 @@ class _LoadingScreenDialogState extends State<LoadingScreenDialog> {
 
     // Send the JSON to the addReservation method
     final viewModel = Provider.of<ReservationViewModel>(context, listen: false);
-    final res = viewModel.getMyReservations(userId);
-    print (res);
     await viewModel.addReservation(reservationData);
   }
 
@@ -70,7 +68,7 @@ class _LoadingScreenDialogState extends State<LoadingScreenDialog> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20.0),
               ),
-              child: viewModel.isLoading
+              child: viewModel.isLoading  && viewModel.error == null
                   ? _buildLoadingScreen()
                   : _buildSuccessScreen(viewModel.reservationCode),
             ),
@@ -224,5 +222,6 @@ class _LoadingScreenDialogState extends State<LoadingScreenDialog> {
       }
     }
     viewModel.setLoadingScreenshot(false);
+    viewModel.clearAll();
   }
 }

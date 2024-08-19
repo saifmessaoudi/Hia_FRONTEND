@@ -31,10 +31,16 @@ class Cart extends HiveObject {
     };
   }
 
+  void overrideEstablishmentId(String id) {
+    establishmentId = id;
+    save();
+  }
+
  Future<bool> addItem(Food food, int quantity) async {
   try {
     Debugger.blue('Adding item: ${food.name}, quantity: $quantity');
 
+    
     if (items.isEmpty) {
       establishmentId = food.establishment.id;
       Debugger.blue('Establishment ID: $establishmentId');

@@ -1,8 +1,8 @@
+import "package:flutter_screenutil/flutter_screenutil.dart";
 import "package:google_maps_flutter/google_maps_flutter.dart";
 import "package:hia/views/home/exports/export_homescreen.dart";
 import "package:hia/views/home/sections/nearly_section.dart";
 import "package:hia/views/location/map_screen.dart";
-import "package:hia/widgets/custom_refresh_indicator.dart";
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,14 +20,10 @@ void initState() {
    WidgetsBinding.instance.addPostFrameCallback((_) async {
       final userViewModel = Provider.of<UserViewModel>(context, listen: false);
      userViewModel.getFavouriteFood(userViewModel.userData!.id) ; 
-     // Trigger distance calculation on initialization
   final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
   establishmentViewModel.calculateAllDistances();
     });
 
-
-    
-  
 }
   List<String> banner = ['images/banner1.png', 'images/banner2.png'];
 
@@ -60,7 +56,7 @@ void initState() {
                     child: Container(
                       padding: EdgeInsets.zero,
                       width: MediaQuery.of(context).size.width,
-                      height: 240.0,
+                      height: 285.0,
                       decoration: const BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage(
@@ -207,7 +203,7 @@ void initState() {
                 ],
               ),
         
-              Consumer<FoodViewModel>(
+                            Consumer<FoodViewModel>(
                 builder: (context, foodViewModel, child) {
                   List<FilterData> selectedFilterData = foodViewModel
                       .selectedFilters
@@ -217,23 +213,30 @@ void initState() {
                   return selectedFilterData.isNotEmpty
                       ? Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                          child: Wrap(
-                            spacing: 14.0,
-                            children: selectedFilterData.map((filterData) {
-                              return FilterChipElement(
-                                catList: filterData,
-                                onRemove: () {
-                                  foodViewModel.removeFilter(filterData.catTitle);
-                                },
-                              );
-                            }).toList(),
+                          child: Column(
+                            children: [
+                              Wrap(
+                                spacing: 14.0,
+                                children: selectedFilterData.map((filterData) {
+                                  return FilterChipElement(
+                                    catList: filterData,
+                                    onRemove: () {
+                                      foodViewModel.removeFilter(filterData.catTitle);
+                                    },
+                                  );
+                                }).toList(),
+                              ),
+                               Gap(5.h),
+                              const Divider(), // Divider
+                              Gap(5.h),
+                            ],
                           ),
                         )
-                      : Container();
+                      : const SizedBox.shrink();
                 },
               ),
               ////// ----------- Offers Section ----------- ///////
-              const Gap(10),
+              
               const OffersSection(),
         
               ////// ----------- Nearly Section ----------- ///////

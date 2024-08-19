@@ -40,7 +40,13 @@ class EmptyCard extends StatelessWidget {
                      color: Colors.white,
                     ),
                     onPressed: () {
-                      
+                        Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Home(initialIndex: 0),
+                              ),
+                              (route) => false,
+                            );
                   },
                 ),  
                 const Spacer()

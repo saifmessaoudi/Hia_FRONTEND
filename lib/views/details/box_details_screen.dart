@@ -1,10 +1,13 @@
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:hia/app/style/app_colors.dart';
 import 'package:hia/models/offer.model.dart';
 import 'package:hia/views/details/establishment.details.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 import '../../constant.dart';
 
@@ -252,14 +255,25 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                       backgroundColor: Colors.white,
                       radius: MediaQuery.of(context).size.width / 4,
                       child: ClipOval(
-                        child: Image.network(
-                          widget.box.image,
-                          fit: BoxFit
-                              .cover, // Use BoxFit.cover to ensure the image covers the entire circle
-                          width: MediaQuery.of(context).size.width /
-                              2, // Ensure the width matches the CircleAvatar's diameter
-                          height: MediaQuery.of(context).size.width /
-                              2, // Ensure the height matches the CircleAvatar's diameter
+                        child: FastCachedImage(
+                          url: widget.box.image,
+                          width: MediaQuery.of(context).size.width / 2, 
+                          height: MediaQuery.of(context).size.width / 2, 
+                          fit: BoxFit.cover, 
+                          loadingBuilder: (context, loadingProgress) {
+                            return loadingProgress.isDownloading && loadingProgress.totalBytes != null
+                                ? Shimmer(
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width / 2,
+                                      height: MediaQuery.of(context).size.width / 2,
+                                      color: AppColors.unselectedItemShadow,
+                                    ),
+                                  )
+                                :  SizedBox(
+                                    width: MediaQuery.of(context).size.width / 2,
+                                    height: MediaQuery.of(context).size.width / 2,
+                                  );
+                          },
                         ),
                       ),
                     ),

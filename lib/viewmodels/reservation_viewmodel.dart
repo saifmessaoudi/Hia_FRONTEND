@@ -9,6 +9,8 @@ class ReservationViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? _reservationCode;
   String? get reservationCode => _reservationCode;
+  String? _error;
+  String? get error => _error;
 
    List<Reservation> _reservations = [];
 
@@ -25,15 +27,20 @@ class ReservationViewModel extends ChangeNotifier {
 
     try {
       _reservationCode = await _reservationService.addReservation(reservation);
+      await Future.delayed(const Duration(seconds: 2));
       if (_reservationCode == "ERROR") {
         _reservationCode = null;
+        _error = "An error occurred while adding the reservation";
       }
     } catch (e) {
       _reservationCode = null;
+      _error = "An error occurred while adding the reservation";
     } finally {
       _isLoading = false;
       notifyListeners();
+
     }
+
   }
 
   void setLoadingScreenshot(bool value) {
@@ -53,6 +60,14 @@ class ReservationViewModel extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+     
     }
+
+  }
+
+  void clearAll() {
+    _isLoading = false;
+    _error = null;
+    notifyListeners();
   }
 }

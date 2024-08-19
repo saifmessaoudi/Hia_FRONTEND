@@ -19,7 +19,7 @@ class SurpriseBoxCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: isGrid ? 200.w : 280.w, // Adjust width for grid
-      height: isGrid ? 210.h : 230.h, // Adjust height for grid
+      height: isGrid ? 210.h : 248.h, // Adjust height for grid
       child: GestureDetector(
         onTap: () {
           Navigator.push(
@@ -55,7 +55,7 @@ class SurpriseBoxCard extends StatelessWidget {
                       url: offer.image,
                       height: isGrid
                           ? 120.h
-                          : 140.h, // Adjust image height for grid
+                          : 150.h, // Adjust image height for grid
                       width: double.infinity,
                       fit: BoxFit.cover,
                       loadingBuilder: (context, loadingProgress) {
@@ -65,7 +65,7 @@ class SurpriseBoxCard extends StatelessWidget {
                                 child: Container(
                                   height: isGrid
                                       ? 120.h
-                                      : 140.h, // Adjust shimmer height for grid
+                                      : 150.h, // Adjust shimmer height for grid
                                   width: double.infinity,
                                   color: AppColors.unselectedItemShadow,
                                 ),
@@ -73,7 +73,7 @@ class SurpriseBoxCard extends StatelessWidget {
                             : SizedBox(
                                 height: isGrid
                                     ? 120
-                                    : 140); // Adjust height for grid
+                                    : 150); // Adjust height for grid
                       },
                     ),
                     // Gradient Overlay at the bottom of the image
@@ -193,13 +193,25 @@ class SurpriseBoxCard extends StatelessWidget {
                           ],
                         ),
                         // Price
-                        Text(
-                          '${offer.price.toStringAsFixed(2)} TND',
-                          style: AppStyles.interboldHeadline5
-                              .withSize(isGrid
-                                  ? 10.sp
-                                  : 13.sp) // Adjust font size for grid
-                              .withColor(AppColors.blackTitleButton),
+                         RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '${offer.price.toStringAsFixed(2)} ',
+                                style: AppStyles.interboldHeadline5
+                                    .withSize(isGrid ? 10.sp : 15.sp) // Adjust font size for grid
+                                    .withColor(AppColors.blackTitleButton)
+                                    .copyWith(fontWeight: FontWeight.bold), // Make price bold
+                              ),
+                              TextSpan(
+                                text: 'TND',
+                                style: AppStyles.interboldHeadline5
+                                    .withSize(isGrid ? 8.sp : 10.sp) // Smaller font size for TND
+                                    .withColor(AppColors.blackTitleButton)
+                                    .copyWith(fontWeight: FontWeight.normal), // Normal weight for TND
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
