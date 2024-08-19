@@ -37,7 +37,9 @@ class ReservationViewModel extends ChangeNotifier {
       _error = "An error occurred while adding the reservation";
     } finally {
       _isLoading = false;
+      _error = null;
       notifyListeners();
+
 
     }
 

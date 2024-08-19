@@ -10,6 +10,7 @@ import 'package:hia/app/style/app_constants.dart';
 import 'package:hia/app/style/app_style.dart';
 import 'package:hia/app/style/font_size.dart';
 import 'package:hia/app/style/widget_modifier.dart';
+import 'package:hia/views/reviews/review_screen.dart';
 import 'package:hia/widgets/back_row.dart';
 import 'package:hia/widgets/loading_scren_cart_order.dart';
 import 'package:hia/widgets/styled_button.dart';
@@ -307,6 +308,11 @@ class _HistoryItem extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
+                  onTap : (){
+                      final firstFood = order.items!.first.food;
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewScreen( food: firstFood)));
+
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

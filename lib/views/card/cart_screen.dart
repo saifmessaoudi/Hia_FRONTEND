@@ -1,6 +1,7 @@
 import 'package:hia/app/style/widget_modifier.dart';
 import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/viewmodels/cart_viewmodel.dart';
+import 'package:hia/viewmodels/reservation_viewmodel.dart';
 import 'package:hia/views/card/empty_card.dart';
 import 'package:hia/views/card/loading_order.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
@@ -76,6 +77,7 @@ class CartScreen extends StatelessWidget {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
+                      
                         _showLoadingScreen(context);
                       },
                       child: Container(
