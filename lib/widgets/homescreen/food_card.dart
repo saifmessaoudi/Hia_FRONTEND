@@ -123,10 +123,13 @@ class _FoodCardState extends State<FoodCard> {
                               const WidgetSpan(
                                 child: Padding(
                                   padding: EdgeInsets.only(bottom: 12.0),
-                                  child: Icon(
-                                    Icons.attach_money,
-                                    color: kMainColor,
-                                    size: 7.0,
+                                  child: Text(
+                                    'TND',
+                                    style: TextStyle(
+                                      color: kGreyTextColor,
+                                      fontSize: 5.0,
+                                    )
+                                    
                                   ),
                                 ),
                               ),
