@@ -5,23 +5,25 @@ import 'package:hia/viewmodels/cart_viewmodel.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/widgets/custom_toast.dart';
 
-class FoodCard extends StatefulWidget { 
+class FoodCard extends StatefulWidget {
   final Food food;
 
   const FoodCard({
     super.key,
     required this.food,
   });
-    @override
+  @override
   _FoodCardState createState() => _FoodCardState();
 }
- class _FoodCardState extends State<FoodCard> {
+
+class _FoodCardState extends State<FoodCard> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-      await userViewModel.verifFoodFavourite(widget.food.id, userViewModel.userData!.id);
+      await userViewModel.verifFoodFavourite(
+          widget.food.id, userViewModel.userData!.id);
     });
   }
 
@@ -34,12 +36,12 @@ class FoodCard extends StatefulWidget {
         SizedBox(
           width: 160.0,
           child: Card(
-            elevation: 5.0, 
+            elevation: 5.0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
               side: BorderSide(
-                color: kMainColor.withOpacity(0.5), 
-                width: 2.0, 
+                color: kMainColor.withOpacity(0.5),
+                width: 2.0,
               ),
             ),
             child: Container(
@@ -64,8 +66,7 @@ class FoodCard extends StatefulWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
                         child: CachedNetworkImage(
-                          
-                           width: 110.0,
+                          width: 110.0,
                           height: 110.0,
                           imageUrl: widget.food.image,
                           placeholder: (context, url) => Shimmer(
@@ -79,16 +80,21 @@ class FoodCard extends StatefulWidget {
                               height: 100.0,
                               color: Colors.white,
                             ),
-                            ),
-                          errorWidget: (context, url, error) => Icon(Icons.error),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
                         ),
                       ),
                     ),
                     Row(
                       children: [
-                        Text(
-                          widget.food.name,
-                          style: kTextStyle.copyWith(color: kTitleColor),
+                        Expanded(
+                          child: Text(
+                            widget.food.name,
+                            style: kTextStyle.copyWith(color: kTitleColor),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
                         ),
                       ],
                     ),
@@ -138,8 +144,18 @@ class FoodCard extends StatefulWidget {
                         const Spacer(),
                         GestureDetector(
                           onTap: () {
-                            cartViewModel.addItem(widget.food,1);
-                            showCustomToast(context, "${widget.food.name} added to cart");
+                            cartViewModel
+                                .addItem(widget.food, 1)
+                                .then((success) {
+                              if (success) {
+                                showCustomToast(context,
+                                    "${widget.food.name} added to cart");
+                              } else {
+                                showCustomToast(context,
+                                    "You cannot add items from different restaurants to the cart",
+                                    isError: true);
+                              }
+                            });
                           },
                           child: const CircleAvatar(
                             backgroundColor: Colors.transparent,
@@ -159,39 +175,36 @@ class FoodCard extends StatefulWidget {
             ),
           ),
         ),
-        Consumer<UserViewModel>(
-  builder: (context, userViewModel, child) {
-    
-    final isFavourite = userViewModel.getFavouriteStatus(widget.food.id);
+        Consumer<UserViewModel>(builder: (context, userViewModel, child) {
+          final isFavourite = userViewModel.getFavouriteStatus(widget.food.id);
 
-    return Positioned(
-      top: 10.0,
-      right: 10.0,
-      child: GestureDetector(
-        onTap: () async {
-
-          if (isFavourite) {
-            await userViewModel.removeFoodsFromFavourites(widget.food.id, userViewModel.userData!.id);
-                  await userViewModel.verifFoodFavourite(widget.food.id, userViewModel.userData!.id);
-
-          } else {
-            await userViewModel.addFoodsToFavourites(widget.food.id, userViewModel.userData!.id);
-          }
-        },
-        child: CircleAvatar(
-                                  backgroundColor: Colors.transparent,
-                                  radius: 12.0,
-                                  child: Icon(
-                                    
-                                    Icons.favorite_rounded,
-     color: isFavourite ? Colors.red : Colors.grey,
-    size: 18.0,
-      ),
-         ),
-      ),
-    );
-  }
-)
+          return Positioned(
+            top: 10.0,
+            right: 10.0,
+            child: GestureDetector(
+              onTap: () async {
+                if (isFavourite) {
+                  await userViewModel.removeFoodsFromFavourites(
+                      widget.food.id, userViewModel.userData!.id);
+                  await userViewModel.verifFoodFavourite(
+                      widget.food.id, userViewModel.userData!.id);
+                } else {
+                  await userViewModel.addFoodsToFavourites(
+                      widget.food.id, userViewModel.userData!.id);
+                }
+              },
+              child: CircleAvatar(
+                backgroundColor: Colors.transparent,
+                radius: 12.0,
+                child: Icon(
+                  Icons.favorite_rounded,
+                  color: isFavourite ? Colors.red : Colors.grey,
+                  size: 18.0,
+                ),
+              ),
+            ),
+          );
+        })
       ],
     );
   }

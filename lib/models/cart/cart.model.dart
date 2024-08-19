@@ -10,46 +10,74 @@ class Cart extends HiveObject {
   @HiveField(0)
   List<CartItem> items;
 
-  Cart({required this.items});
+  @HiveField(1)
+  String? establishmentId;
+
+  Cart({required this.items , this.establishmentId});
 
   factory Cart.fromJson(Map<String, dynamic> json) {
     return Cart(
       items: (json['items'] as List<dynamic>)
           .map((e) => CartItem.fromJson(e as Map<String, dynamic>))
           .toList(),
+      establishmentId: json['establishmentId'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'items': items.map((e) => e.toJson()).toList(),
+      'establishmentId': establishmentId,
     };
   }
 
- void addItem(Food food, int quantity) {
-  Debugger.blue('Adding item: ${food.name}, quantity: $quantity');
+ Future<bool> addItem(Food food, int quantity) async {
+  try {
+    Debugger.blue('Adding item: ${food.name}, quantity: $quantity');
 
-  // Find the index of the existing item
-  int existingIndex = items.indexWhere((item) => item.food.id == food.id);
+    if (items.isEmpty) {
+      establishmentId = food.establishment.id;
+      Debugger.blue('Establishment ID: $establishmentId');
+    }
 
-  if (existingIndex != -1) {
-    // Update the quantity of the existing item
-    items[existingIndex].quantity += quantity;
-    Debugger.blue('Updated existing item quantity: ${items[existingIndex].quantity}');
-  } else {
-    // Add the new item to the cart
-    items.add(CartItem(food: food, quantity: quantity));
-    Debugger.blue('Added new item: ${food.name}, quantity: $quantity');
+    if (establishmentId != food.establishment.id) {
+      Debugger.red('Cannot add item from a different establishment');
+      return false;
+    }
+
+    // Find the index of the existing item
+    int existingIndex = items.indexWhere((item) => item.food.id == food.id);
+
+    if (existingIndex != -1) {
+      // Update the quantity of the existing item
+      items[existingIndex].quantity += quantity;
+      Debugger.blue('Updated existing item quantity: ${items[existingIndex].quantity}');
+    } else {
+      // Add the new item to the cart
+      items.add(CartItem(food: food, quantity: quantity));
+      Debugger.blue('Added new item: ${food.name}, quantity: $quantity');
+    }
+
+    save(); // Save the updated cart
+    return true;
+  } catch (error) {
+    Debugger.red('Error adding item: $error');
+    return false;
   }
-
-  save(); // Save the updated cart
 }
 
-
+void clearCart() {
+  items.clear();
+  establishmentId = null;
+  save();
+}
 
 
   void removeItem(Food food) {
     items.removeWhere((item) => item.food.id == food.id);
+    if (items.isEmpty) {
+      establishmentId = null;
+    }
     save();
   }
 
@@ -59,6 +87,9 @@ class Cart extends HiveObject {
     if (existingIndex != -1) {
       if (quantity == 0) {
         items.removeAt(existingIndex);
+        if (items.isEmpty) {
+          establishmentId = null;
+        }
       } else {
         items[existingIndex].quantity = quantity;
       }

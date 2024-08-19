@@ -274,8 +274,6 @@ class _SignInState extends State<SignIn> {
               buttontext: 'Log In',
               buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
               onPressed: () async {
-
-                
                  await authViewModel.login(
                     emailController.text,
                     passwordController.text,
@@ -288,10 +286,7 @@ class _SignInState extends State<SignIn> {
                       builder: (context) => const LocationPermission(),
                     ),
                   );
-                }
-                
-                
-              },
+                } },
             );
     },
   );

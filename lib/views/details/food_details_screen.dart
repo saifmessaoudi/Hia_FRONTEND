@@ -385,9 +385,13 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                                 color: kMainColor,
                               ),
                               onPressed: () async {
-                                cartViewModel.addItem(widget.food, quantity);
-                                showCustomToast(context,
-                                    '${widget.food.name} added to cart');
+                                 cartViewModel.addItem(widget.food, 1).then((success) {
+                              if (success) {
+                                showCustomToast(context, "${widget.food.name} added to cart");
+                              } else {
+                                showCustomToast(context, "You cannot add items from different restaurants to the cart",isError: true);
+                              }
+                            });
                               },
                             ),
                             const SizedBox(

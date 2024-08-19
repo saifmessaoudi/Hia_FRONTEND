@@ -18,15 +18,18 @@ class CartAdapter extends TypeAdapter<Cart> {
     };
     return Cart(
       items: (fields[0] as List).cast<CartItem>(),
+      establishmentId: fields[1] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Cart obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.items);
+      ..write(obj.items)
+      ..writeByte(1)
+      ..write(obj.establishmentId);
   }
 
   @override

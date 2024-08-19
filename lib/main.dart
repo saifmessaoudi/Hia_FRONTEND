@@ -16,6 +16,7 @@ import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:hia/viewmodels/food_viewmodel.dart';
 import 'package:hia/viewmodels/home/navigation_provider.dart';
 import 'package:hia/viewmodels/offer.viewmodel.dart';
+import 'package:hia/viewmodels/reservation_viewmodel.dart';
 import 'package:hia/viewmodels/review.viewmodel.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_pref_provider.dart';
@@ -85,6 +86,8 @@ void main() async {
           },
         ),
         ChangeNotifierProvider(create: (context) => CartViewModel()),
+                ChangeNotifierProvider(create: (context) => ReservationViewModel()),
+
         ChangeNotifierProvider(create:  (context) => ReviewViewModel("")),
         ChangeNotifierProvider(
           create: (_) => NavigationModel(),)

@@ -5,7 +5,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/models/establishement.model.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 
@@ -38,7 +37,7 @@ class EstablishmentCard extends StatelessWidget {
                   child:  CachedNetworkImage(
                            width: 100.0,
                           height: 100.0,
-                          imageUrl: establishment?.image ?? "",
+                          imageUrl: establishment.image ?? "",
                           placeholder: (context, url) => Shimmer(
                             gradient: const LinearGradient(
                               begin: Alignment.topLeft,

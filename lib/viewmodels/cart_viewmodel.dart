@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/models/cart/cart.model.dart';
-import 'package:hia/models/cart/cart_item.model.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hive/hive.dart';
 
@@ -26,12 +25,16 @@ class CartViewModel extends ChangeNotifier {
     _cart = _cartBox.get('cart', defaultValue: Cart(items: []));
     _isLoading = false;
     notifyListeners();
-    Debugger.blue('Cart Loaded: ${_cart?.items.length} items');
   }
 
-  void addItem(Food food, int quantity) {
-    _cart?.addItem(food, quantity);
-    notifyListeners();
+  Future<bool> addItem(Food food, int quantity)async {
+    try {
+      bool result = await _cart?.addItem(food, quantity) ?? false;
+      return result;
+    }catch (e){
+      Debugger.red('Error adding item to cart: $e');
+      return false;
+    }
   }
   
  void removeItem(Food food) {

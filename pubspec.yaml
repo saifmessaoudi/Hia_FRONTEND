@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   json_annotation: ^4.5.1
   cupertino_icons: ^1.0.2
-  path_provider: ^2.0.5
+  path_provider: ^2.1.4
   nb_utils: ^5.0.8
   http: ^1.0.0
   geocoding: ^2.0.0
@@ -52,6 +52,8 @@ dependencies:
   fast_cached_network_image: ^1.2.9
   get: ^4.6.6
   latlong2: ^0.9.1
+  screenshot: ^3.0.0
+  image_gallery_saver: ^2.0.3
 
 dev_dependencies:
   flutter_test:

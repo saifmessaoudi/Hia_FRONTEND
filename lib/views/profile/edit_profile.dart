@@ -1,12 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/views/foodPreference/food_preferences_screen.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/views/location/bottom_location_sheet.dart';
+import 'package:hia/views/profile/preference_chip.dart';
 import 'package:hia/views/profile/profile_bottom_sheet.dart';
 import 'package:hia/widgets/back_row.dart';
 import 'package:hia/widgets/custom_toast.dart';
@@ -161,14 +163,14 @@ class _EditProfileState extends State<EditProfile> {
                       color: Colors.white,
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.all(15.0),
                       child: Column(
                         children: [
                           Stack(
                             alignment: Alignment.center,
                             children: [
                               Container(
-                                width: 90.0,
+                                width: 90.0, 
                                 height: 90.0,
                                 decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
@@ -311,11 +313,11 @@ class _EditProfileState extends State<EditProfile> {
                                   style: kTextStyle.copyWith(
                                     color: kTitleColor,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 18.0,
+                                    fontSize: 20.0,
                                   ),
                                 ),
                               ),
-                              const Gap(5.0),
+                               Gap(10.h),
                               Row(
                                 children: [
                                   Expanded(
@@ -326,20 +328,13 @@ class _EditProfileState extends State<EditProfile> {
                                         child: SingleChildScrollView(
                                           scrollDirection: Axis.horizontal,
                                           child: Wrap(
-                                            spacing: 10.0,
+                                            spacing: 12.0,
                                             runSpacing: 4.0,
                                             children: userPreferences
                                                 .map(
-                                                  (pref) => Chip(
-                                                    backgroundColor: kMainColor,
-                                                    label: Text(
-                                                      pref,
-                                                      style: kTextStyle.copyWith(
-                                                        color: Colors.white,
-                                                        fontSize: 12.0,
-                                                      ),
+                                                  (pref) => PreferenceChipElement(
+                                                      pref: pref,
                                                     ),
-                                                  ),
                                                 )
                                                 .toList(),
                                           ),
