@@ -20,6 +20,17 @@ class CartItem extends HiveObject {
     );
   }
 
+  factory CartItem.fromJsonWithoutFood(Map<String, dynamic> json) {
+    return CartItem(
+      food: Food.fromJsonWithoutEstablishment(json['food']),
+      quantity: json['quantity'],
+    );
+  }
+
+
+
+
+
   Map<String, dynamic> toJson() {
     return {
       'food': food.toJson(),

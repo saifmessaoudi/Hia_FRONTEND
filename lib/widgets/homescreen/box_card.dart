@@ -1,8 +1,15 @@
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:hia/app/style/app_colors.dart';
+import 'package:hia/app/style/app_constants.dart';
+import 'package:hia/app/style/app_style.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/models/offer.model.dart';
+import 'package:hia/views/details/box_details_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class SurpriseBoxCard extends StatelessWidget {
   const SurpriseBoxCard({super.key, required this.offer});
@@ -11,77 +18,58 @@ class SurpriseBoxCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      elevation: 4,
-      child: Container(
-        width: 300.0,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.0),
-          gradient: const LinearGradient(
-            colors: [Colors.white, Colors.white],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-               Lottie.asset(
-                    'images/box.json', // Replace with your Lottie animation file path
-                    height: 80, // Adjust height as needed
-                    width: 80, // Take full width
-                    fit: BoxFit.contain, // Adjust fit as needed
-                  ),
-              
-              const Gap(10),
-              Text(
-                offer.name,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: kTitleColor,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const Gap(10),
-              
-                 Text(
-                    " ${offer.quantity} items left",
-                    style:  TextStyle(
-                      fontSize: 14,
-                      color: offer.quantity < 5 ? kTitleColor : kTitleColor,
-                    ),
-                  ),
-                
-             
-              const Gap(10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                   Icon(Icons.access_time, color:  offer.validUntil.difference(DateTime.now()).inDays < 3
-                          ? Colors.red
-                          : kTitleColor),
-                  const SizedBox(width: 5),
-
-                  Text(
-                    "Expires in ${offer.validUntil.difference(DateTime.now()).inDays} days",
-                    style:  TextStyle(
-                      fontSize: 14,
-                      color: offer.validUntil.difference(DateTime.now()).inDays < 3
-                          ? Colors.red
-                          : Colors.red,
-                    ),
+    return SizedBox(
+      width: 270,
+      height:160,
+      child: GestureDetector(
+       onTap: () {
+          Navigator.push (
+            context,
+            MaterialPageRoute(
+              builder: (context) => BoxDetailsScreen(box: offer),
+            ),
+          );
+        },
+        child: Container(
+           decoration:  BoxDecoration(
+                borderRadius: BorderRadius.circular(15.r),
+                boxShadow:  [
+                    BoxShadow(
+                    color:   AppColors.background.withOpacity(0.1),
+                    offset: const Offset(0, 5),
+                    blurRadius: 1,
+                    spreadRadius: 1,
+                    blurStyle: BlurStyle.inner,
                   ),
                 ],
               ),
-            ],
-          ),
+          child: ClipRRect(
+                borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    FastCachedImage(
+                      url: offer.image,
+                      fit:  BoxFit.cover,
+                      loadingBuilder: (context, loadingProgress) {
+                        return loadingProgress.isDownloading && loadingProgress.totalBytes != null
+                            ? Shimmer(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(AppConstants.cardRadius),
+                                    color: AppColors.unselectedItemShadow,
+                                  ),
+                                ),
+                              )
+                            : const SizedBox.shrink();
+                      },
+                    ),
+                    Center(
+                      child: Text(offer.name, style: AppStyles.interboldHeadline1.withSize(23).withColor(Colors.white).medium()),
+                    ),
+                  ],
+                ),
+              ),
         ),
       ),
     );

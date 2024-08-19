@@ -71,7 +71,7 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                       ),
                       Container(
                         width: context.width(),
-                        height: context.height()-200,
+                        height: context.height() - 200,
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(30.0),
@@ -96,10 +96,17 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => EstablishmentDetailsScreen(establishment: widget.box.etablishment)));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              EstablishmentDetailsScreen(
+                                                  establishment: widget
+                                                      .box.etablishment)));
                                 },
                                 child: Text(
                                   widget.box.etablishment.name,
@@ -113,7 +120,8 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                             ),
                             const Gap(10),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 10.0),
                               child: Row(
                                 children: [
                                   Expanded(
@@ -123,12 +131,16 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                                           WidgetSpan(
                                             child: Icon(
                                               Icons.lock_clock,
-                                              color: widget.box.isAvailable ? kMainColor : Colors.red,
+                                              color: widget.box.isAvailable
+                                                  ? kMainColor
+                                                  : Colors.red,
                                               size: 18.0,
                                             ),
                                           ),
                                           TextSpan(
-                                            text: widget.box.isAvailable ? ' Available' : ' Not Available',
+                                            text: widget.box.isAvailable
+                                                ? ' Available'
+                                                : ' Not Available',
                                             style: kTextStyle.copyWith(
                                               fontWeight: FontWeight.bold,
                                               color: kTitleColor,
@@ -142,18 +154,23 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                                     child: RichText(
                                       text: TextSpan(
                                         children: [
-                                           WidgetSpan(
+                                          WidgetSpan(
                                             child: Icon(
                                               Icons.shopping_cart,
-                                              color: widget.box.quantity < 3 ? Colors.red : kMainColor,
+                                              color: widget.box.quantity < 3
+                                                  ? Colors.red
+                                                  : kMainColor,
                                               size: 18.0,
                                             ),
                                           ),
                                           TextSpan(
-                                          text: " ${widget.box.quantity} items left",
-                                            style:  TextStyle(
+                                            text:
+                                                " ${widget.box.quantity} items left",
+                                            style: TextStyle(
                                               fontSize: 14,
-                                              color: widget.box.quantity < 3 ? Colors.red : kTitleColor,
+                                              color: widget.box.quantity < 3
+                                                  ? Colors.red
+                                                  : kTitleColor,
                                             ),
                                           ),
                                         ],
@@ -165,7 +182,8 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                             ),
                             const Gap(25),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
                               child: Text(
                                 widget.box.description,
                                 style: kTextStyle.copyWith(
@@ -179,9 +197,10 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                             const SizedBox(
                               height: 20.0,
                             ),
-                            //price tunisian 
+                            //price tunisian
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
                               child: Row(
                                 children: [
                                   Text(
@@ -209,7 +228,8 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                                     child: ButtonGlobal(
                                       buttonTextColor: Colors.white,
                                       buttontext: 'Add To Cart',
-                                      buttonDecoration: kButtonDecoration.copyWith(color: kMainColor),
+                                      buttonDecoration: kButtonDecoration
+                                          .copyWith(color: kMainColor),
                                       onPressed: () {
                                         // Implement add to cart logic
                                       },
@@ -231,12 +251,17 @@ class _ProductDetailsState extends State<BoxDetailsScreen> {
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
                       radius: MediaQuery.of(context).size.width / 4,
-                      child: Lottie.asset(
-                    'images/box.json', // Replace with your Lottie animation file path
-                    height: 500, // Adjust height as needed
-                    width: 500, // Take full width
-                    fit: BoxFit.contain, // Adjust fit as needed
-                  ),
+                      child: ClipOval(
+                        child: Image.network(
+                          widget.box.image,
+                          fit: BoxFit
+                              .cover, // Use BoxFit.cover to ensure the image covers the entire circle
+                          width: MediaQuery.of(context).size.width /
+                              2, // Ensure the width matches the CircleAvatar's diameter
+                          height: MediaQuery.of(context).size.width /
+                              2, // Ensure the height matches the CircleAvatar's diameter
+                        ),
+                      ),
                     ),
                   ),
                 ],

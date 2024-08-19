@@ -22,7 +22,7 @@ export 'package:hia/views/home/establishment_screen.dart';
 export 'package:hia/views/home/establishment_search_delegate.dart';
 export 'package:nb_utils/nb_utils.dart';
 export 'package:provider/provider.dart';
-export 'package:shimmer/shimmer.dart';
 export "package:hia/views/home/sections/popular_deals_section.dart";
 export "package:hia/views/home/sections/recommended_section.dart";
 export "package:hia/views/home/sections/offers_section.dart";
+export 'package:shimmer/shimmer.dart';

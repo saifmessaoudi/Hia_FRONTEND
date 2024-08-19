@@ -7,6 +7,7 @@ import 'package:hia/views/foods/food_see_all_favourites.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/views/map/map_positions.dart';
 import 'package:hia/views/profile/edit_profile.dart';
+import 'package:hia/views/profile/order_tracking/order_history.dart';
 import 'package:hia/widgets/custom_dialog.dart';
 import 'package:hia/widgets/smart_scaffold.dart';
 
@@ -253,6 +254,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           color: Colors.white,
                                         ),
                                         child: ListTile(
+                                          onTap: () {
+                                            const OrderHistoryScreen().launch(context);
+                                          },
                                           leading: const CircleAvatar(
                                             backgroundColor: Color(0xFFF5F5F5),
                                             child: Icon(

@@ -40,6 +40,8 @@ class _LoadingScreenDialogState extends State<LoadingScreenDialog> {
     final userId =
         Provider.of<UserViewModel>(context, listen: false).userData!.id;
 
+    
+
     // Create the reservation data
     final reservationData = Reservation(
       etablishmentId: establishmentId!,
@@ -49,6 +51,8 @@ class _LoadingScreenDialogState extends State<LoadingScreenDialog> {
 
     // Send the JSON to the addReservation method
     final viewModel = Provider.of<ReservationViewModel>(context, listen: false);
+    final res = viewModel.getMyReservations(userId);
+    print (res);
     await viewModel.addReservation(reservationData);
   }
 
