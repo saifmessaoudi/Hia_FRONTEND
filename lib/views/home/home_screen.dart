@@ -19,11 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-      userViewModel.getFavouriteFood(userViewModel.userData!.id);
-      
-    });
+   
   }
 
   List<String> banner = ['images/banner1.png', 'images/banner2.png'];

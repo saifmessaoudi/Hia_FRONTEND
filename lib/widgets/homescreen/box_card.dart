@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -51,30 +52,20 @@ class SurpriseBoxCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppConstants.cardRadius),
                 child: Stack(
                   children: [
-                    FastCachedImage(
-                      url: offer.image,
-                      height: isGrid
-                          ? 120.h
-                          : 150.h, // Adjust image height for grid
+                      CachedNetworkImage(
                       width: double.infinity,
+                      height: isGrid ? 120.h : 150.h, // Adjust image height for grid
+                      imageUrl: offer.image,
                       fit: BoxFit.cover,
-                      loadingBuilder: (context, loadingProgress) {
-                        return loadingProgress.isDownloading &&
-                                loadingProgress.totalBytes != null
-                            ? Shimmer(
-                                child: Container(
-                                  height: isGrid
-                                      ? 120.h
-                                      : 150.h, // Adjust shimmer height for grid
-                                  width: double.infinity,
-                                  color: AppColors.unselectedItemShadow,
-                                ),
-                              )
-                            : SizedBox(
-                                height: isGrid
-                                    ? 120
-                                    : 150); // Adjust height for grid
-                      },
+                      placeholder: (context, url) => Shimmer(
+                        
+                        child: Container(
+                          height: isGrid ? 120.h : 150.h, // Adjust shimmer height for grid
+                          width: double.infinity,
+                          color: AppColors.background,
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
                     // Gradient Overlay at the bottom of the image
                     Positioned(
@@ -128,24 +119,19 @@ class SurpriseBoxCard extends StatelessWidget {
                     Row(
                       children: [
                         ClipOval(
-                          child: FastCachedImage(
-                            url: offer.etablishment.image!,
-                            width:
-                                24.w, 
+                          child: CachedNetworkImage(
+                            imageUrl: offer.etablishment.image!,
+                            width: 24.w,
                             height: 24.h,
                             fit: BoxFit.cover,
-                            loadingBuilder: (context, loadingProgress) {
-                              return loadingProgress.isDownloading &&
-                                      loadingProgress.totalBytes != null
-                                  ? Shimmer(
-                                      child: Container(
-                                        width: 24.w,
-                                        height: 24.h,
-                                        color: AppColors.unselectedItemShadow,
-                                      ),
-                                    )
-                                  : const SizedBox(width: 24, height: 24);
-                            },
+                            placeholder: (context, url) => Shimmer(
+                              child: Container(
+                                width: 24.w,
+                                height: 24.h,
+                                color: AppColors.background,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => const SizedBox(width: 24, height: 24),
                           ),
                         ),
                         SizedBox(

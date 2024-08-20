@@ -20,6 +20,7 @@ final OfferService _service = OfferService();
 
     try {
       offers = await _service.getCachedData();
+      Debugger.green('Fetched offers from cache: ${offers.length}');
       await _service.cacheData(offers);  // Cache the fetched data
       if (await _service.hasInternetConnection()) {
         final fetchedOffers = await _service.fetchOffers();
