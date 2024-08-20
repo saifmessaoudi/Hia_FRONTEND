@@ -25,6 +25,15 @@ class Review extends HiveObject {
     );
   }
 
+  //from json with empty user
+  factory Review.fromJsonWithoutUser(Map<String, dynamic> json) {
+    return Review(
+      user: User.empty(),
+      comment: json['comment'] as String?,
+      rating: (json['rating'] as num).toDouble(),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'user': user,

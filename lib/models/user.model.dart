@@ -58,6 +58,22 @@ class User {
     required this.favoriteFood,
     required this.foodPreference,
   });
+  User.empty()
+      : id = '',
+        firstName = '',
+        lastName = '',
+        email = '',
+        password = '',
+        phone = '',
+        isVerified = false,
+        profileImage = '',
+        address = '',
+        longitude = '',
+        latitude = '',
+        favoriteFood = [],
+        foodPreference = [];
+
+
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
