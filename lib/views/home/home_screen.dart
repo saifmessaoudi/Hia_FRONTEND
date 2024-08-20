@@ -10,19 +10,10 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-
-   
-  }
-
-  List<String> banner = ['images/banner1.png', 'images/banner2.png'];
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Provider.of<FoodViewModel>(context, listen: false).refreshFoods();
           Provider.of<EstablishmentViewModel>(context, listen: false)
               .refreshEstablishments();
+          Provider.of<OfferViewModel>(context, listen: false).refreshOffers();
         },
         child: SingleChildScrollView(
           child: Column(
@@ -47,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Container(
                       padding: EdgeInsets.zero,
                       width: MediaQuery.of(context).size.width,
-                      height: 285.0,
+                      height: 280.0,
                       decoration: const BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage(
@@ -70,11 +62,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   children: [
                                     Image.asset(
                                       'images/h_logo_white.png',
-                                      height: 55.0,
-                                      width: 55.0,
+                                      height: 50.0,
+                                      width: 50.0,
                                     ),
                                     const SizedBox(
-                                      height: 15.0,
+                                      height: 13.0,
                                     ),
                                     Consumer<UserViewModel>(
                                       builder: (context, userViewModel, child) {

@@ -11,7 +11,7 @@ import 'home_screen.dart';
 
 class Home extends StatefulWidget {
   final int initialIndex;
-  const Home({Key? key, this.initialIndex=0}) : super(key: key);
+  const Home({Key? key, this.initialIndex = 0}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -23,6 +23,7 @@ class _HomeState extends State<Home> {
     topRight: Radius.circular(25),
   );
   final ValueNotifier<int> _selectedItemPosition = ValueNotifier<int>(0);
+  late PageController _pageController;
 
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
@@ -35,7 +36,14 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _selectedItemPosition.value = ValueNotifier<int>(widget.initialIndex).value;
+    _selectedItemPosition.value = widget.initialIndex;
+    _pageController = PageController(initialPage: widget.initialIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -46,7 +54,14 @@ class _HomeState extends State<Home> {
           valueListenable: _selectedItemPosition,
           builder: (context, selectedIndex, child) {
             return SmartScaffold(
-              body: _widgetOptions.elementAt(selectedIndex),
+              body: PageView(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  _selectedItemPosition.value = index;
+                },
+                children: _widgetOptions,
+                physics: const NeverScrollableScrollPhysics(), // Disable swipe navigation
+              ),
               bottomNavigationBar: Container(
                 height: 78.0,
                 decoration: BoxDecoration(
@@ -69,7 +84,10 @@ class _HomeState extends State<Home> {
                   snakeViewColor: kMainColor,
                   unselectedItemColor: kMainColor,
                   currentIndex: selectedIndex,
-                  onTap: (index) => _selectedItemPosition.value = index,
+                  onTap: (index) {
+                    _selectedItemPosition.value = index;
+                    _pageController.jumpToPage(index);
+                  },
                   items: [
                     const BottomNavigationBarItem(
                       icon: Icon(Icons.home_outlined),
@@ -101,8 +119,8 @@ class _HomeState extends State<Home> {
                                   style: TextStyle(
                                     color: selectedIndex == 2 ? kMainColor : Colors.white,
                                     fontSize: 8,
-                                    
-                                  ),textAlign: TextAlign.center,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),

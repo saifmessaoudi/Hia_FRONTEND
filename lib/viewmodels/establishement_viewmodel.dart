@@ -181,7 +181,7 @@ _isCalculating = true;
   notifyListeners();
 
   // Ensure this runs after the current frame
-  WidgetsBinding.instance.addPostFrameCallback((_) async {  
+  
     
     try {
       User user = _userViewModel.userData!;
@@ -189,7 +189,6 @@ _isCalculating = true;
       double userLon = user.longitude.toDouble();
 
       // Simulate a delay for distance calculation
-      await Future.delayed(Duration(milliseconds: 500));
 
       _distances = establishments.map((establishment) {
         return _calculateDistance(userLat, userLon, establishment.latitude, establishment.longitude);
@@ -200,7 +199,6 @@ _isCalculating = true;
       _isCalculating = false;
       notifyListeners();
     }
-  });
 }
 
 void sortByDistance() async {

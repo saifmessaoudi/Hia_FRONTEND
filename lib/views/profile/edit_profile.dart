@@ -71,7 +71,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SmartScaffold(
       resizeToAvoidBottomInset: true,
       bottomNavigationBar: Container(
         height: 80.0, // Adjusted height for the bottom navigation bar
@@ -131,8 +131,7 @@ class _EditProfileState extends State<EditProfile> {
           ),
         ),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
+      body:  SingleChildScrollView(
           child: Column(
             children: [
               Container(
@@ -148,14 +147,17 @@ class _EditProfileState extends State<EditProfile> {
                       children: [
                         Padding(
                           padding: EdgeInsets.all(20.0),
-                          child: BackRow(title: ""),
+                          child: Padding(
+                            padding:  EdgeInsets.only(top: 20.0),
+                            child: BackRow(title: ""),
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 30.0),
                     Container(
                       width: double.infinity,
-                      height: MediaQuery.of(context).size.height * 0.8,
+                      height: MediaQuery.of(context).size.height,
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30.0),
@@ -403,10 +405,12 @@ class _EditProfileState extends State<EditProfile> {
                                             ),
                                     ],
                                   ),
+                                  
                                 ),
                               ),
                             ),
                           ),
+                         
                           ],
                         ),
                       ),
@@ -418,7 +422,7 @@ class _EditProfileState extends State<EditProfile> {
             
           ),
         ),
-      ),
+      
     );
      }
 }

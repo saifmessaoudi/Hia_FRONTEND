@@ -30,11 +30,7 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
     @override
   void initState() {
     super.initState();
-    // Verify the food favorite status when the widget is initialized
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-      await userViewModel.verifFoodFavourite(widget.food.id, userViewModel.userData!.id);
-    });
+    
   }
 
   @override

@@ -14,6 +14,10 @@ final OfferService _service = OfferService();
     fetchOffers();
   }
 
+  Future<void> refreshOffers() async {
+    await fetchOffers();
+  }
+
   Future<void> fetchOffers() async {
     isLoading = true;
     notifyListeners();

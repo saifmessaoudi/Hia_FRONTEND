@@ -5,8 +5,7 @@ import 'package:hia/models/food.model.dart';
 import 'package:hia/viewmodels/cart_viewmodel.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/widgets/custom_toast.dart';
-import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
+
 
 class FoodCard extends StatefulWidget {
   final Food food;
@@ -21,15 +20,7 @@ class FoodCard extends StatefulWidget {
 }
 
 class _FoodCardState extends State<FoodCard> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-      await userViewModel.verifFoodFavourite(
-          widget.food.id, userViewModel.userData!.id);
-    });
-  }
+  
 
   @override
   Widget build(BuildContext context) {
