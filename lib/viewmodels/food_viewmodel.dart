@@ -12,8 +12,12 @@ class FoodViewModel extends ChangeNotifier {
   List<Food> _foods = [];
   List<Food> _filteredFoods = [];
 
-  List<Food> get foods => _filteredFoods.isEmpty ? _foods : _filteredFoods;
-
+List<Food> get foods {
+    if (_selectedFilters.isNotEmpty) {
+      return _filteredFoods;
+    }
+    return _foods;
+  }
   List<String> _selectedFilters = [];
   List<String> get selectedFilters => _selectedFilters;
 
@@ -67,14 +71,15 @@ class FoodViewModel extends ChangeNotifier {
     }
   }
 
+  //apply filter and return [] is filter no match 
   void applyFilters(List<String> filters) {
     _selectedFilters = filters;
-    if (filters.isEmpty) {
+    _filteredFoods = _foods.where((food) {
+      return filters.any((filter) => food.category.contains(filter));
+    }).toList();
+
+    if (_filteredFoods.isEmpty) {
       _filteredFoods = [];
-    } else {
-      _filteredFoods = _foods.where((food) {
-        return filters.contains(food.category.first);
-      }).toList();
     }
     notifyListeners();
   }

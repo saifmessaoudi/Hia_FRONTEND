@@ -36,7 +36,7 @@ class _FilterDialogState extends State<FilterDialog> {
         builder: (context, constraints) {
           return Container(
             width: constraints.maxWidth * 0.8,
-            height: constraints.maxHeight * 0.23,
+            height: constraints.maxHeight * 0.19,
             padding: const EdgeInsets.all(10.0),
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -61,22 +61,18 @@ class _FilterDialogState extends State<FilterDialog> {
                           } else {
                             selectedFilters.add(filterName);
                           }
+                          widget.onApply(selectedFilters);
                         });
                       },
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
+                      child:                       ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
                         child: Stack(
                           children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: Image.asset(
-                                filterImage,
-                                height: 70,
-                                width: 70,
-                                fit: BoxFit.cover,
-                              ),
+                            Image.asset(
+                              filterImage,
+                              height: 70,
+                              width: 70,
+                              fit: BoxFit.cover,
                             ),
                             Container(
                               height: 70,
@@ -86,6 +82,25 @@ class _FilterDialogState extends State<FilterDialog> {
                                 color: isSelected ? kMainColor.withOpacity(0.5) : Colors.transparent,
                               ),
                             ),
+                            // Gradient Overlay at the bottom of the image
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                height: 25, // Adjust gradient height as needed
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.black.withOpacity(0.7),
+                                      Colors.transparent
+                                    ],
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                  ),
+                                ),
+                              ),
+                            ),
                             Positioned(
                               bottom: 5,
                               left: 5,
@@ -93,33 +108,20 @@ class _FilterDialogState extends State<FilterDialog> {
                               child: Text(
                                 filterName,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 10.0,
                                   color: Colors.white,
-                                  backgroundColor: Colors.black.withOpacity(0.2),
                                 ),
                               ),
                             ),
                           ],
                         ),
-                      ),
+                      )
                     );
                   }).toList(),
                 ),
                 const SizedBox(height: 10.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        widget.onApply(selectedFilters);
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Apply', style: TextStyle(color: kMainColor)),
-                    )
-                  ],
-                ),
               ],
             ),
           );

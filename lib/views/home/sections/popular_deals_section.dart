@@ -40,43 +40,57 @@ class PopularDealsSection extends StatelessWidget {
           padding: const EdgeInsets.all(10.0),
           child: Consumer<FoodViewModel>(
             builder: (context, foodViewModel, child) {
-              return foodViewModel.isLoading
-                  ? Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: SizedBox(
-                        height: 150, // Specify a fixed height for the ListView
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 5,
-                          itemBuilder: (_, __) => Container(
-                            width: 200,
-                            margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                          ),
+              if (foodViewModel.isLoading) {
+                return Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: SizedBox(
+                    height: 150, // Specify a fixed height for the ListView
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 5,
+                      itemBuilder: (_, __) => Container(
+                        width: 200,
+                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                    )
-                  : HorizontalList(
-                      spacing: 10,
-                      itemCount: foodViewModel.foods.length,
-                      itemBuilder: (_, i) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FoodDetailsScreen(food: foodViewModel.foods[i]),
-                              ),
-                            );
-                          },
-                          child: FoodCard(food: foodViewModel.foods[i]),
+                    ),
+                  ),
+                );
+              } else if (foodViewModel.foods.isEmpty) {
+                return Center(
+                  child: SizedBox(
+                    height: 80,
+                    child: Text(
+                      'No deals for now',
+                      style: kTextStyle.copyWith(color: kGreyTextColor),
+                      
+                    ),
+                  ),
+                );
+              } else {
+                return HorizontalList(
+                  spacing: 10,
+                  itemCount: foodViewModel.foods.length,
+                  itemBuilder: (_, i) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                FoodDetailsScreen(food: foodViewModel.foods[i]),
+                          ),
                         );
                       },
+                      child: FoodCard(food: foodViewModel.foods[i]),
                     );
+                  },
+                );
+              }
             },
           ),
         ),

@@ -1,8 +1,10 @@
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:google_maps_flutter/google_maps_flutter.dart";
-import "package:hia/views/home/exports/export_homescreen.dart";
-import "package:hia/views/home/sections/nearly_section.dart";
-import "package:hia/views/location/map_screen.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hia/views/home/exports/export_homescreen.dart';
+import 'package:hia/views/home/sections/nearly_section.dart';
+import 'package:hia/views/location/map_screen.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,27 +16,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-void initState() {
-  super.initState();
+  void initState() {
+    super.initState();
 
-   WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-     userViewModel.getFavouriteFood(userViewModel.userData!.id) ; 
-  final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
-  establishmentViewModel.calculateAllDistances();
+      userViewModel.getFavouriteFood(userViewModel.userData!.id);
+      final establishmentViewModel =
+          Provider.of<EstablishmentViewModel>(context, listen: false);
+      establishmentViewModel.calculateAllDistances();
     });
+  }
 
-}
   List<String> banner = ['images/banner1.png', 'images/banner2.png'];
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
-    
     return SmartScaffold(
       body: RefreshIndicator(
         color: kMainColor,
@@ -92,8 +89,15 @@ void initState() {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) =>  CustomMapScreen(
-                                                  initialPosition: LatLng(userViewModel.userData!.latitude.toDouble(), userViewModel.userData!.longitude.toDouble()),
+                                                builder: (context) =>
+                                                    CustomMapScreen(
+                                                  initialPosition: LatLng(
+                                                      userViewModel.userData!
+                                                          .latitude
+                                                          .toDouble(),
+                                                      userViewModel.userData!
+                                                          .longitude
+                                                          .toDouble()),
                                                 ),
                                               ),
                                             );
@@ -185,7 +189,8 @@ void initState() {
                                             onApply: (selectedFilters) {
                                               Provider.of<FoodViewModel>(context,
                                                       listen: false)
-                                                  .applyFilters(selectedFilters);
+                                                  .applyFilters(
+                                                      selectedFilters);
                                             },
                                           );
                                         },
@@ -202,16 +207,20 @@ void initState() {
                   ),
                 ],
               ),
-        
-                            Consumer<FoodViewModel>(
+              Consumer<FoodViewModel>(
                 builder: (context, foodViewModel, child) {
                   List<FilterData> selectedFilterData = foodViewModel
                       .selectedFilters
                       .map((filter) => catData.firstWhere((data) =>
-                          data.catTitle.toLowerCase() == filter.toLowerCase()))
+                          data.catTitle.toLowerCase() ==
+                          filter.toLowerCase()))
                       .toList();
-                  return selectedFilterData.isNotEmpty
-                      ? Padding(
+                  bool hasFilters = selectedFilterData.isNotEmpty;
+
+                  return Column(
+                    children: [
+                      if (hasFilters)
+                        Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15.0),
                           child: Column(
                             children: [
@@ -221,36 +230,28 @@ void initState() {
                                   return FilterChipElement(
                                     catList: filterData,
                                     onRemove: () {
-                                      foodViewModel.removeFilter(filterData.catTitle);
+                                      foodViewModel
+                                          .removeFilter(filterData.catTitle);
                                     },
                                   );
                                 }).toList(),
                               ),
-                               Gap(5.h),
+                              Gap(5.h),
                               const Divider(), // Divider
                               Gap(5.h),
                             ],
                           ),
-                        )
-                      : const SizedBox.shrink();
+                        ),
+                      if (hasFilters) const PopularDealsSection(),
+                      const OffersSection(),
+                      const NearlySection(),
+                      const RecommendedSection(),
+                      if (!hasFilters) const PopularDealsSection(),
+                      const Gap(20.0),
+                    ],
+                  );
                 },
               ),
-              ////// ----------- Offers Section ----------- ///////
-              
-              const OffersSection(),
-        
-              ////// ----------- Nearly Section ----------- ///////
-              
-              const NearlySection(),
-        
-              ////// ----------- Recommended Section ----------- ///////
-        
-              const RecommendedSection(),
-        
-              ////// ----------- Popular Deals Section ----------- ///////
-              const PopularDealsSection(),
-        
-              const Gap(20.0),
             ],
           ),
         ),
