@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:hia/helpers/debugging_printer.dart';
-import 'package:hia/widgets/custom_toast.dart';
 
 class ConnectivityManager extends ChangeNotifier {
   final Connectivity _connectivity = Connectivity();

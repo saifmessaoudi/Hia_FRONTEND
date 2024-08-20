@@ -159,7 +159,7 @@ class UserService extends ChangeNotifier {
         return {'success': false, 'message': responseData['message']};
       }
     } catch (error) {
-      print('Error: $error');
+      Debugger.red('Error: $error');
       return {
         'success': false,
         'message': 'Failed to reset password. Please try again later.'
@@ -170,7 +170,7 @@ class UserService extends ChangeNotifier {
   Future<Map<String, dynamic>> sendPhoneOtp(String phone, String email) async {
     try {
       final response = await http.post(
-        Uri.parse(baseUrl + '/user/send-phone-otp'),
+        Uri.parse('$baseUrl/user/send-phone-otp'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -188,7 +188,7 @@ class UserService extends ChangeNotifier {
         return {'success': false, 'message': responseData['message']};
       }
     } catch (error) {
-      print('Error: $error');
+      Debugger.red('Error: $error');
       return {
         'success': false,
         'message': 'Failed to send OTP. Please try again later.'
@@ -214,11 +214,11 @@ class UserService extends ChangeNotifier {
         final jsonResponse = jsonDecode(response.body);
         return User.fromJson(jsonResponse);
       } else {
-        print('Failed to fetch user: ${response.statusCode}');
+        Debugger.red('Failed to fetch user: ${response.statusCode}');
         throw Exception('Failed to fetch user: ${response.body}');
       }
     } catch (error) {
-      print('Error fetching user: $error');
+      Debugger.red('Error fetching user: $error');
       return null;
     }
   }
@@ -226,7 +226,7 @@ class UserService extends ChangeNotifier {
   Future<Map<String, dynamic>> verifyOtpEmail(String email, String otp) async {
     try {
       final response = await http.post(
-        Uri.parse(baseUrl + '/user/verify-otp-email'),
+        Uri.parse('$baseUrl/user/verify-otp-email'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -244,7 +244,7 @@ class UserService extends ChangeNotifier {
         return {'success': false, 'message': responseData['message']};
       }
     } catch (error) {
-      print('Error: $error');
+      Debugger.red('Error: $error');
       return {
         'success': false,
         'message': 'Failed to verify OTP. Please try again later.'
@@ -257,7 +257,7 @@ class UserService extends ChangeNotifier {
   Future<Map<String, dynamic>> verifyOtpPhone(String phone, String otp) async {
     try {
       final response = await http.post(
-        Uri.parse(baseUrl + '/user/verify-otp-phone'),
+        Uri.parse('$baseUrl/user/verify-otp-phone'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -286,7 +286,7 @@ class UserService extends ChangeNotifier {
       String email, String password) async {
     try {
       final response = await http.post(
-        Uri.parse(baseUrl + '/user/change-password'),
+        Uri.parse('$baseUrl/user/change-password'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -303,7 +303,7 @@ class UserService extends ChangeNotifier {
         return {'success': false, 'message': responseData['message']};
       }
     } catch (error) {
-      print('Error: $error');
+      Debugger.red('Error: $error');
       return {
         'success': false,
         'message': 'Failed to reset password. Please try again later.'
@@ -327,11 +327,11 @@ class UserService extends ChangeNotifier {
       if (response.statusCode == 200) {
         return true;
       } else {
-        print('Failed to save preferences: ${response.statusCode}');
+        Debugger.red('Failed to save preferences: ${response.statusCode}');
         return false;
       }
     } catch (error) {
-      print('Error saving preferences: $error');
+      Debugger.red('Error saving preferences: $error');
       return false;
     }
   }
@@ -352,18 +352,16 @@ Future<void> addFoodsToFavourites(String idFood, String userId) async {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print('Food added to favorites: ${data['message']}');
-      print('Favorite foods: ${data['favoriteFood']}');
+      Debugger.green('Food added to favorites: ${data['message']}');
     } else if (response.statusCode == 400) {
       final data = jsonDecode(response.body);
-      print('Error: ${data['message']}');
+      Debugger.red('Error: ${data['message']}');
     } else if (response.statusCode == 404) {
       final data = jsonDecode(response.body);
-      print('Error: ${data['message']}');
+      Debugger.red('Error: ${data['message']}');
     } else {
       // Other errors
-      print('Error: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      Debugger.red('Error: ${response.statusCode}');
     }
   }
   Future<void> removeFoodsFromFavourites(String idFood, String userId) async {
@@ -382,18 +380,16 @@ Future<void> addFoodsToFavourites(String idFood, String userId) async {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print('Food removed from favorites: ${data['message']}');
-      print('Favorite foods: ${data['favoriteFood']}');
+      Debugger.green('Food removed from favorites: ${data['message']}');
     } else if (response.statusCode == 400) {
       final data = jsonDecode(response.body);
-      print('Error: ${data['message']}');
+      Debugger.red('Error: ${data['message']}');
     } else if (response.statusCode == 404) {
       final data = jsonDecode(response.body);
-      print('Error: ${data['message']}');
+      Debugger.red('Error: ${data['message']}');
     } else {
       // Other errors
-      print('Error: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      Debugger.red('Error: ${response.statusCode}');
     }
   }
   Future<bool> verifFoodFavourite(String userId, String foodId) async {
@@ -451,11 +447,11 @@ Future<Food?> getFoodById(String id) async {
         final jsonResponse = jsonDecode(response.body);
         return Food.fromJson(jsonResponse);
       } else {
-        print('Failed to fetch food: ${response.statusCode}');
+        Debugger.red('Failed to fetch food: ${response.statusCode}');
         throw Exception('Failed to fetch food: ${response.body}');
       }
     } catch (error) {
-      print('Error fetching food: $error');
+      Debugger.red('Error fetching food: $error');
       return null;
     }
   }

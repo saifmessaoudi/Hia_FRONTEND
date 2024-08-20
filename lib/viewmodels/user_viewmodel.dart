@@ -195,7 +195,7 @@ bool isAuthenticated() {
       notifyListeners();
       return true;
     } catch (error) {
-      print('Error: $error');
+      Debugger.red('Error: $error');
       return false;
     }
   }
@@ -218,7 +218,7 @@ bool isAuthenticated() {
       }
       
     } catch (error) {
-      print('Error getting address from coordinates: $error');
+      Debugger.red('Error getting address from coordinates: $error');
       return null;
     }
   }
@@ -238,7 +238,7 @@ bool isAuthenticated() {
       _favouritesMap[foodId] = isFavourite;
       notifyListeners();
     } catch (e) {
-      print('Error verifying favourite status: $e');
+      Debugger.red('Error verifying favourite status: $e');
     }
   }
 
@@ -263,7 +263,7 @@ bool isAuthenticated() {
     _favouritesMap[idFood] = true;
     notifyListeners();
   } catch (e) {
-    print('Error adding to favourites: $e');
+    Debugger.red('Error adding to favourites: $e');
   }
 }
 
@@ -285,7 +285,7 @@ bool isAuthenticated() {
       _favouritesMap[idFood] = false;
       notifyListeners();
     } catch (e) {
-      print('Error removing from favourites: $e');
+      Debugger.red('Error removing from favourites: $e');
     }
   }
 
@@ -294,7 +294,7 @@ bool isAuthenticated() {
       _favouriteFood = await userService.getFavouriteFoodsByUserId(userId);
       notifyListeners();
     } catch (e) {
-      print('Failed to load favourite foods: $e');
+      Debugger.red('Failed to load favourite foods: $e');
     }
   }
 
@@ -303,7 +303,7 @@ bool isAuthenticated() {
       _foodById = await userService.getFoodById(foodid);
       notifyListeners();
     } catch (e) {
-      print('Failed to load getFoodById: $e');
+      Debugger.red('Failed to load getFoodById: $e');
     }
   }
 

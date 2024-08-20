@@ -1,4 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -87,6 +86,7 @@ class _EditProfileState extends State<EditProfile> {
                       isLoading = true;
                     });
                     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+                     
                     bool success = await userService.updateUserProfile(
                       userViewModel.userId!,
                       firstNameController.text,
@@ -191,7 +191,7 @@ class _EditProfileState extends State<EditProfile> {
                                           color: Colors.white,
                                         ),
                                       ),
-                                      errorWidget: (context, url, error) => Icon(Icons.error),
+                                      errorWidget: (context, url, error) => const Icon(Icons.error),
                                       fit: BoxFit.cover,
                                     ),
                                   ),

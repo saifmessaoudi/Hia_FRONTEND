@@ -9,13 +9,13 @@ class ShimmerImage extends StatelessWidget {
   final BorderRadius borderRadius;
 
   const ShimmerImage({
-    Key? key,
+    super.key,
     required this.imageUrl,
     required this.width,
     required this.height,
     this.fit = BoxFit.cover,
     this.borderRadius = BorderRadius.zero,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class ShimmerImage extends StatelessWidget {
                 width: width,
                 height: height,
                 color: Colors.grey,
-                child: Icon(Icons.error, color: Colors.red),
+                child: const Icon(Icons.error, color: Colors.red),
               );
             },
           ),

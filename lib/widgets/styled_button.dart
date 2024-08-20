@@ -51,7 +51,7 @@ class StyledButton extends StatelessWidget {
                     : isSocial
                         ? AppStyles.interregularTitle.withSize(FontSizes.headline6).withColor(style.textColor).medium()
                         : AppStyles.interSemiBoldTextButton.withSize(FontSizes.headline4).withColor(style.textColor));
-    final side = MaterialStateProperty.resolveWith<BorderSide?>((states) {
+    final side = WidgetStateProperty.resolveWith<BorderSide?>((states) {
       if (isFromRecipe) {
         return const BorderSide(
           color: AppColors.offBlack,
@@ -66,7 +66,7 @@ class StyledButton extends StatelessWidget {
       return BorderSide.none;
     });
 
-    final shadowColor = MaterialStateProperty.resolveWith<Color>((states) {
+    final shadowColor = WidgetStateProperty.resolveWith<Color>((states) {
       if (isFromRecipe) {
         return Colors.black;
       }
@@ -79,15 +79,15 @@ class StyledButton extends StatelessWidget {
       child: ElevatedButton.icon(
         onPressed: onPressed,
         style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
-              overlayColor: MaterialStateProperty.all(AppColors.overlayColor),
-              backgroundColor: MaterialStateProperty.all(!isDisabled ? style.backgroundColor : AppColors.inactive),
-              foregroundColor: MaterialStateProperty.all(style.textColor),
-              elevation: !isFromRecipe ? MaterialStateProperty.all(1) : MaterialStateProperty.all(4),
+              overlayColor: WidgetStateProperty.all(AppColors.overlayColor),
+              backgroundColor: WidgetStateProperty.all(!isDisabled ? style.backgroundColor : AppColors.inactive),
+              foregroundColor: WidgetStateProperty.all(style.textColor),
+              elevation: !isFromRecipe ? WidgetStateProperty.all(1) : WidgetStateProperty.all(4),
               shadowColor: shadowColor,
-              shape: MaterialStateProperty.all(
+              shape: WidgetStateProperty.all(
                 RoundedRectangleBorder(
                   side: BorderSide(width: style.borderWidth, color: style.borderColor),
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
                 ),
               ),
               side: side,

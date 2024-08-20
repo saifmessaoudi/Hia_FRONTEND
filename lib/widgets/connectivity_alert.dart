@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hia/constant.dart';
 
 class ConnectivityAlertWidget extends StatelessWidget {
   final String message;

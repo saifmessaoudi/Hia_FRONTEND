@@ -6,11 +6,11 @@ class LoadingWidget extends StatelessWidget {
   final double spacing;
 
   const LoadingWidget({
-    Key? key,
+    super.key,
     this.color = Colors.grey,
     this.size = 20.0,
     this.spacing = 8.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +32,10 @@ class Dot extends StatefulWidget {
   final double size;
 
   const Dot({
-    Key? key,
+    super.key,
     required this.color,
     required this.size,
-  }) : super(key: key);
+  });
 
   @override
   _DotState createState() => _DotState();
@@ -50,7 +50,7 @@ class _DotState extends State<Dot> with SingleTickerProviderStateMixin {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1000),
     )..repeat();
     _animation = Tween<double>(
       begin: 0.0,

@@ -20,7 +20,7 @@ class ShimmerCartItem extends StatelessWidget {
             Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
-              child: CircleAvatar(
+              child: const CircleAvatar(
                 radius: 40.0,
                 backgroundColor: Colors.white,
               ),
@@ -56,7 +56,7 @@ class ShimmerCartItem extends StatelessWidget {
                 Shimmer.fromColors(
                   baseColor: Colors.grey[300]!,
                   highlightColor: Colors.grey[100]!,
-                  child: Icon(Icons.remove, color: Colors.white),
+                  child: const Icon(Icons.remove, color: Colors.white),
                 ),
                 const SizedBox(height: 5.0),
                 Shimmer.fromColors(
@@ -72,7 +72,7 @@ class ShimmerCartItem extends StatelessWidget {
                 Shimmer.fromColors(
                   baseColor: Colors.grey[300]!,
                   highlightColor: Colors.grey[100]!,
-                  child: Icon(Icons.add, color: Colors.white),
+                  child: const Icon(Icons.add, color: Colors.white),
                 ),
               ],
             ),

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/services/user_service.dart';

@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hia/viewmodels/cart_viewmodel.dart';
@@ -71,7 +70,7 @@ class _FoodCardState extends State<FoodCard> {
                               ),
                             ),
                             errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
+                               const Icon(Icons.error),
                           ),
                         ),
                       ),

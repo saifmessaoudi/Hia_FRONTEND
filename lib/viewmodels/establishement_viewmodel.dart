@@ -1,9 +1,7 @@
 import 'dart:math';
 import 'package:latlong2/latlong.dart' as latLng;
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:hia/models/food.model.dart';
@@ -11,8 +9,6 @@ import 'package:hia/models/map_marker.dart';
 import 'package:hia/models/user.model.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_pref_provider.dart';
-import 'package:hive/hive.dart';
-import 'package:map_location_picker/map_location_picker.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../services/establishement_service.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -30,8 +26,9 @@ class EstablishmentViewModel extends ChangeNotifier {
   bool isLoading = false;
   bool _isSorting = false;
     bool _isCalculating = false;
-   UserViewModel _userViewModel = UserViewModel();
-  FoodPreferenceProvider _foodPreferenceProvider;
+    // ignore: prefer_final_fields
+    UserViewModel _userViewModel = UserViewModel();
+  final FoodPreferenceProvider _foodPreferenceProvider;
 
   String? _address;
   String? get address => _address;
@@ -39,7 +36,7 @@ class EstablishmentViewModel extends ChangeNotifier {
   int? _lengthEstablishments;
   int? get lengthEstablishments => _lengthEstablishments;
 
-    double _distance = 0.0;
+    final double _distance = 0.0;
 
 
     List<double> _distances = [];
@@ -53,7 +50,7 @@ class EstablishmentViewModel extends ChangeNotifier {
   List<Food>? _foodbyestablishment;
   List<Food>? get foodbyestablishment => _foodbyestablishment;
 
-  bool _isFetchingFoods = false;
+  final bool _isFetchingFoods = false;
 
   bool get isFetchingFoods => _isFetchingFoods;
 
@@ -145,8 +142,8 @@ void updateMarkers(List<Establishment> establishments) {
       title: establishment.name,
       address: establishment.address,
       location: latLng.LatLng(
-        establishment.latitude ?? 0.0,  
-        establishment.longitude ?? 0.0,
+        establishment.latitude,  
+        establishment.longitude,
       ),
       rating: establishment.averageRating,
     );
@@ -194,7 +191,7 @@ _isCalculating = true;
         return _calculateDistance(userLat, userLon, establishment.latitude, establishment.longitude);
       }).toList();
     } catch (e) {
-      print('Error calculating distances: $e');
+      Debugger.red('Error calculating distances: $e');
     } finally {
       _isCalculating = false;
       notifyListeners();
@@ -202,8 +199,7 @@ _isCalculating = true;
 }
 
 void sortByDistance() async {
-  if (_userViewModel.userData == null || establishments == null) {
-    print('User data or establishments are null.');
+  if (_userViewModel.userData == null) {
     return;
   }
 
@@ -215,8 +211,7 @@ void sortByDistance() async {
     double userLat = user.latitude.toDouble();
     double userLon = user.longitude.toDouble();
 
-    // Simulate a delay for sorting
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 500));
 
     _distances = establishments.map((establishment) {
       return _calculateDistance(
@@ -231,7 +226,7 @@ void sortByDistance() async {
       return distanceA.compareTo(distanceB);
     });
   } catch (e) {
-      print('Error sorting by distance: $e');
+      Debugger.red('Error sorting by distance: $e');
     } finally {
       _isSorting = false;
       notifyListeners();
@@ -242,7 +237,6 @@ void sortByDistance() async {
 
   void launchMaps(double? latitude, double? longitude) async {
     if (_userViewModel.userData == null) {
-      print('User data is null.');
       return;
     }
 
@@ -250,10 +244,8 @@ void sortByDistance() async {
       final Uri url = Uri.parse(
           'https://www.google.com/maps/dir/?api=1&origin=${_userViewModel.userData!.latitude.toDouble()},${_userViewModel.userData!.longitude.toDouble()}&destination=$latitude,$longitude');
 
-      print('Generated URL: $url');
 
       final canLaunch = await canLaunchUrl(url);
-      print('Can launch URL: $canLaunch');
 
       if (canLaunch) {
         await launchUrl(url);
@@ -261,7 +253,7 @@ void sortByDistance() async {
         throw 'Could not launch $url';
       }
     } catch (e) {
-      print('Error launching maps: $e');
+      Debugger.red('Error launching maps: $e');
     }
   }
 }

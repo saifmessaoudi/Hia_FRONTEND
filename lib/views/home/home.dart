@@ -11,7 +11,7 @@ import 'home_screen.dart';
 
 class Home extends StatefulWidget {
   final int initialIndex;
-  const Home({Key? key, this.initialIndex = 0}) : super(key: key);
+  const Home({super.key, this.initialIndex = 0});
 
   @override
   _HomeState createState() => _HomeState();
@@ -59,8 +59,8 @@ class _HomeState extends State<Home> {
                 onPageChanged: (index) {
                   _selectedItemPosition.value = index;
                 },
-                children: _widgetOptions,
-                physics: const NeverScrollableScrollPhysics(), // Disable swipe navigation
+                physics: const NeverScrollableScrollPhysics(),
+                children: _widgetOptions, 
               ),
               bottomNavigationBar: Container(
                 height: 78.0,

@@ -5,9 +5,9 @@ class OtpForm extends StatefulWidget {
   final void Function(String) onOtpEntered;
 
   const OtpForm({
-    Key? key,
+    super.key,
     required this.onOtpEntered,
-  }) : super(key: key);
+  });
 
   @override
   _OtpFormState createState() => _OtpFormState();
@@ -33,7 +33,9 @@ class _OtpFormState extends State<OtpForm> {
     pin2FocusNode.dispose();
     pin3FocusNode.dispose();
     pin4FocusNode.dispose();
-    controllers.forEach((controller) => controller.dispose());
+    for (var controller in controllers) {
+      controller.dispose();
+    }
     super.dispose();
   }
 

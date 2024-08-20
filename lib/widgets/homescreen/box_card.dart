@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -65,7 +64,7 @@ class SurpriseBoxCard extends StatelessWidget {
                           color: AppColors.background,
                         ),
                       ),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      errorWidget: (context, url, error) =>const Icon(Icons.error),
                     ),
                     // Gradient Overlay at the bottom of the image
                     Positioned(

@@ -64,7 +64,7 @@ Future <List<Establishment>> getAllEstablishments() async {
         throw Exception('Failed to load establishments');
       }
     } catch (e) {
-      print('Error fetching establishments: $e');
+      Debugger.red('Error fetching establishments: $e');
       throw Exception('Failed to load establishments');
     }
   }
@@ -77,7 +77,7 @@ Future <List<Establishment>> getAllEstablishments() async {
     };
 
     // Debug prints
-    print('Sending request to $url with body: $body');
+    Debugger.red('Sending request to $url with body: $body');
 
     // Make the POST request
     final response = await http.post(
@@ -91,23 +91,18 @@ Future <List<Establishment>> getAllEstablishments() async {
     // Check the response status and parse the JSON
     if (response.statusCode == 200) {
       List<dynamic> responseJson = json.decode(response.body);
-      print('Response JSON: $responseJson');
+      Debugger.red('Response JSON: $responseJson');
 
-      // Ensure the response is a list of maps
-      if (responseJson is List<dynamic>) {
-        List<Food> foods = responseJson.map((json) {
-          if (json is Map<String, dynamic>) {
-            return Food.fromJson(json);
-          } else {
-            throw Exception('Unexpected JSON format');
-          }
-        }).toList();
-        return foods;
-      } else {
-        throw Exception('Expected a list in response');
-      }
-    } else {
-      print('Failed response: ${response.body}');
+      List<Food> foods = responseJson.map((json) {
+        if (json is Map<String, dynamic>) {
+          return Food.fromJson(json);
+        } else {
+          throw Exception('Unexpected JSON format');
+        }
+      }).toList();
+      return foods;
+        } else {
+      Debugger.red('Failed response: ${response.body}');
       throw Exception('Failed to load products');
     }
   }

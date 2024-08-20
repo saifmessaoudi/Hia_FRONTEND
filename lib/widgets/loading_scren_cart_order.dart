@@ -6,7 +6,6 @@ class LoadingScreenCart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("LoadingScreenCart is being built");
     return Container(
       color: Colors.white,
       child: Center(

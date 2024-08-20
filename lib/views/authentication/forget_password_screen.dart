@@ -1,10 +1,6 @@
 
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
-import 'package:hia/constant.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/views/authentication/email.verification.dart';
@@ -12,7 +8,6 @@ import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/widgets/back_row.dart';
 import 'package:hia/widgets/custom_toast.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});

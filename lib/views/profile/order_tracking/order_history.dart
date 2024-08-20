@@ -264,7 +264,7 @@ class _HistoryItem extends StatelessWidget {
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: order.items!.map((item) => Text(
+                children: order.items.map((item) => Text(
                   "* ${item.quantity} x ${item.food.name}",
                   style: AppStyles.interSemiBoldTextButton.medium().withSize(FontSizes.headline6),
                 )).toList(),
@@ -313,7 +313,7 @@ class _HistoryItem extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap : (){
-                      final firstFood = order.items!.first.food;
+                      final firstFood = order.items.first.food;
                       Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewScreen( food: firstFood)));
 
                   },

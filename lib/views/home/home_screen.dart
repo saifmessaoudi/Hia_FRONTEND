@@ -1,10 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/views/home/sections/nearly_section.dart';
 import 'package:hia/views/location/map_screen.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

@@ -1,7 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
-import 'package:hia/models/user.model.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/views/authentication/phone_verification.dart';
 import 'package:hia/views/global_components/button_global.dart';
@@ -10,7 +11,7 @@ import 'package:nb_utils/nb_utils.dart';
 class PhoneAuth extends StatefulWidget {
   final String email;
 
-  const PhoneAuth({Key? key, required this.email}) : super(key: key);
+  const PhoneAuth({super.key, required this.email});
 
   @override
   _PhoneAuthState createState() => _PhoneAuthState();

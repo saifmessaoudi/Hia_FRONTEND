@@ -1,9 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:hia/constant.dart';
+import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
@@ -12,14 +15,13 @@ import 'package:hia/views/authentication/phone_auth.dart';
 import 'package:hia/views/authentication/registration/sign_up.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/views/location/location_permission.dart';
-import 'package:hia/widgets/smart_scaffold.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class SignIn extends StatefulWidget {
-  const SignIn({Key? key}) : super(key: key);
+  const SignIn({super.key});
 
   @override
   _SignInState createState() => _SignInState();
@@ -58,10 +60,10 @@ class _SignInState extends State<SignIn> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('OK'),
             style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(kMainColor),
+              foregroundColor: WidgetStateProperty.all<Color>(kMainColor),
             ),
+            child:  const Text('OK'),
           ),
         ],
       ),
@@ -435,7 +437,7 @@ class _SignInState extends State<SignIn> {
   }
 
   Future<void> signInWithFacebook() async {
-    String _token;
+    String token;
     String email = '';
     final authViewModel = Provider.of<UserViewModel>(context, listen: false);
     setState(() {
@@ -446,9 +448,7 @@ class _SignInState extends State<SignIn> {
 
       if (result.status == LoginStatus.success) {
         final AccessToken accessToken = result.accessToken!;
-        final userData = await FacebookAuth.instance.getUserData();
         final accesToken = accessToken.tokenString;
-        print('Access Token: $accesToken');
 
         final response = await http.post(
           Uri.parse('http://192.168.1.11:3030/user/facebook-login'),
@@ -463,10 +463,10 @@ class _SignInState extends State<SignIn> {
         final Map<String, dynamic>? responseData = jsonDecode(response.body);
 
         if (responseData != null && responseData.containsKey('token')) {
-          _token = responseData['token'];
+          token = responseData['token'];
           email = responseData['user']["email"];
 
-          await authViewModel.loginWithFacebook(_token);
+          await authViewModel.loginWithFacebook(token);
           setState(() {
             isLoading = false;
           });
@@ -488,13 +488,13 @@ class _SignInState extends State<SignIn> {
           );
         }
       } else {
-        print('Message: ${result.message}');
+        Debugger.red('Message: ${result.message}');
         setState(() {
           isLoading = false;
         });
       }
     } catch (e) {
-      print('Error during Facebook login: $e');
+      Debugger.red('Error during Facebook login: $e');
     }
   }
 }

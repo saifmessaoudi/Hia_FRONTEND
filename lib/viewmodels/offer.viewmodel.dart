@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/models/offer.model.dart';
 import 'package:hia/services/offer.service.dart';
-import 'package:hia/viewmodels/user_viewmodel.dart';
 
 
 class OfferViewModel extends ChangeNotifier {
@@ -26,12 +25,12 @@ final OfferService _service = OfferService();
       offers = await _service.getCachedData();
       Debugger.green('Fetched offers from cache: ${offers.length}');
       await _service.cacheData(offers);  // Cache the fetched data
-      if (await _service.hasInternetConnection()) {
+      bool internetAvailable = await _retryInternetCheck(retries: 3, delay: Duration(seconds: 2));
+      if (internetAvailable) {
         final fetchedOffers = await _service.fetchOffers();
         offers = fetchedOffers;
         await _service.cacheData(offers);  // Cache the fetched data
-      }
-      if (offers.isEmpty) {
+      }else if (offers.isEmpty) {
         Debugger.red('No offer cached data found, fetching from server...');
         offers = await _service.fetchOffers();
         await _service.cacheData(offers);  
@@ -43,6 +42,16 @@ final OfferService _service = OfferService();
       isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<bool> _retryInternetCheck({ int retries=3,  Duration delay=const Duration(seconds: 2)}) async {
+    for (var i = 0; i < retries; i++) {
+     if (await _service.hasInternetConnection()) {
+        return true;
+      }
+      await Future.delayed(delay);
+    }
+    return false;
   }
 
   List<Offer> mergeOffers(List<Offer> cached, List<Offer> fetched) {
