@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hia/constant.dart';
+import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/splash/splash_view.dart';
 import 'package:hia/widgets/smart_scaffold.dart';
@@ -29,12 +30,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     // Initialize animation
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
 
-    // Simulate loading delay
-    Future.delayed(const Duration(seconds: 3), () {
-      // Navigate to the next screen or perform another action here
-      // For example: Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NextScreen()));
-    });
   }
+
+ 
 
   @override
   void dispose() {

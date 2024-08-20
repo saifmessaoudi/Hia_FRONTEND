@@ -19,8 +19,18 @@ final OfferService _service = OfferService();
     notifyListeners();
 
     try {
-      offers = await _service.fetchOffers();
-      Debugger.green('Offers fetched successfully');
+      offers = await _service.getCachedData();
+      await _service.cacheData(offers);  // Cache the fetched data
+      if (await _service.hasInternetConnection()) {
+        final fetchedOffers = await _service.fetchOffers();
+        offers = fetchedOffers;
+        await _service.cacheData(offers);  // Cache the fetched data
+      }
+      if (offers.isEmpty) {
+        Debugger.red('No offer cached data found, fetching from server...');
+        offers = await _service.fetchOffers();
+        await _service.cacheData(offers);  
+      }
     } catch (e) {
       Debugger.red('Error fetching offers: $e');
       // Handle error appropriately here (e.g., show a message to the user)

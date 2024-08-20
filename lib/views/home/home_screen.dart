@@ -22,9 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final userViewModel = Provider.of<UserViewModel>(context, listen: false);
       userViewModel.getFavouriteFood(userViewModel.userData!.id);
-      final establishmentViewModel =
-          Provider.of<EstablishmentViewModel>(context, listen: false);
-      establishmentViewModel.calculateAllDistances();
+      
     });
   }
 

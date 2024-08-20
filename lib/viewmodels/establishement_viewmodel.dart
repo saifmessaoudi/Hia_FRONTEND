@@ -107,6 +107,8 @@ class EstablishmentViewModel extends ChangeNotifier {
       // Filter establishments based on user preferences
       updateRecommendedEstablishments();
 
+      calculateAllDistances();
+
     } catch (e) {
       Debugger.red('Error fetching establishments: $e');
       // Handle error appropriately here (e.g., show a message to the user)
@@ -174,7 +176,7 @@ void updateMarkers(List<Establishment> establishments) {
     return R * c; // Distance in km
   }
 
-  void calculateAllDistances() async {
+  Future <void> calculateAllDistances() async {
 _isCalculating = true;
   notifyListeners();
 

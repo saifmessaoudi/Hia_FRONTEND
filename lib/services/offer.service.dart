@@ -7,6 +7,19 @@ import 'package:http/http.dart' as http;
 class OfferService {
   final String baseUrl = 'http://192.168.1.11:3030';
   static const String cacheKey = 'offerCache';
+  late Box<Offer> _box;
+
+  OfferService() {
+    _initBox();
+  }
+
+  Future<void> _initBox() async {
+    if (!Hive.isBoxOpen('offerBox')) {
+      _box = await Hive.openBox<Offer>('offerBox');
+    } else {
+      _box = Hive.box<Offer>('offerBox');
+    }
+  }
 
   Future<List<Offer>> fetchOffers() async {
     final response = await http.get(Uri.parse('$baseUrl/offer/getAll'));
@@ -24,18 +37,14 @@ class OfferService {
   }
 
   Future<void> cacheData(List<Offer> data) async {
-    var box = Hive.box('offerBox');
-    box.put(cacheKey, data.map((e) => e.toJson()).toList());
-    Debugger.green('Data cached successfully');
+    await _box.clear();  // Clear old cached data
+    await _box.addAll(data);
   }
 
   Future<List<Offer>> getCachedData() async {
-    var box = Hive.box('offerBox');
-    List<dynamic> cachedData = box.get(cacheKey, defaultValue: []);
+    List<Offer> cachedData = _box.values.toList();
     Debugger.green('Retrieved cached data ');
-    return cachedData.map((e) {
-      return Offer.fromJson(Map<String, dynamic>.from(e as Map)); // Ensure proper type casting
-    }).toList();
+    return cachedData;
   }
 
   Future<bool> hasInternetConnection() async {

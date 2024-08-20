@@ -45,13 +45,11 @@ void main() async {
 
   await Hive.openBox<Food>('foodBox');
   await Hive.openBox<Establishment>('establishmentsBox');
-  await Hive.openBox('offerBox');
+  await Hive.openBox<Offer>('offerBox');
   await Hive.openBox<Cart>('cartBox');
   await Hive.openBox<CartItem>('cartItemBox');
   
-  if (defaultTargetPlatform == TargetPlatform.android) {
-    AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
-  }
+ 
 
   
 
