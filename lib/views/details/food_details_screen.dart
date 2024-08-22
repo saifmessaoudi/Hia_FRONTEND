@@ -1,23 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gap/gap.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hia/viewmodels/cart_viewmodel.dart';
-import 'package:hia/viewmodels/user_viewmodel.dart';
-import 'package:hia/views/details/establishment.details.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/views/reviews/review_screen.dart';
 import 'package:hia/widgets/custom_toast.dart';
-import 'package:nb_utils/nb_utils.dart';
-import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 
-import '../../constant.dart';
 
 class FoodDetailsScreen extends StatefulWidget {
-  const FoodDetailsScreen({required this.food});
+  const FoodDetailsScreen({super.key, required this.food});
 
   final Food food;
 
@@ -30,17 +22,16 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
     @override
   void initState() {
     super.initState();
-    
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    userViewModel.verifFoodFavourite(widget.food.id, userViewModel.userData!.id);
   }
 
   @override
   Widget build(BuildContext context) {
     final cartViewModel = Provider.of<CartViewModel>(context);
-    return SafeArea(
-      child: SmartScaffold(
+    return SmartScaffold(
          body: Consumer<UserViewModel>(
           builder: (context, userViewModel, child) {
-            final isFavourite = userViewModel.getFavouriteStatus(widget.food.id);
         return Stack(
           children: [
             Container(
@@ -57,40 +48,43 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                 children: [
                   Column(
                     children: [
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: const Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            ).onTap(() {
-                              Navigator.pop(context);
-                            }),
-                          ),
-                          const Spacer(),
-                          GestureDetector(
-                                onTap: () async {
-                                  if (isFavourite) {
-                                    await userViewModel.removeFoodsFromFavourites(widget.food.id, userViewModel.userData!.id);
-                                  } else {
-                                    await userViewModel.addFoodsToFavourites(widget.food.id, userViewModel.userData!.id);
-                                  }
-                                  setState(() {}); // Refresh the state
-                                },
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.red.withOpacity(0.1),
-                                  radius: 20.0,
-                                  child: Icon(
-                                    Icons.favorite_rounded,
-                                    color: isFavourite ? Colors.red : Colors.grey,
-                                    size: 20.0,
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 25),
+                              child: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              ).onTap(() {
+                                Navigator.pop(context);
+                              }),
+                            ),
+                            const Spacer(),
+                            GestureDetector(
+                                  onTap: () async {
+                                     userViewModel.toggleFavorite();
+                                     if (userViewModel.isFavourite) {
+                                       await userViewModel.addFoodsToFavourites(widget.food.id , userViewModel.userData!.id);
+                                     } else {
+                                        await userViewModel.removeFoodsFromFavourites(widget.food.id , userViewModel.userData!.id);
+                                     }
+                                  },
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.red.withOpacity(0.1),
+                                    radius: 20.0,
+                                    child: Icon(
+                                      Icons.favorite_rounded,
+                                      color: userViewModel.getFavouriteStatus(widget.food.id) ? Colors.red : Colors.grey,
+                                      size: 20.0,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 10.0),
-                            ],
-                          ),
+                                const SizedBox(width: 10.0),
+                              ],
+                            ),
+                      ),
                           const SizedBox(height: 150),
                       Container(
                         width: context.width(),
@@ -185,6 +179,7 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                                 children: [
                                   WidgetSpan(
                                     child: Icon(
+                                      
                                       Icons.lock_clock,
                                       color: widget.food.isAvailable
                                           ? kMainColor
@@ -381,7 +376,7 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                                 color: kMainColor,
                               ),
                               onPressed: () async {
-                                 cartViewModel.addItem(widget.food, 1).then((success) {
+                                 cartViewModel.addItem(widget.food, quantity).then((success) {
                               if (success) {
                                 showCustomToast(context, "${widget.food.name} added to cart");
                               } else {
@@ -417,7 +412,7 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                               ),
                             ),
                             errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
+                               const Icon(Icons.error),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -431,8 +426,8 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
         );
           }
       ),
-      )
-    );
+      );
+    
   
   }
 }

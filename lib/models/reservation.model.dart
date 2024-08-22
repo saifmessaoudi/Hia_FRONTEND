@@ -1,5 +1,6 @@
 import 'package:hia/models/cart/cart_item.model.dart';
 import 'package:hia/models/establishement.model.dart';
+import 'package:intl/intl.dart';
 
 class Reservation {
   final String userId;
@@ -48,5 +49,11 @@ class Reservation {
       status: json['status'],
       totalPrice: json['totalPrice'],
     );
+  }
+
+  String getFormattedDate() {
+    if (date == null) return '';
+    final DateFormat formatter = DateFormat('MMM dd, yyyy | HH:mm');
+    return formatter.format(date!);
   }
 }

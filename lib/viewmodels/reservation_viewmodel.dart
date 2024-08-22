@@ -19,6 +19,7 @@ class ReservationViewModel extends ChangeNotifier {
   bool _isLoadingScreenshot = false;
   bool get isLoadingScreenshot => _isLoadingScreenshot;
 
+
   Future<void> addReservation(Reservation reservation) async {
     _isLoading = true;
     notifyListeners();
@@ -56,7 +57,7 @@ class ReservationViewModel extends ChangeNotifier {
 
     try {
       Debugger.green("fetching reservations for user $userId");
-      _reservations = await _reservationService.getReservationsByUserId("666b0adf641d4360d56e326a");
+      _reservations = await _reservationService.getReservationsByUserId(userId);
     } catch (e) {
       _reservations = [];
     } finally {

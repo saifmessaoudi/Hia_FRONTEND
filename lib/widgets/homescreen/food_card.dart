@@ -19,6 +19,13 @@ class FoodCard extends StatefulWidget {
 }
 
 class _FoodCardState extends State<FoodCard> {
+
+  @override
+  void initState() {
+    super.initState();
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    userViewModel.verifFoodFavourite(widget.food.id, userViewModel.userData!.id);
+  }
   
 
   @override
@@ -167,36 +174,38 @@ class _FoodCardState extends State<FoodCard> {
             ),
           ),
        
-        Consumer<UserViewModel>(builder: (context, userViewModel, child) {
-          final isFavourite = userViewModel.getFavouriteStatus(widget.food.id);
-
-          return Positioned(
-            top: 10.0,
-            right: 10.0,
-            child: GestureDetector(
-              onTap: () async {
-                if (isFavourite) {
-                  await userViewModel.removeFoodsFromFavourites(
-                      widget.food.id, userViewModel.userData!.id);
+          Consumer<UserViewModel>(
+          builder: (context, userViewModel, child) {
+            final isFavourite = userViewModel.getFavouriteStatus(widget.food.id);
+        
+            return Positioned(
+              top: 10.0,
+              right: 10.0,
+              child: GestureDetector(
+                onTap: () async {
+                  if (isFavourite) {
+                    await userViewModel.removeFoodsFromFavourites(
+                        widget.food.id, userViewModel.userData!.id);
+                  } else {
+                    await userViewModel.addFoodsToFavourites(
+                        widget.food.id, userViewModel.userData!.id);
+                  }
                   await userViewModel.verifFoodFavourite(
                       widget.food.id, userViewModel.userData!.id);
-                } else {
-                  await userViewModel.addFoodsToFavourites(
-                      widget.food.id, userViewModel.userData!.id);
-                }
-              },
-              child: CircleAvatar(
-                backgroundColor: Colors.transparent,
-                radius: 13.0,
-                child: Icon(
-                  Icons.favorite_rounded,
-                  color: isFavourite ? Colors.red : Colors.grey,
-                  size: 20.0,
+                },
+                child: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  radius: 13.0,
+                  child: Icon(
+                    Icons.favorite_rounded,
+                    color: isFavourite ? Colors.red : Colors.grey,
+                    size: 22.0,
+                  ),
                 ),
               ),
-            ),
-          );
-        })
+            );
+          },
+        )
       ],
     );
   }

@@ -423,7 +423,7 @@ Future<List<Food>> getFavouriteFoodsByUserId(String userId) async {
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
-      return data.map((item) => Food.fromJson(item)).toList();
+      return data.map((item) => Food.fromJsonWithoutEstablishment(item)).toList();
     } else {
       throw Exception('Failed to load favourite foods');
     }

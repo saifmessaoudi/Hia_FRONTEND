@@ -43,7 +43,7 @@ class UserViewModel with ChangeNotifier {
 
 
 
-Map<String, bool> _favouritesMap = {}; // Map to track favorite status
+ Map<String, bool> _favouritesMap = {}; // Map to track favorite status
 
   bool getFavouriteStatus(String foodId) {
     return _favouritesMap[foodId] ?? false;
@@ -232,17 +232,23 @@ bool isAuthenticated() {
       notifyListeners();
     }
   }
-  Future<void> verifFoodFavourite(String foodId, String userId) async {
-    try {
+   Future<void> verifFoodFavourite(String foodId, String userId) async {
+     try {
+      await getFoodById(foodId);
       bool isFavourite = await userService.verifFoodFavourite(userId, foodId);
-      _favouritesMap[foodId] = isFavourite;
+      _favouritesMap[foodId] = isFavourite; 
       notifyListeners();
     } catch (e) {
-      Debugger.red('Error verifying favourite status: $e');
+      _favouritesMap[foodId] = false;
+      notifyListeners();
     }
   }
 
+  
+
  Future<void> addFoodsToFavourites(String idFood, String userId) async {
+  _favouritesMap[idFood] = true;
+  notifyListeners();
   try {
     // Ensure the food is fetched before adding to favourites
      await getFoodById(idFood); 
@@ -259,9 +265,6 @@ bool isAuthenticated() {
       notifyListeners() ; 
     }
 
-    // Update the favourites map
-    _favouritesMap[idFood] = true;
-    notifyListeners();
   } catch (e) {
     Debugger.red('Error adding to favourites: $e');
   }
@@ -269,7 +272,9 @@ bool isAuthenticated() {
 
 
   Future<void> removeFoodsFromFavourites(String idFood, String userId) async {
-    try {
+   _favouritesMap[idFood] = false;
+      notifyListeners(); 
+      try {
            await getFoodById(idFood); 
 
       await userService.removeFoodsFromFavourites(idFood, userId);
@@ -282,8 +287,7 @@ bool isAuthenticated() {
       notifyListeners() ; 
     }
 
-      _favouritesMap[idFood] = false;
-      notifyListeners();
+      
     } catch (e) {
       Debugger.red('Error removing from favourites: $e');
     }
@@ -307,5 +311,13 @@ bool isAuthenticated() {
     }
   }
 
+  void toggleFavorite() {
+    _isFavourite = !_isFavourite;
+    notifyListeners();
+  }
 
+  void setFavorite(bool value) {
+    _isFavourite = value;
+    notifyListeners();
+  }
 }

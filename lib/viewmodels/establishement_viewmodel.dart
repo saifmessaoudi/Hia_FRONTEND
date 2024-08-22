@@ -106,6 +106,10 @@ class EstablishmentViewModel extends ChangeNotifier {
 
       calculateAllDistances();
 
+      sortByDistance();
+
+     
+
     } catch (e) {
       Debugger.red('Error fetching establishments: $e');
       // Handle error appropriately here (e.g., show a message to the user)

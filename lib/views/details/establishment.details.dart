@@ -5,19 +5,13 @@ import 'package:hia/models/establishement.model.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/views/offers/offers_establishment.dart';
-import 'package:hia/views/reviews/review_screen.dart';
-import 'package:hia/widgets/homescreen/food_card.dart';
-
 import 'package:nb_utils/nb_utils.dart' as nb_utils;
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class EstablishmentDetailsScreen extends StatefulWidget {
   const EstablishmentDetailsScreen({required this.establishment});
 
   final Establishment establishment;
-
-  static const IconData contact_phone =
-      IconData(0xe18c, fontFamily: 'MaterialIcons');
 
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
@@ -32,8 +26,7 @@ class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
     final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: true);
     //get index establishment 
     int index = establishmentViewModel.establishments.indexWhere((element) => element.id == widget.establishment.id);
-    return SafeArea(
-      child: Scaffold(
+    return SmartScaffold(
         resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
@@ -51,31 +44,34 @@ class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
                 children: [
                   Column(
                     children: [
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: const Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            ).onTap(() {
-                              Navigator.pop(context);
-                            }),
-                          ),
-                          const Spacer(),
-                          CircleAvatar(
-                            backgroundColor: Colors.red.withOpacity(0.1),
-                            radius: 16.0,
-                            child: const Icon(
-                              Icons.favorite_rounded,
-                              color: Colors.red,
-                              size: 16.0,
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              ).onTap(() {
+                                Navigator.pop(context);
+                              }),
                             ),
-                          ),
-                          const SizedBox(
-                            width: 10.0,
-                          ),
-                        ],
+                            const Spacer(),
+                            CircleAvatar(
+                              backgroundColor: Colors.red.withOpacity(0.1),
+                              radius: 16.0,
+                              child: const Icon(
+                                Icons.favorite_rounded,
+                                color: Colors.red,
+                                size: 16.0,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         height: 150,
@@ -102,10 +98,10 @@ class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
                                 icon: const Icon(Icons.phone_in_talk_sharp,
                                     color: Color.fromARGB(255, 0, 26, 48)),
                                 onPressed: () async {
-                                  String phoneNumber =
+                                  final phoneNumber =
                                       'tel:${widget.establishment.phone}';
-                                  if (await canLaunch(phoneNumber)) {
-                                    await launch(phoneNumber);
+                                  if (await canLaunchUrlString( phoneNumber)) {
+                                    await launchUrlString(phoneNumber);
                                   } else {
                                     throw 'Could not launch $phoneNumber';
                                   }
@@ -165,8 +161,8 @@ class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      SizedBox(width: 5), // Adjust spacing
-                                      Icon(
+                                      const SizedBox(width: 5), // Adjust spacing
+                                      const Icon(
                                         Icons.shopping_bag,
                                         color: kMainColor,
                                         size: 20,
@@ -201,7 +197,7 @@ class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
                                           ),
                                           TextSpan(
                                             text:
-                                                "${establishmentViewModel.distances![index].toStringAsFixed(1)} km",
+                                                "${establishmentViewModel.distances[index].toStringAsFixed(1)} km",
                                             style: kTextStyle.copyWith(
                                               fontWeight: FontWeight.bold,
                                               color: kTitleColor,
@@ -419,7 +415,7 @@ class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
                               ),
                             ),
                             errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
+                                const Icon(Icons.error),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -431,7 +427,6 @@ class _ProductDetailsState extends State<EstablishmentDetailsScreen> {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }
