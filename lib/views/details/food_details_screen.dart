@@ -412,7 +412,7 @@ class _FoodDetailsScreenState extends State<FoodDetailsScreen> {
                               ),
                             ),
                             errorWidget: (context, url, error) =>
-                               const Icon(Icons.error),
+                                Image.asset('images/placeholder.png' , fit: BoxFit.cover,),
                             fit: BoxFit.cover,
                           ),
                         ),

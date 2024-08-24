@@ -31,7 +31,7 @@ class OffersSection extends StatelessWidget {
                             baseColor: Colors.grey[300]!,
                             highlightColor: Colors.grey[100]!,
                             child: SizedBox(
-                              height: 170, // Specify a fixed height for the ListView
+                              height: 245, 
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: 5,

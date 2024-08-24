@@ -10,8 +10,8 @@ class FoodService {
   final String baseUrl = 'http://192.168.1.11:3030';
   static const String cacheKey = 'foodCache';
 
-  Future<List<Food>> fetchFoods() async {
-    final response = await http.get(Uri.parse('$baseUrl/food/getAllFoods'));
+  Future<List<Food>> fetchFoods({int page =1 , int batch=10}) async {
+    final response = await http.get(Uri.parse('$baseUrl/food/getAllFoods?page=$page&batch=$batch'));
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       List<Food> foods = data.map((e) {

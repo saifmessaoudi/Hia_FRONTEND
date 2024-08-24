@@ -77,7 +77,7 @@ class _FoodCardState extends State<FoodCard> {
                               ),
                             ),
                             errorWidget: (context, url, error) =>
-                               const Icon(Icons.error),
+                                Image.asset('images/placeholder.png' , width: 100.0, height: 100.0),
                           ),
                         ),
                       ),

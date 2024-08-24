@@ -40,7 +40,7 @@ class PopularDealsSection extends StatelessWidget {
           padding: const EdgeInsets.all(10.0),
           child: Consumer<FoodViewModel>(
             builder: (context, foodViewModel, child) {
-              if (foodViewModel.isLoading) {
+              if (foodViewModel.isLoading && foodViewModel.foods.isEmpty) {
                 return Shimmer.fromColors(
                   baseColor: Colors.grey[300]!,
                   highlightColor: Colors.grey[100]!,
@@ -67,28 +67,51 @@ class PopularDealsSection extends StatelessWidget {
                     child: Text(
                       'No deals for now',
                       style: kTextStyle.copyWith(color: kGreyTextColor),
-                      
                     ),
                   ),
                 );
               } else {
-                return HorizontalList(
-                  spacing: 10,
-                  itemCount: foodViewModel.foods.length,
-                  itemBuilder: (_, i) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                FoodDetailsScreen(food: foodViewModel.foods[i]),
+                return NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollInfo) {
+                    if (!foodViewModel.isLoading &&
+                        scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+                      foodViewModel.fetchFoods();
+                      return true;
+                    }
+                    return false;
+                  },
+                  child: HorizontalList(
+                    spacing: 10,
+                    itemCount: foodViewModel.foods.length + (foodViewModel.isLoading ? 1 : 0),
+                    itemBuilder: (_, i) {
+                      if (i == foodViewModel.foods.length) {
+                        return Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(
+                            width: 200,
+                            margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
                           ),
                         );
-                      },
-                      child: FoodCard(food: foodViewModel.foods[i]),
-                    );
-                  },
+                      }
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  FoodDetailsScreen(food: foodViewModel.foods[i]),
+                            ),
+                          );
+                        },
+                        child: FoodCard(food: foodViewModel.foods[i]),
+                      );
+                    },
+                  ),
                 );
               }
             },

@@ -65,6 +65,8 @@ class EstablishmentViewModel extends ChangeNotifier {
       await _service.cacheData(_establishments);
       updateMarkers(_establishments) ; 
       updateRecommendedEstablishments();
+      calculateAllDistances();
+      await sortByDistance();
     } catch (e) {
       Debugger.red('Error fetching establishments: $e');
       // Handle error appropriately here (e.g., show a message to the user)
@@ -106,9 +108,7 @@ class EstablishmentViewModel extends ChangeNotifier {
 
       calculateAllDistances();
 
-      sortByDistance();
-
-     
+    await sortByDistance();
 
     } catch (e) {
       Debugger.red('Error fetching establishments: $e');
@@ -178,10 +178,8 @@ void updateMarkers(List<Establishment> establishments) {
   }
 
   Future <void> calculateAllDistances() async {
-_isCalculating = true;
+  _isCalculating = true;
   notifyListeners();
-
-  // Ensure this runs after the current frame
   
     
     try {
@@ -202,7 +200,7 @@ _isCalculating = true;
     }
 }
 
-void sortByDistance() async {
+Future<void> sortByDistance() async {
   if (_userViewModel.userData == null) {
     return;
   }
@@ -215,7 +213,6 @@ void sortByDistance() async {
     double userLat = user.latitude.toDouble();
     double userLon = user.longitude.toDouble();
 
-    await Future.delayed(const Duration(milliseconds: 500));
 
     _distances = establishments.map((establishment) {
       return _calculateDistance(

@@ -55,7 +55,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> with SingleTick
                 body: Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 5.w, top: 20.h),
+                      padding: EdgeInsets.only(left: 3.w, top: 22.h),
                       child: const BackRow(title: "Order History"),
                     ),
                     Gap(AppConstants.verticalSpacing),
@@ -65,9 +65,9 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> with SingleTick
                         Tab(text: "Pending Orders"),
                         Tab(text: "Completed Orders"),
                       ],
-                      labelColor: AppColors.primary,
+                      labelColor: AppColors.secondaryBackground,
                       unselectedLabelColor: AppColors.grey,
-                      indicatorColor: AppColors.primary,
+                      indicatorColor: AppColors.secondaryBackground,
                     ),
                     Expanded(
                       child: TabBarView(
@@ -86,7 +86,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> with SingleTick
                 floatingActionButton: Consumer<ReservationViewModel>(
                   builder: (context, orderHistoryViewModel, child) {
                     return Visibility(
-                      visible: orderHistoryViewModel.myReservation.isEmpty,
+                      visible: orderHistoryViewModel.myReservation.isEmpty && !orderHistoryViewModel.isLoading,
                       child: StyledButton(
                         style: ButtonStyles.primary,
                         title: "Go to Marketplace",
@@ -134,7 +134,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> with SingleTick
 
   Widget _buildShimmerEffect() {
     return ListView.builder(
-      itemCount: 4,
+      itemCount: 1,
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
           baseColor: kMainColor,
@@ -193,7 +193,7 @@ class _HistoryItem extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppConstants.historyCardRadius),
           gradient: AppColors.accountGradientClr,
-          border: Border.all(color: AppColors.offWhite, width: 1),
+          border: Border.all(color: Colors.blueGrey, width: 1),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -236,12 +236,12 @@ class _HistoryItem extends StatelessWidget {
                   children: [
                     Text(
                       "#${order.codeReservation}",
-                      style: AppStyles.interSemiBoldTextButton.medium().withSize(FontSizes.headline6),
+                      style: AppStyles.interSemiBoldTextButton.bold().withSize(FontSizes.headline5),
                     ),
-                    Gap(8.w),
+                    Gap(5.w),
                     Text(
                       formattedDate,
-                      style: AppStyles.interSemiBoldTextButton.medium().withColor(AppColors.grey).withSize(FontSizes.headline6),
+                      style: AppStyles.interSemiBoldTextButton.regular().withColor(Colors.blueGrey).withSize(FontSizes.title),
                     ),
                   ],
                 ),
@@ -253,33 +253,45 @@ class _HistoryItem extends StatelessWidget {
               children: [
                 Text(
                   "Total price ",
-                  style: AppStyles.interSemiBoldTextButton.medium().withColor(AppColors.grey).withSize(FontSizes.headline6),
+                  style: AppStyles.interSemiBoldTextButton.regular().withColor( Colors.blueGrey).withSize(FontSizes.headline6),
                 ),
                 Text(
-                  "\$${(order.totalPrice)?.toStringAsFixed(2)}",
-                  style: AppStyles.interSemiBoldTextButton.medium().withSize(FontSizes.headline6),
+                  "${order.getFormattedTotalPrice()} DT",
+                  style: AppStyles.interSemiBoldTextButton.medium().withSize(FontSizes.title),
                 ),
               ],
             ),
             Gap(10.h),
-            Divider(color: AppColors.greyRegular, thickness: AppConstants.dividerThickness),
+            const ZigzagDivider( color: Colors.blueGrey ),
+            Gap(12.h),
             Row(
               children: [
-                Column(
+                               Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: order.items.map((item) => Text(
-                    "* ${item.quantity} x ${item.food.name}",
-                    style: AppStyles.interSemiBoldTextButton.medium().withSize(FontSizes.headline6),
+                  children: order.items.map((item) => RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "* ${item.quantity}x ",
+                          style: AppStyles.interSemiBoldTextButton.medium().withSize(FontSizes.headline6),
+                        ),
+                        TextSpan(
+                          text: " ${item.food.name}",
+                          style: AppStyles.interSemiBoldTextButton.regular().withSize(FontSizes.title),
+                        ),
+                      ],
+                    ),
                   )).toList(),
-                ),
+                )
                 
               ],
             ),
             
             if (order.status == "Done") ...[
-              Divider(color: AppColors.greyRegular, thickness: AppConstants.dividerThickness),
+              Gap(10.h),
+              Divider(color: Colors.blueGrey, thickness: 2.r),
             
-              Gap(AppConstants.verticalSpacing),
+              Gap(10.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

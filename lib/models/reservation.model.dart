@@ -11,7 +11,7 @@ class Reservation {
   final DateTime? date;
   final Establishment? establishment;
   final String? status;
-  final int? totalPrice;
+  final double? totalPrice;
 
   Reservation({
     required this.userId,
@@ -47,7 +47,12 @@ class Reservation {
           ? Establishment.fromJsonWithoutFoods(json['etablishment'])
           : null,
       status: json['status'],
-      totalPrice: json['totalPrice'],
+      totalPrice: json['totalPrice'] != null
+          ? (json['totalPrice'] is Map<String, dynamic> &&
+                  json['totalPrice']['\$numberDecimal'] != null
+              ? double.parse(json['totalPrice']['\$numberDecimal'])
+              : double.parse(json['totalPrice'].toString()))
+          : null,
     );
   }
 
@@ -55,5 +60,12 @@ class Reservation {
     if (date == null) return '';
     final DateFormat formatter = DateFormat('MMM dd, yyyy | HH:mm');
     return formatter.format(date!);
+  }
+
+  // Return total price in this format: e.g., 13,000
+   String getFormattedTotalPrice() {
+    if (totalPrice == null) return '';
+    final NumberFormat formatter = NumberFormat('#,###.##');
+    return formatter.format(totalPrice);
   }
 }

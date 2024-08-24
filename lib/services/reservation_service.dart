@@ -27,14 +27,8 @@ class ReservationService {
   Future<List<Reservation>> getReservationsByUserId(String userId) async {
    try {
     final response = await http.get(Uri.parse('$baseUrl/reservation/getReservationByUserID/$userId'));
-
-
-       
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-                Debugger.green('Parsed data: $data');
-
         final List<Reservation> reservations = [];
         for (var item in data) {
           reservations.add(Reservation.fromJson(item));

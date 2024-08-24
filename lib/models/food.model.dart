@@ -12,7 +12,7 @@ class Food extends HiveObject {
   final String description;
 
   @HiveField(2)
-  final int price;
+  final double price;
 
   @HiveField(3)
   final String image;
@@ -85,7 +85,9 @@ class Food extends HiveObject {
       id: json['_id'],
       name: json['name'],
       description: json['description'],
-      price: json['price'],
+      price: json['price'] is Map<String, dynamic> && json['price']['\$numberDecimal'] != null
+          ? double.parse(json['price']['\$numberDecimal'])
+          : double.parse(json['price'].toString()),
       image: json['image'],
       category: List<String>.from(json['category']),
       averageRating: json['averageRating'],
@@ -108,7 +110,9 @@ class Food extends HiveObject {
       id: json['_id'],
       name: json['name'],
       description: json['description'],
-      price: json['price'],
+       price: json['price'] is Map<String, dynamic> && json['price']['\$numberDecimal'] != null
+          ? double.parse(json['price']['\$numberDecimal'])
+          : double.parse(json['price'].toString()),
       image: json['image'],
       category: List<String>.from(json['category']),
       averageRating: json['averageRating'],

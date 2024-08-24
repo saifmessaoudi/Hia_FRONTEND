@@ -6,7 +6,7 @@ import 'package:shimmer/shimmer.dart';
 class CartItemWidget extends StatelessWidget {
   final String imageUrl;
   final String name;
-  final int price;
+  final double price;
   final int quantity;
   final VoidCallback onIncrease;
   final VoidCallback onDecrease;

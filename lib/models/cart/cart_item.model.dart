@@ -1,5 +1,6 @@
 import 'package:hia/models/food.model.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 
 part 'cart_item.model.g.dart';
 
@@ -29,6 +30,10 @@ class CartItem extends HiveObject {
 
 
 
+  String getFormattedPrice() {
+  final formatter = NumberFormat('#,##0.000', 'en_US');
+  return formatter.format(food.price);
+  }
 
 
   Map<String, dynamic> toJson() {
