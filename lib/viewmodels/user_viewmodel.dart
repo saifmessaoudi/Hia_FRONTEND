@@ -53,6 +53,7 @@ class UserViewModel with ChangeNotifier {
    UserViewModel() {
     // Initialize session on app startup
     initSession();
+
   }
 bool isAuthenticated() {
     return _token != null;

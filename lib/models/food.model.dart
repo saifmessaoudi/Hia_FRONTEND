@@ -85,15 +85,16 @@ class Food extends HiveObject {
       id: json['_id'],
       name: json['name'],
       description: json['description'],
-      price: json['price'] is Map<String, dynamic> && json['price']['\$numberDecimal'] != null
-          ? double.parse(json['price']['\$numberDecimal'])
-          : double.parse(json['price'].toString()),
+      price: json['price'].toDouble(),
       image: json['image'],
       category: List<String>.from(json['category']),
-      averageRating: json['averageRating'],
-      ingredients: List<String>.from(json['ingredients']),
+    averageRating: json['averageRating'] is double
+    ? (json['averageRating'] as double).toInt()
+    : json['averageRating'],      ingredients: List<String>.from(json['ingredients']),
       isAvailable: json['isAvailable'],
-      remise: json['remise'],
+      remise: json['remise'] is double
+    ? (json['remise'] as double).toInt()
+    : json['remise'],
       remiseDeadline: DateTime.parse(json['remiseDeadline']),
       reviews: (json['reviews'] as List<dynamic>?)
           ?.map((e) => Review.fromJsonWithoutUser(e as Map<String, dynamic>))
@@ -101,31 +102,41 @@ class Food extends HiveObject {
       establishment: Establishment.empty(), // Correct key name
 
     );
+  }  static double _parseDouble(dynamic value) {
+    if (value is double) {
+      return value;
+    } else if (value is Map<String, dynamic> && value.containsKey('\$numberDecimal')) {
+      return double.parse(value['\$numberDecimal']);
+    } else {
+      return double.parse(value.toString());
+    }
   }
 
 
 
-  factory Food.fromJson(Map<String, dynamic> json) {
-    return Food(
-      id: json['_id'],
-      name: json['name'],
-      description: json['description'],
-       price: json['price'] is Map<String, dynamic> && json['price']['\$numberDecimal'] != null
-          ? double.parse(json['price']['\$numberDecimal'])
-          : double.parse(json['price'].toString()),
-      image: json['image'],
-      category: List<String>.from(json['category']),
-      averageRating: json['averageRating'],
-      ingredients: List<String>.from(json['ingredients']),
-      isAvailable: json['isAvailable'],
-      remise: json['remise'],
-      remiseDeadline: DateTime.parse(json['remiseDeadline']),
-      reviews: (json['reviews'] as List<dynamic>?)
-          ?.map((e) => Review.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      establishment: Establishment.fromJsonWithoutFoods(json['etablishment']), // Correct key name
-    );
-  }
+       factory Food.fromJson(Map<String, dynamic> json) {
+      return Food(
+        id: json['_id'],
+        name: json['name'],
+        description: json['description'],
+        price: json['price'].toDouble(),
+        image: json['image'],
+        category: List<String>.from(json['category']),
+        averageRating: json['averageRating'] is double
+            ? (json['averageRating'] as double).toInt()
+            : json['averageRating'],
+        ingredients: List<String>.from(json['ingredients']),
+        isAvailable: json['isAvailable'],
+        remise: json['remise'] is double
+            ? (json['remise'] as double).toInt()
+            : json['remise'],
+        remiseDeadline: DateTime.parse(json['remiseDeadline']),
+        reviews: (json['reviews'] as List<dynamic>?)
+            ?.map((e) => Review.fromJsonWithoutUser(e as Map<String, dynamic>))
+            .toList(),
+        establishment: Establishment.fromJsonWithoutFoods(json['etablishment']),
+      );
+    }
 
   Map<String, dynamic> toJson() {
     return {

@@ -7,18 +7,24 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class FoodService {
-  final String baseUrl = 'http://192.168.1.11:3030';
+  final String baseUrl = 'http://10.0.2.2:3030';
   static const String cacheKey = 'foodCache';
 
-  Future<List<Food>> fetchFoods({int page =1 , int batch=10}) async {
+  Future<List<Food>> fetchFoods({int page = 1, int batch = 10}) async {
     final response = await http.get(Uri.parse('$baseUrl/food/getAllFoods?page=$page&batch=$batch'));
     if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body);
-      List<Food> foods = data.map((e) {
-        return Food.fromJson(e as Map<String, dynamic>);
-      }).toList();
-      await cacheData(foods);
-      return foods;
+      Debugger.green('Response body: ${response.body}');
+      try {
+        List<dynamic> data = json.decode(response.body);
+        List<Food> foods = data.map((e) {
+          return Food.fromJson(e as Map<String, dynamic>);
+        }).toList();
+        await cacheData(foods);
+        return foods;
+      } catch (e) {
+        Debugger.red('Error decoding JSON: $e');
+        throw Exception('Failed to decode foods');
+      }
     } else {
       throw Exception('Failed to load foods');
     }
