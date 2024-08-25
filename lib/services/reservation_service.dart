@@ -4,7 +4,7 @@ import 'package:hia/models/reservation.model.dart';
 import 'package:http/http.dart' as http;
 
 class ReservationService {
-  final String baseUrl = 'http://10.0.2.2:3030';
+  final String baseUrl = 'https://hiabackend-production.up.railway.app';
 
   Future<String> addReservation(Reservation reservation) async {
     final response = await http.post(

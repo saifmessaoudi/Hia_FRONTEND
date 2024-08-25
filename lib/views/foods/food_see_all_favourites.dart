@@ -1,4 +1,6 @@
+import 'package:hia/app/style/app_style.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FoodScreenFavourites extends StatefulWidget {
   const FoodScreenFavourites({super.key});
@@ -19,7 +21,7 @@ class _FoodScreenFavouriteState extends State<FoodScreenFavourites> {
 
   @override
   Widget build(BuildContext context) {
-    return SmartScaffold(
+    return Scaffold(
       body: Stack(
         children: [
           Container(
@@ -30,72 +32,95 @@ class _FoodScreenFavouriteState extends State<FoodScreenFavourites> {
               ),
             ),
           ),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(30),
-                      child: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                      ).onTap(() {
+          Column(
+            children: [
+              AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.6),
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      icon: Image.asset('images/left-arrow.png',
+                          width: 18.w, height: 18.w),
+                      onPressed: () {
                         Navigator.pop(context);
-                      }),
+                      },
                     ),
+                  ),
+                ),
+                title: Row(
+                  children: [
                     Text(
-                      'Favourite Deals',
-                      style: kTextStyle.copyWith(
-                          color: Colors.white, fontSize: 18.0),
-                    ),
-                    const SizedBox(
-                      width: 130,
+                      'Your Favourites',
+                      style: AppStyles.interboldHeadline5
+                          .medium()
+                          .withColor(Colors.white.withOpacity(0.9)),
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 30.0,
-                ),
-                Container(
-                  width: context.width(),
-                  height: context.height(),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        topRight: Radius.circular(30.0)),
-                    color: Colors.white,
-                  ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      Consumer<UserViewModel>(
-                        builder: (context, userviewmodel, child) {
-                          return GridView.count(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            childAspectRatio: 0.75,
-                            crossAxisCount: 2,
-                            children: List.generate(
-                              userviewmodel.favouritefood!.length,
-                              (index) => Center(
-                                child: FoodCard(
-                                  food: userviewmodel.favouritefood![index],
-                                ).onTap(() {
-                                  // Handle tap
-                                }),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
                       const SizedBox(
                         height: 20.0,
+                      ),
+                      Container(
+                        width: context.width(),
+                        height: context.height() - 50,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30.0),
+                              topRight: Radius.circular(30.0)),
+                          color: Colors.white,
+                        ),
+                        child: Column(
+                          children: [
+                            Consumer<UserViewModel>(
+                              builder: (context, userviewmodel, child) {
+                                return  CustomScrollView(
+                                  shrinkWrap: true,
+                                  slivers: [
+                                     SliverGrid(
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          childAspectRatio: 0.9,
+                                        ),
+                                        delegate: SliverChildBuilderDelegate(
+                                          (BuildContext context, int index) {
+                                            return Center(
+                                              child: FoodCard(
+                                                food: userviewmodel
+                                                    .favouritefood![index],
+                                              ).onTap(() {
+                                                // Handle tap
+                                              }),
+                                            );
+                                          },
+                                          childCount:
+                                              userviewmodel.favouritefood!.length,
+                                        ),
+                                      ),
+                                    
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

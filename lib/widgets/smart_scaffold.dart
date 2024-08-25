@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:io';
-
-import 'package:flutter/material.dart';
-import 'package:hia/app/style/app_colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hia/utils/connectivity_manager.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/widgets/offline_screen.dart';
-import 'package:provider/provider.dart';
-import 'connectivity_alert.dart'; // Import the new widget
+
 
 class SmartScaffold extends StatefulWidget {
   const SmartScaffold({
@@ -86,8 +83,6 @@ class _SmartScaffoldState extends State<SmartScaffold> {
     super.dispose();
   }
 
- 
-
   @override
   Widget build(BuildContext context) {
     return Consumer<ConnectivityManager>(
@@ -100,6 +95,50 @@ class _SmartScaffoldState extends State<SmartScaffold> {
           child: Scaffold(
             extendBody: widget.extendBody,
             key: widget.key,
+            appBar: widget.displayBack || widget.displayMenu || widget.displayClose
+                ? AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    leading: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.7),
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: widget.displayBack
+                              ? Image.asset(
+                                  'images/left-arrow.png',
+                                  width: 18.w,
+                                  height: 18.w,
+                                )
+                              : widget.displayMenu
+                                  ? Icon(Icons.menu, color: widget.leadingIconColor)
+                                  : widget.displayClose
+                                      ? Icon(Icons.close, color: widget.leadingIconColor)
+                                      : const SizedBox.shrink(),
+                          onPressed: widget.onLeadingPressed ?? () => Navigator.pop(context),
+                        ),
+                      ),
+                    ),
+                    title: widget.title != null
+                        ? Text(
+                            widget.title!,
+                            style: widget.titleStyle ??
+                                TextStyle(color: widget.tilteColor, fontSize: 20),
+                          )
+                        : null,
+                    actions: widget.actionIconData != null
+                        ? [
+                            IconButton(
+                              icon: Icon(widget.actionIconData, color: widget.actionIconColor),
+                              onPressed: widget.onActionPressed,
+                            ),
+                          ]
+                        : null,
+                  )
+                : null,
             body: widget.isAuth
                 ? Stack(
                     children: [
@@ -139,15 +178,14 @@ class _SmartScaffoldState extends State<SmartScaffold> {
                   )
                 : widget.body,
             floatingActionButton: widget.floatingActionButton,
-            floatingActionButtonLocation: widget.floatingActionButtonLocation ??
-                (Platform.isIOS ? FloatingActionButtonLocation.endDocked : FloatingActionButtonLocation.endFloat),
+            floatingActionButtonLocation: widget.floatingActionButtonLocation ?? (Platform.isIOS ? FloatingActionButtonLocation.endDocked : FloatingActionButtonLocation.endFloat),
             bottomSheet: widget.bottomSheet,
             backgroundColor: widget.backgroundColor,
             resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
             bottomNavigationBar: widget.bottomNavigationBar,
           ),
         );
-      }
+      },
     );
   }
 }
