@@ -1,4 +1,5 @@
 import 'package:hia/models/food.model.dart';
+import 'package:hia/models/offer.model.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
@@ -7,39 +8,59 @@ part 'cart_item.model.g.dart';
 @HiveType(typeId: 4)
 class CartItem extends HiveObject {
   @HiveField(0)
-  final Food food;
+  final Food? food;
 
   @HiveField(1)
   int quantity;
 
-  CartItem({required this.food, required this.quantity});
+  @HiveField(2)
+  final Offer? offer;
+
+  @HiveField(3)
+   String type;
+
+
+
+  CartItem({this.food, this.offer, this.type = "food", required this.quantity});
 
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
-      food: Food.fromJson(json['food']),
+      food: json['food'] != null ? Food.fromJson(json['food']) : null,
+      offer: json['offer'] != null ? Offer.fromJson(json['offer']) : null,
       quantity: json['quantity'],
+      type: json['type'] ?? "food",
     );
   }
 
   factory CartItem.fromJsonWithoutFood(Map<String, dynamic> json) {
     return CartItem(
-      food: Food.fromJsonWithoutEstablishment(json['food']),
+      food: json['food'] != null ? Food.fromJsonWithoutEstablishment(json['food']) : null,
+      offer: json['offer'] != null ? Offer.fromJsonWithoutEtablishment(json['offer']) : null,
       quantity: json['quantity'],
     );
   }
 
-
-
   String getFormattedPrice() {
-  final formatter = NumberFormat('#,##0.000', 'en_US');
-  return formatter.format(food.price);
+    final formatter = NumberFormat('#,##0.000', 'en_US');
+    if (food != null) {
+      return formatter.format(food!.price);
+    } else if (offer != null) {
+      return formatter.format(offer!.price);
+    } else {
+      return '0.000';
+    }
   }
-
 
   Map<String, dynamic> toJson() {
     return {
-      'food': food.toJson(),
+      'food': food?.toJson(),
+      'offer': offer?.toJson(),
       'quantity': quantity,
+      'type':type
     };
+  }
+
+  bool isValid() {
+    return (food != null || offer != null) && (food == null || offer == null);
   }
 }

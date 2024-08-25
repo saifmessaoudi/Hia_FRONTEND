@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/models/cart/cart.model.dart';
 import 'package:hia/models/food.model.dart';
+import 'package:hia/models/offer.model.dart';
 import 'package:hive/hive.dart';
 
 class CartViewModel extends ChangeNotifier {
@@ -35,23 +36,23 @@ class CartViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> addItem(Food food, int quantity)async {
+  Future<bool> addItem(Food? food, int quantity, {Offer? offer})async {
     try {
-      bool result = await _cart?.addItem(food, quantity) ?? false;
-      return result;
+        bool isAdded = await _cart?.addItem(food, quantity, offer: offer) ?? false;
+        return isAdded;
     }catch (e){
       Debugger.red('Error adding item to cart: $e');
       return false;
     }
   }
   
- void removeItem(Food food) {
-    _cart?.removeItem(food);
+ void removeItem(Food? food , {Offer? offer}) {
+    _cart?.removeItem(food, offer: offer);
     notifyListeners();
  }
 
  //update the quantity of the item
-  void updateItemQuantity(Food food, int quantity) {
+  void updateItemQuantity(Food? food, int quantity, {Offer? offer}) {
     _cart?.updateItemQuantity(food, quantity);
     notifyListeners();
   }

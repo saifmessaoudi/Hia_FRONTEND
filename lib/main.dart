@@ -27,6 +27,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
+import 'views/details/box_details_screen.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final appDocumentDir = await getApplicationDocumentsDirectory();
@@ -58,6 +60,8 @@ void main() async {
           create: (_) => ConnectivityManager(),
           child: const Home(),
         ),
+        ChangeNotifierProvider(create: (_) => OnBoardingProvider()),
+        ChangeNotifierProvider(create: (_) => QuantityProvider()),
 
         ChangeNotifierProvider(create: (_) => UserViewModel()),
         ChangeNotifierProvider(

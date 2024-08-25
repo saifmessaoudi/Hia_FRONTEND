@@ -20,7 +20,7 @@ class FoodAdapter extends TypeAdapter<Food> {
       id: fields[12] as String,
       name: fields[0] as String,
       description: fields[1] as String,
-      price: fields[2] is int ? (fields[2] as int).toDouble() : fields[2] as double,
+      price: fields[2] as double,
       image: fields[3] as String,
       category: (fields[4] as List).cast<String>(),
       averageRating: fields[5] as int,

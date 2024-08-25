@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hia/app/style/app_style.dart';
 import 'package:hia/views/authentication/sign_in.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart';
 
 import '../../constant.dart';
 
@@ -13,43 +15,29 @@ class OnBoard extends StatefulWidget {
 
 class _OnBoardState extends State<OnBoard> {
   PageController pageController = PageController(initialPage: 0);
-  int currentIndexPage = 0;
-  String buttonText = 'Next';
 
   List<Map<String, dynamic>> sliderList = [
     {
-      "icon": 'images/hiaonboard1-8.png',
-      "title": 'Welcome to Hia Application!',
-      "description":
-          'Hia helps you find your favorite food from your preferred establishments.',
+      "icon": 'images/onboard1.png',
+      "title": 'Welcome to Hia',
+      "description": 'Discover your favorite food at nearby places.',
     },
     {
-      "icon": 'images/Fichier 6-8.png',
-      "title": 'Choose your favourite Food!',
-      "description":
-          'Hia helps you find your preferred establishments to enjoy delicious food. You can easily make a reservation and receive a confirmation ID for your booking.',
+      "icon": 'images/onboard2.png',
+      "title": 'Find Your Favorite Food',
+      "description": 'Book easily and get a confirmation ID instantly.',
     },
     {
-      "icon": 'images/hiaonboard3_2-8.png',
+      "icon": 'images/onboard3.png',
       "title": 'Enjoy you Experience!',
-      "description":
-          'Navigate easily to your desired establishment to enjoy your booking.',
+      "description": 'Navigate to your reservation and enjoy!',
     },
   ];
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void dispose() {
+    pageController.dispose();
     super.dispose();
-  }
-
-  @override
-  void setState(fn) {
-    if (mounted) super.setState(fn);
   }
 
   @override
@@ -57,119 +45,156 @@ class _OnBoardState extends State<OnBoard> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: white,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height - 10,
-                width: MediaQuery.of(context).size.width,
-                child: Stack(
-                  children: [
-                    PageView.builder(
-                      itemCount: sliderList.length,
-                      controller: pageController,
-                      onPageChanged: (int index) =>
-                          setState(() => currentIndexPage = index),
-                      itemBuilder: (_, index) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0,
-                                  right: 10.0,
-                                  top: 25.0,
-                                  bottom: 20.0),
-                              child: SizedBox(
-                                width: context.width() / 2,
-                                child: Text(
-                                  sliderList[index]['title'].toString(),
-                                  style: kTextStyle.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: kTitleColor,
-                                      fontSize: 18.0),
-                                ),
-                              ),
+        body: Column(
+          children: [
+            Consumer<OnBoardingProvider>(
+              builder: (context, provider, child) {
+                return provider.currentIndexPage < sliderList.length - 1
+                    ? Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SignIn()),
+                                (route) => false,
+                              );
+                            },
+                            child: Text(
+                              'Skip',
+                              style: AppStyles.interMediumHeadline6
+                                  .medium()
+                                  .copyWith(
+                                      color: kSecondaryColor, fontSize: 18),
                             ),
-                            // ignore: sized_box_for_whitespace
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0, right: 20.0),
-                              // ignore: sized_box_for_whitespace
-                              child: Text(
-                                sliderList[index]['description'].toString(),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 5,
-                                style: kTextStyle.copyWith(
-                                  color: kGreyTextColor,
-                                ),
-                              ),
-                            ),
-                            const Spacer(),
-                            Image.asset(
-                              sliderList[index]['icon'],
-                              fit: BoxFit.fill,
-                              width: context.width(),
-                            ),
-                          ],
+                          ),
+                        ),
+                      )
+                    : const SizedBox(height: 55);
+              },
+            ),
+            Expanded(
+              child: PageView.builder(
+                itemCount: sliderList.length,
+                controller: pageController,
+                onPageChanged: (int index) {
+                  context
+                      .read<OnBoardingProvider>()
+                      .setCurrentIndexPage(index);
+                },
+                itemBuilder: (_, index) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        sliderList[index]['icon'],
+                        fit: BoxFit.contain,
+                        width: context.width() * 0.8,
+                      ),
+                      const SizedBox(height: 30),
+                      Padding(
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Text(
+                          sliderList[index]['title'].toString(),
+                          textAlign: TextAlign.center,
+                          style: AppStyles.interMediumHeadline6
+                              .bold()
+                              .withColor(Colors.black)
+                              .withSize(30),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Text(
+                          sliderList[index]['description'].toString(),
+                          textAlign: TextAlign.center,
+                          style: AppStyles.interregularTitle.copyWith(
+                              color: Colors.blueGrey, fontSize: 18),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+            Consumer<OnBoardingProvider>(
+              builder: (context, provider, child) {
+                return DotIndicator(
+                  currentDotSize: 15,
+                  dotSize: 6,
+                  pageController: pageController,
+                  pages: sliderList,
+                  indicatorColor: kMainColor,
+                  unselectedIndicatorColor: kSecondaryColor,
+                );
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: GestureDetector(
+                onTap: () {
+                  final provider =
+                      context.read<OnBoardingProvider>();
+                  if (provider.currentIndexPage < sliderList.length - 1) {
+                    pageController.nextPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  } else {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignIn()),
+                      (route) => false,
+                    );
+                  }
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 55,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(35.0),
+                    color: kMainColor,
+                  ),
+                  child: Center(
+                    child: Consumer<OnBoardingProvider>(
+                      builder: (context, provider, child) {
+                        return Text(
+                          provider.currentIndexPage < sliderList.length - 1
+                              ? 'Next'
+                              : 'Get Started',
+                          style: kTextStyle.copyWith(
+                            color: white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         );
                       },
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 20.0, right: 20.0, top: 200),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              setState(
-                                () {
-                                  currentIndexPage < 2
-                                      ? pageController.nextPage(
-                                          duration: const Duration(
-                                              microseconds: 1000),
-                                          curve: Curves.bounceInOut)
-                                      : 
-                                      Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => const SignIn()),
-                                          (route) => false,
-                                        );
-                                },
-                              );
-                            },
-                            child: Container(
-                              width: 90,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20.0),
-                                color: kMainColor,
-                              ),
-                              child: Center(
-                                child: Image.asset('images/chevrons-right.png'),
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                          DotIndicator(
-                            currentDotSize: 15,
-                            dotSize: 6,
-                            pageController: pageController,
-                            pages: sliderList,
-                            indicatorColor: kMainColor,
-                            unselectedIndicatorColor: kSecondaryColor,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
+  }
+}
+
+
+class OnBoardingProvider with ChangeNotifier {
+  int _currentIndexPage = 0;
+
+  int get currentIndexPage => _currentIndexPage;
+
+  void setCurrentIndexPage(int index) {
+    _currentIndexPage = index;
+    notifyListeners();
   }
 }

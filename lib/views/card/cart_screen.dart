@@ -1,7 +1,5 @@
-import 'package:hia/app/style/widget_modifier.dart';
 import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/viewmodels/cart_viewmodel.dart';
-import 'package:hia/viewmodels/reservation_viewmodel.dart';
 import 'package:hia/views/card/empty_card.dart';
 import 'package:hia/views/card/loading_order.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
@@ -77,7 +75,6 @@ class CartScreen extends StatelessWidget {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                      
                         _showLoadingScreen(context);
                       },
                       child: Container(
@@ -130,38 +127,51 @@ class CartScreen extends StatelessWidget {
                         itemCount: cart.items.length,
                         itemBuilder: (context, index) {
                           var item = cart.items[index];
+                          var key = item.food?.id ?? item.offer?.id ?? '';
+                          var name = item.food?.name ?? item.offer?.name ?? '';
+                          var imageUrl = item.food?.image ?? item.offer?.image ?? '';
+                          var price = item.food?.price ?? item.offer?.price ?? 0.0;
+
                           return Dismissible(
-                            key: Key(item.food.id),
+                            key: Key(key),
                             direction: DismissDirection.endToStart,
                             background: Container(
                               color: Colors.transparent,
                               child: const Align(
                                 alignment: Alignment.centerRight,
                                 child: Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 20.0),
-                                  child: Icon(Icons.delete,
-                                      color: Colors.red, size: 30.0),
+                                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                                  child: Icon(Icons.delete, color: Colors.red, size: 30.0),
                                 ),
                               ),
                             ),
                             onDismissed: (direction) {
-                              viewModel.removeItem(item.food);
-                              showCustomToast(context,
-                                  "${item.food.name} removed from cart");
+                              if (item.food != null) {
+                                viewModel.removeItem(item.food!);
+                                showCustomToast(context, "${item.food!.name} removed from cart");
+                              } else if (item.offer != null) {
+                                viewModel.removeItem(null, offer: item.offer);
+                                showCustomToast(context, "${item.offer!.name} removed from cart");
+                              }
                             },
                             child: CartItemWidget(
-                              imageUrl: item.food.image,
-                              name: item.food.name,
-                              price: item.food.price,
+                              imageUrl: imageUrl,
+                              name: name,
+                              price: price.toDouble(),
                               quantity: item.quantity,
                               onIncrease: () {
-                                viewModel.updateItemQuantity(
-                                    item.food, item.quantity + 1);
+                                if (item.food != null) {
+                                  viewModel.updateItemQuantity(item.food!, item.quantity + 1);
+                                } else if (item.offer != null) {
+                                  viewModel.updateItemQuantity(null, item.quantity + 1, offer: item.offer!);
+                                }
                               },
                               onDecrease: () {
-                                viewModel.updateItemQuantity(
-                                    item.food, item.quantity - 1);
+                                if (item.food != null) {
+                                  viewModel.updateItemQuantity(item.food!, item.quantity - 1);
+                                } else if (item.offer != null) {
+                                  viewModel.updateItemQuantity(null, item.quantity - 1, offer: item.offer!);
+                                }
                               },
                             ),
                           );

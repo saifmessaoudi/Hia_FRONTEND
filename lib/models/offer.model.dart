@@ -68,6 +68,28 @@ class Offer extends HiveObject {
     required this.price,
   }) : formattedValidUntil = DateFormatter.formatDate(validUntil, 'dd MMM yyyy');
 
+
+  //factory without etablishment 
+  factory Offer.fromJsonWithoutEtablishment(Map<String, dynamic> json) {
+    return Offer(
+      name: json['name'],
+      description: json['description'],
+      image: json['image'],
+      food: (json['food'] as List).map((item) => Food.fromJson(item)).toList(),
+      etablishment: Establishment.empty(),
+      remise: json['remise'],
+      validFrom: DateTime.parse(json['validFrom']),
+      validUntil: DateTime.parse(json['validUntil']),
+      isAvailable: json['isAvailable'],
+      quantity: json['quantity'],
+      id: json['_id'],
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
+      price: json['price'],
+    );
+  }
+
+
   factory Offer.fromJson(Map<String, dynamic> json) {
     return Offer(
       name: json['name'],

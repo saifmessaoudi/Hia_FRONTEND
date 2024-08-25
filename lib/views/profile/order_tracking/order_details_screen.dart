@@ -89,7 +89,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               itemCount: widget.order.items.length,
                               itemBuilder: (context, index) {
                                 return FastCachedImage(
-                                  url: widget.order.items[index].food.image,
+                                  url:  widget.order.items[index].offer != null 
+                                    ? widget.order.items[index].offer!.image 
+                                    : widget.order.items[index].food!.image,
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                   height: 250.0,
@@ -327,7 +329,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       cartViewModel.setReOrderLoading(true);
                       cartViewModel.clearCart();
                       await cartViewModel.addItems(
-                          widget.order.items.map((item) => item.food).toList());
+                          widget.order.items.map((item) => item.food!).toList());
                       await cartViewModel.overrideEstablishmentId(
                           widget.order.establishment!.id);
                     },
@@ -496,7 +498,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           .withSize(FontSizes.headline6),
                     ),
                     TextSpan(
-                      text: item.food.name,
+                      text: item.offer != null ? item.offer!.name : item.food!.name,
                       style: AppStyles.interSemiBoldTextButton
                           .medium()
                           .withColor(Colors.black)

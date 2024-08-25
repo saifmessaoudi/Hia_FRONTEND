@@ -1,6 +1,7 @@
 import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/models/cart/cart_item.model.dart';
 import 'package:hia/models/food.model.dart';
+import 'package:hia/models/offer.model.dart';
 import 'package:hive/hive.dart';
 
 part 'cart.model.g.dart';
@@ -36,11 +37,16 @@ class Cart extends HiveObject {
     save();
   }
 
- Future<bool> addItem(Food food, int quantity) async {
+ Future<bool> addItem(Food? food, int quantity, {Offer? offer}) async {
   try {
-    Debugger.blue('Adding item: ${food.name}, quantity: $quantity');
-
+    if (food ==null && offer == null) {
+      Debugger.red('Cannot add item without food or offer');
+      return false;
+    }
     
+     if (food != null){
+
+     
     if (items.isEmpty) {
       establishmentId = food.establishment.id;
       Debugger.blue('Establishment ID: $establishmentId');
@@ -52,7 +58,7 @@ class Cart extends HiveObject {
     }
 
     // Find the index of the existing item
-    int existingIndex = items.indexWhere((item) => item.food.id == food.id);
+    int existingIndex = items.indexWhere((item) => item.food!.id == food.id);
 
     if (existingIndex != -1) {
       // Update the quantity of the existing item
@@ -60,10 +66,24 @@ class Cart extends HiveObject {
       Debugger.blue('Updated existing item quantity: ${items[existingIndex].quantity}');
     } else {
       // Add the new item to the cart
-      items.add(CartItem(food: food, quantity: quantity));
+      items.add(CartItem(food: food, quantity: quantity , offer: offer));
       Debugger.blue('Added new item: ${food.name}, quantity: $quantity');
     }
+     }
+     else if (offer !=null){
+      if (items.isEmpty) {
+      establishmentId = offer.etablishment.id;
+      Debugger.blue('Establishment ID: $establishmentId');
+    }
 
+    if (establishmentId != offer.etablishment.id) {
+      Debugger.red('Cannot add item from a different establishment');
+      return false;
+    }
+      
+      items.add(CartItem(food: null, quantity: quantity , offer: offer));
+      Debugger.blue('Added new item: ${offer.name}, quantity: $quantity');
+     }
     save(); // Save the updated cart
     return true;
   } catch (error) {
@@ -79,34 +99,54 @@ void clearCart() {
 }
 
 
-  void removeItem(Food food) {
-    items.removeWhere((item) => item.food.id == food.id);
-    if (items.isEmpty) {
-      establishmentId = null;
-    }
-    save();
-  }
-
-  void updateItemQuantity(Food food, int quantity) {
-    int existingIndex = items.indexWhere((item) => item.food.id == food.id);
-
-    if (existingIndex != -1) {
-      if (quantity == 0) {
-        items.removeAt(existingIndex);
-        if (items.isEmpty) {
-          establishmentId = null;
-        }
-      } else {
-        items[existingIndex].quantity = quantity;
+    void removeItem(Food? food, {Offer? offer}) {
+      if (food != null && offer != null) {
+        items.removeWhere((item) => 
+          (item.food != null && item.food!.id == food.id) || 
+          (item.offer != null && item.offer!.id == offer.id)
+        );
+      } 
+      else if (food != null) {
+        items.removeWhere((item) => item.food != null && item.food!.id == food.id);
+      } 
+      else if (offer != null) {
+        items.removeWhere((item) => item.offer != null && item.offer!.id == offer.id);
       }
+    
+      if (items.isEmpty) {
+        establishmentId = null;
+      }
+    
       save();
     }
 
+  void updateItemQuantity(Food? food, int quantity , {Offer? offer}) {
+    if (food != null){
+      int index = items.indexWhere((item) => item.food!.id == food.id);
+    if (index != -1) {
+      items[index].quantity = quantity;
+      save();
+    }
+    }else if (offer != null){
+      int index = items.indexWhere((item) => item.offer!.id == offer.id);
+    if (index != -1) {
+      items[index].quantity = quantity;
+      save();
+    }
+    }
+    
   }
 
  
 
-  double getTotalPrice() {
-    return items.fold(0, (total, item) => total + (item.food.price * item.quantity));
+    double getTotalPrice() {
+    return items.fold(0, (total, item) {
+      if (item.food != null) {
+        return total + (item.food!.price * item.quantity);
+      } else if (item.offer != null) {
+        return total + (item.offer!.price * item.quantity);
+      }
+      return total;
+    });
   }
 }

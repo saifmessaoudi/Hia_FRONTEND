@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
 import 'package:flutter/rendering.dart';
@@ -40,16 +39,22 @@ class _LoadingScreenDialogState extends State<LoadingScreenDialog> {
     final userId =
         Provider.of<UserViewModel>(context, listen: false).userData!.id;
 
-    
+    final updatedItems = cartItems.map((item) {
+    if (item.food != null) {
+      item.type = 'food';
+    } else if (item.offer != null) {
+      item.type = 'offer';
+    }
+    return item;
+  }).toList();
 
     // Create the reservation data
     final reservationData = Reservation(
       etablishmentId: establishmentId!,
       userId: userId,
-      items: cartItems,
+      items: updatedItems,
     );
 
-    // Send the JSON to the addReservation method
     final viewModel = Provider.of<ReservationViewModel>(context, listen: false);
     await viewModel.addReservation(reservationData);
   }

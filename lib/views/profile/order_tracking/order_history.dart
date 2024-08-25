@@ -253,7 +253,7 @@ class _HistoryItem extends StatelessWidget {
               children: [
                 Text(
                   "Total price ",
-                  style: AppStyles.interSemiBoldTextButton.regular().withColor( Colors.blueGrey).withSize(FontSizes.headline6),
+                  style: AppStyles.interSemiBoldTextButton.regular().withColor(Colors.blueGrey).withSize(FontSizes.headline6),
                 ),
                 Text(
                   "${order.getFormattedTotalPrice()} DT",
@@ -262,89 +262,94 @@ class _HistoryItem extends StatelessWidget {
               ],
             ),
             Gap(10.h),
-            const ZigzagDivider( color: Colors.blueGrey ),
+            const ZigzagDivider(color: Colors.blueGrey),
             Gap(12.h),
             Row(
               children: [
-                               Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: order.items.map((item) => RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "* ${item.quantity}x ",
-                          style: AppStyles.interSemiBoldTextButton.medium().withSize(FontSizes.headline6),
+                  children: order.items.map((item) {
+                    if (item.food != null) {
+                      return RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "* ${item.quantity}x ",
+                              style: AppStyles.interSemiBoldTextButton.medium().withSize(FontSizes.headline6),
+                            ),
+                            TextSpan(
+                              text: " ${item.food!.name}",
+                              style: AppStyles.interSemiBoldTextButton.regular().withSize(FontSizes.title),
+                            ),
+                          ],
                         ),
-                        TextSpan(
-                          text: " ${item.food.name}",
-                          style: AppStyles.interSemiBoldTextButton.regular().withSize(FontSizes.title),
+                      );
+                    } else if (item.offer != null) {
+                      return RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "* ${item.quantity}x ",
+                              style: AppStyles.interSemiBoldTextButton.medium().withSize(FontSizes.headline6),
+                            ),
+                            TextSpan(
+                              text: " ${item.offer!.name}",
+                              style: AppStyles.interSemiBoldTextButton.regular().withSize(FontSizes.title),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  )).toList(),
-                )
-                
+                      );
+                    } else {
+                      return Container();
+                    }
+                  }).toList(),
+                ),
               ],
             ),
-            
             if (order.status == "Done") ...[
               Gap(10.h),
               Divider(color: Colors.blueGrey, thickness: 2.r),
-            
               Gap(10.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                    GestureDetector(
+                  GestureDetector(
                     onTap: () async {
                       final cartViewModel = Provider.of<CartViewModel>(context, listen: false);
-                  
                       cartViewModel.setReOrderLoading(true);
                       cartViewModel.clearCart();
-                      await cartViewModel.addItems(order.items.map((item) => item.food).toList());
+                      await cartViewModel.addItems(order.items.map((item) => item.food!).toList());
                       await cartViewModel.overrideEstablishmentId(order.establishment!.id);
                       Future.delayed(const Duration(seconds: 2), () {
                         cartViewModel.setReOrderLoading(false);
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const CartScreen()));
                       });
-                      
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.shopping_bag_sharp,
-                            color: AppColors.offWhite,
-                            size: 18), 
+                        const Icon(Icons.shopping_bag_sharp, color: AppColors.offWhite, size: 18),
                         const Gap(4),
                         Text(
                           "Re-order",
-                          style: AppStyles.interregularTitle
-                              .withSize(16.sp) 
-                              .withColor(AppColors.offWhite)
-                              .bold(),
+                          style: AppStyles.interregularTitle.withSize(16.sp).withColor(AppColors.offWhite).bold(),
                         ),
                       ],
                     ),
                   ),
                   GestureDetector(
-                    onTap : (){
-                        final firstFood = order.items.first.food;
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewScreen( food: firstFood)));
-      
+                    onTap: () {
+                      final firstFood = order.items.first.food;
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewScreen(food: firstFood!)));
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.star,
-                            color: AppColors.offWhite,
-                            size: 18), 
+                        const Icon(Icons.star, color: AppColors.offWhite, size: 18),
                         const Gap(4),
                         Text(
                           "Rate",
-                          style: AppStyles.interregularTitle
-                              .withSize(16.sp) 
-                              .withColor(AppColors.offWhite)
-                              .bold(),
+                          style: AppStyles.interregularTitle.withSize(16.sp).withColor(AppColors.offWhite).bold(),
                         ),
                       ],
                     ),
