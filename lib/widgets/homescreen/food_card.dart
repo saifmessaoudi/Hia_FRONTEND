@@ -147,8 +147,7 @@ class _FoodCardState extends State<FoodCard> {
                                 .addItem(widget.food, 1)
                                 .then((success) {
                               if (success) {
-                                showCustomToast(context,
-                                    "${widget.food.name} added to cart");
+                                showCustomToast(context, "Item added to cart");
                               } else {
                                 showCustomToast(context,
                                     "You cannot add items from different restaurants to the cart",
@@ -208,5 +207,7 @@ class _FoodCardState extends State<FoodCard> {
         )
       ],
     );
-  }
+  }  
+  
 }
+
