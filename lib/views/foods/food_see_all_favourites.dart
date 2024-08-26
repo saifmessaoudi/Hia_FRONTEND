@@ -84,12 +84,40 @@ class _FoodScreenFavouriteState extends State<FoodScreenFavourites> {
                           children: [
                             Consumer<UserViewModel>(
                               builder: (context, userviewmodel, child) {
-                                return  CustomScrollView(
-                                  shrinkWrap: true,
-                                  slivers: [
-                                     SliverGrid(
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                if (userviewmodel.isLoading) {
+                                  return CustomScrollView(
+                                    shrinkWrap: true,
+                                    slivers: [
+                                      SliverGrid(
+                                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                        mainAxisSpacing:  10.0, ),
+                                        delegate: SliverChildBuilderDelegate(
+                                          (BuildContext context, int index) {
+                                            return Shimmer.fromColors(
+                                              baseColor: Colors.grey[300]!,
+                                              highlightColor: Colors.grey[100]!,
+                                              child: Container(
+                                                width: 90,
+                                                margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius: BorderRadius.circular(10.0),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          childCount: 1, 
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  return CustomScrollView(
+                                    shrinkWrap: true,
+                                    slivers: [
+                                      SliverGrid(
+                                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 2,
                                           childAspectRatio: 0.9,
                                         ),
@@ -97,20 +125,18 @@ class _FoodScreenFavouriteState extends State<FoodScreenFavourites> {
                                           (BuildContext context, int index) {
                                             return Center(
                                               child: FoodCard(
-                                                food: userviewmodel
-                                                    .favouritefood![index],
+                                                food: userviewmodel.favouritefood![index],
                                               ).onTap(() {
                                                 // Handle tap
                                               }),
                                             );
                                           },
-                                          childCount:
-                                              userviewmodel.favouritefood!.length,
+                                          childCount: userviewmodel.favouritefood!.length,
                                         ),
                                       ),
-                                    
-                                  ],
-                                );
+                                    ],
+                                  );
+                                }
                               },
                             ),
                           ],

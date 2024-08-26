@@ -34,6 +34,7 @@ class _EditProfileState extends State<EditProfile> {
   String? lastNameError;
   String? emailError;
   String? passwordError;
+  String? imageUrl;
   List<String> userPreferences = [];
   Position? position;
   bool isLoading = false;
@@ -49,6 +50,7 @@ class _EditProfileState extends State<EditProfile> {
     emailController.text = userViewModel.userData?.email ?? '';
     phoneController.text = userViewModel.userData?.phone ?? '';
     userPreferences = userViewModel.userData?.foodPreference ?? [];
+    imageUrl = userViewModel.userData?.profileImage ?? '';
   }
 
   @override
@@ -181,7 +183,7 @@ class _EditProfileState extends State<EditProfile> {
                                   ),
                                   child: ClipOval(
                                     child: CachedNetworkImage(
-                                      imageUrl: 'https://mir-s3-cdn-cf.behance.net/user/276/180d9c144450013.5cde903578dd7.jpg',
+                                      imageUrl:  imageUrl ?? '',
                                       placeholder: (context, url) => Shimmer.fromColors(
                                         baseColor: Colors.grey[300]!,
                                         highlightColor: Colors.grey[100]!,

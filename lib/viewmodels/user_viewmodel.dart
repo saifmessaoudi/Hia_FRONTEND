@@ -295,11 +295,16 @@ bool isAuthenticated() {
   }
 
    Future<void> getFavouriteFood(String userId) async {
+    _isLoading = true;
+    notifyListeners();
     try {
       _favouriteFood = await userService.getFavouriteFoodsByUserId(userId);
       notifyListeners();
     } catch (e) {
       Debugger.red('Failed to load favourite foods: $e');
+    }finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
