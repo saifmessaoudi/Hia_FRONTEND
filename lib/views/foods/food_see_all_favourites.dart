@@ -6,124 +6,123 @@ class FoodScreenFavourites extends StatefulWidget {
   const FoodScreenFavourites({super.key});
 
   @override
-  _FoodScreenFavouriteState createState() => _FoodScreenFavouriteState();
+  _FoodScreenFavouritesState createState() => _FoodScreenFavouritesState();
 }
 
-class _FoodScreenFavouriteState extends State<FoodScreenFavourites> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-      userViewModel.getFavouriteFood(userViewModel.userData!.id);
-    });
-  }
-
+class _FoodScreenFavouritesState extends State<FoodScreenFavourites> {
+   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("images/hiaauthbgg.png"),
-                fit: BoxFit.cover,
+    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserViewModel()..getFavouriteFood(userViewModel.userData!.id)),
+      ],
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("images/hiaauthbgg.png"),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          Column(
-            children: [
-              AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                leading: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.6),
-                      shape: BoxShape.circle,
+            Column(
+              children: [
+                AppBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  leading: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.6),
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: Image.asset('images/left-arrow.png',
+                            width: 18.w, height: 18.w),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
                     ),
-                    child: IconButton(
-                      icon: Image.asset('images/left-arrow.png',
-                          width: 18.w, height: 18.w),
-                      onPressed: () {
-                        Navigator.pop(context);
+                  ),
+                  title: Row(
+                    children: [
+                      Text(
+                        'Your Favourites',
+                        style: AppStyles.interboldHeadline5
+                            .medium()
+                            .withColor(Colors.white.withOpacity(0.9)),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    width: context.width(),
+                    height: context.height() - 50,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.0),
+                          topRight: Radius.circular(30.0)),
+                      color: Colors.white,
+                    ),
+                    child: Consumer<UserViewModel>(
+                      builder: (context, userviewmodel, child) {
+                        if (userviewmodel.isLoading) {
+                          return CustomScrollView(
+                            slivers: [
+                              SliverGrid(
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 0.9,
+                                ),
+                                delegate: SliverChildBuilderDelegate(
+                                  (BuildContext context, int index) {
+                                    return const Center(child: ShimmerFoodCard());
+                                  },
+                                  childCount: 10, // Number of shimmer items to display
+                                ),
+                              ),
+                            ],
+                          );
+                        } else  {
+                          return CustomScrollView(
+                            slivers: [
+                              SliverGrid(
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 0.9,
+                                ),
+                                delegate: SliverChildBuilderDelegate(
+                                  (BuildContext context, int index) {
+                                    return Center(
+                                      child: FoodCard(
+                                        food: userviewmodel.favouritefood![index],
+                                      ).onTap(() {
+                                        // Handle tap
+                                      }),
+                                    );
+                                  },
+                                  childCount: userviewmodel.favouritefood!.length,
+                                ),
+                              ),
+                            ],
+                          );
+                        }
                       },
                     ),
                   ),
                 ),
-                title: Row(
-                  children: [
-                    Text(
-                      'Your Favourites',
-                      style: AppStyles.interboldHeadline5
-                          .medium()
-                          .withColor(Colors.white.withOpacity(0.9)),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  width: context.width(),
-                  height: context.height() - 50,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        topRight: Radius.circular(30.0)),
-                    color: Colors.white,
-                  ),
-                  child: Consumer<UserViewModel>(
-                    builder: (context, userviewmodel, child) {
-                      if (userviewmodel.isLoading) {
-                        return CustomScrollView(
-                          slivers: [
-                            SliverGrid(
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 0.9,
-                              ),
-                              delegate: SliverChildBuilderDelegate(
-                                (BuildContext context, int index) {
-                                  return const Center(child: ShimmerFoodCard());
-                                },
-                                childCount: 10, // Number of shimmer items to display
-                              ),
-                            ),
-                          ],
-                        );
-                      } else {
-                        return CustomScrollView(
-                          slivers: [
-                            SliverGrid(
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 0.9,
-                              ),
-                              delegate: SliverChildBuilderDelegate(
-                                (BuildContext context, int index) {
-                                  return Center(
-                                    child: FoodCard(
-                                      food: userviewmodel.favouritefood![index],
-                                    ).onTap(() {
-                                      // Handle tap
-                                    }),
-                                  );
-                                },
-                                childCount: userviewmodel.favouritefood!.length,
-                              ),
-                            ),
-                          ],
-                        );
-                      }
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

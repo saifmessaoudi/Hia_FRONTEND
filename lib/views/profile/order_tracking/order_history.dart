@@ -132,7 +132,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> with SingleTick
     );
   }
 
-  Widget _buildShimmerEffect() {
+   Widget _buildShimmerEffect() {
     return ListView.builder(
       itemCount: 1,
       itemBuilder: (context, index) {
@@ -142,12 +142,85 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> with SingleTick
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 8.h),
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 5,
             decoration: BoxDecoration(
-              color: Colors.white,
               borderRadius: BorderRadius.circular(AppConstants.historyCardRadius),
+              gradient: AppColors.accountGradientClr,
+              border: Border.all(color: Colors.blueGrey, width: 1),
             ),
-          ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    ClipOval(
+                      child: Container(
+                        width: AppConstants.orderImageSize,
+                        height: AppConstants.orderImageSize,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Gap(16.w),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 100.w,
+                          height: 20.h,
+                          color: Colors.white,
+                        ),
+                        Gap(5.w),
+                        Container(
+                          width: 60.w,
+                          height: 15.h,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Gap(AppConstants.verticalSpacing),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 80.w,
+                      height: 20.h,
+                      color: Colors.white,
+                    ),
+                    Container(
+                      width: 60.w,
+                      height: 20.h,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+                Gap(10.h),
+                const ZigzagDivider(color: Colors.blueGrey),
+                Gap(12.h),
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: List.generate(3, (index) {
+                        return Container(
+                          margin: EdgeInsets.only(bottom: 5.h),
+                          width: 150.w,
+                          height: 15.h,
+                          color: Colors.white,
+                        );
+                      }),
+                    ),
+                  ],
+                ),
+                Gap(10.h),
+                Divider(color: Colors.blueGrey, thickness: 2.r),
+                
+              ],
+            ).paddingSymmetric(
+              horizontal: AppConstants.bodyMinSymetricHorizontalPadding,
+              vertical: 16.h,
+            ),
+          ).paddingOnly(bottom: AppConstants.verticalSpacing),
         );
       },
     );

@@ -6,7 +6,7 @@ import 'package:hia/models/user.model.dart';
 import 'package:http/http.dart' as http;
 
 class UserService extends ChangeNotifier {
-  final String baseUrl = 'https://hiabackend-production.up.railway.app';
+  final String baseUrl = 'http://10.0.2.2:3030';
   
 
   Future<bool> verifyEmail(String email) async {

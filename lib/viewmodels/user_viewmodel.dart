@@ -29,7 +29,7 @@ class UserViewModel with ChangeNotifier {
    bool _isFavourite = false;  
     bool get isFavourite => _isFavourite;
 
- List<Food> _favouriteFood = [];
+ List<Food>? _favouriteFood ;
   List<Food>? get favouritefood => _favouriteFood;
 
   Food? _foodById ;
@@ -258,11 +258,11 @@ bool isAuthenticated() {
     await userService.addFoodsToFavourites(idFood, userId);
 
     // Check if the food is already in the favourites list
-    bool isAlreadyFavourite = _favouriteFood.any((food) => food.id == idFood);
+    bool isAlreadyFavourite = _favouriteFood!.any((food) => food.id == idFood);
 
     // Add food to the favourites list if it's not already there
     if (!isAlreadyFavourite && foodById != null) {
-      _favouriteFood.add(foodById!); 
+      _favouriteFood!.add(foodById!); 
       notifyListeners() ; 
     }
 
@@ -280,11 +280,11 @@ bool isAuthenticated() {
 
       await userService.removeFoodsFromFavourites(idFood, userId);
         // Check if the food is already in the favourites list
-    bool isAlreadyFavourite = _favouriteFood.any((food) => food.id == idFood);
+    bool isAlreadyFavourite = _favouriteFood!.any((food) => food.id == idFood);
 
     // Add food to the favourites list if it's not already there
     if (isAlreadyFavourite && foodById != null) {
-      _favouriteFood.remove(foodById!); 
+      _favouriteFood!.remove(foodById!); 
       notifyListeners() ; 
     }
 
@@ -299,6 +299,10 @@ bool isAuthenticated() {
     notifyListeners();
     try {
       _favouriteFood = await userService.getFavouriteFoodsByUserId(userId);
+      _favouriteFood!.forEach((food) {
+        _favouritesMap[food.id] = true;
+      });
+       
       notifyListeners();
     } catch (e) {
       Debugger.red('Failed to load favourite foods: $e');
