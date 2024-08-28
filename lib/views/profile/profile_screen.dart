@@ -1,7 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/authentication/sign_in.dart';
 import 'package:hia/views/foods/food_see_all_favourites.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
@@ -9,12 +6,7 @@ import 'package:hia/views/map/map_positions.dart';
 import 'package:hia/views/profile/edit_profile.dart';
 import 'package:hia/views/profile/order_tracking/order_history.dart';
 import 'package:hia/widgets/custom_dialog.dart';
-import 'package:hia/widgets/smart_scaffold.dart';
 
-import 'package:nb_utils/nb_utils.dart';
-import 'package:provider/provider.dart';
-
-import '../../constant.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -32,13 +24,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: Stack(
           children: [
             Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("images/hiaauthbgg.png"),
-                  fit: BoxFit.cover,
-                ),
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("images/hiaauthbgg.png"),
+                fit: BoxFit.cover,
               ),
             ),
+          ),
+          
             SingleChildScrollView(
               child: Column(
                 children: [
@@ -78,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         color: Colors.white,
                                       ),
                                     ),
-                                    errorWidget: (context, url, error) => Icon(Icons.error),
+                                    errorWidget: (context, url, error) => const Icon(Icons.error),
                                     fit: BoxFit.cover,
                                   ),
                                 ),

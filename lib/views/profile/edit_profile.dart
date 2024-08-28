@@ -2,6 +2,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hia/app/style/app_style.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/views/foodPreference/food_preferences_screen.dart';
@@ -68,14 +69,321 @@ class _EditProfileState extends State<EditProfile> {
 
 
 
-  
-
   @override
   Widget build(BuildContext context) {
-    return SmartScaffold(
-      resizeToAvoidBottomInset: true,
+    return Scaffold(
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("images/hiaauthbgg.png"),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Column(
+            children: [
+              AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.6),
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      icon: Image.asset('images/left-arrow.png',
+                          width: 18.w, height: 18.w),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                ),
+                title: Row(
+                  children: [
+                    Text(
+                      'My Profile',
+                      style: AppStyles.interboldHeadline5
+                          .medium()
+                          .withColor(Colors.white.withOpacity(0.9)),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 30.0),
+                      Container(
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30.0),
+                            topRight: Radius.circular(30.0),
+                          ),
+                          color: Colors.white,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Column(
+                            children: [
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Container(
+                                    width: 90.0,
+                                    height: 90.0,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.transparent,
+                                    ),
+                                    child: ClipOval(
+                                      child: CachedNetworkImage(
+                                        imageUrl: imageUrl ?? '',
+                                        placeholder: (context, url) => Shimmer.fromColors(
+                                          baseColor: Colors.grey[300]!,
+                                          highlightColor: Colors.grey[100]!,
+                                          child: Container(
+                                            height: 80.0,
+                                            width: 80.0,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 0.0,
+                                    right: 0.0,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          backgroundColor: kMainColor,
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                                          ),
+                                          context: context,
+                                          builder: (context) => const ProfileBottomSheet(),
+                                        );
+                                      },
+                                      child: Image.asset('images/editpicicon.png'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20.0),
+                              AppTextField(
+                                controller: firstNameController,
+                                cursorColor: kMainColor,
+                                textFieldType: TextFieldType.NAME,
+                                decoration: InputDecoration(
+                                  labelText: 'FirstName',
+                                  hintText: 'FirstName',
+                                  errorText: firstNameError,
+                                  border: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                                    borderSide: BorderSide(
+                                      color: kSecondaryColor,
+                                      width: 2.0,
+                                    ),
+                                  ),
+                                  labelStyle: const TextStyle(color: Color.fromARGB(255, 187, 187, 187)),
+                                  floatingLabelStyle: const TextStyle(color: kMainColor),
+                                ),
+                              ),
+                              const SizedBox(height: 12.0),
+                              AppTextField(
+                                controller: lastNameController,
+                                cursorColor: kMainColor,
+                                textFieldType: TextFieldType.NAME,
+                                decoration: InputDecoration(
+                                  labelText: 'LastName',
+                                  hintText: 'LastName',
+                                  errorText: lastNameError,
+                                  border: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                                    borderSide: BorderSide(
+                                      color: kSecondaryColor,
+                                      width: 2.0,
+                                    ),
+                                  ),
+                                  labelStyle: const TextStyle(color: Color.fromARGB(255, 187, 187, 187)),
+                                  floatingLabelStyle: const TextStyle(color: kMainColor),
+                                ),
+                              ),
+                              const SizedBox(height: 12.0),
+                              AppTextField(
+                                controller: emailController,
+                                cursorColor: kMainColor,
+                                textFieldType: TextFieldType.EMAIL,
+                                decoration: InputDecoration(
+                                  labelText: 'Email',
+                                  hintText: 'Email',
+                                  errorText: emailError,
+                                  border: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                                    borderSide: BorderSide(
+                                      color: kSecondaryColor,
+                                      width: 2.0,
+                                    ),
+                                  ),
+                                  labelStyle: const TextStyle(color: Color.fromARGB(255, 187, 187, 187)),
+                                  floatingLabelStyle: const TextStyle(color: kMainColor),
+                                ),
+                              ),
+                              const SizedBox(height: 12.0),
+                              AppTextField(
+                                enabled: false,
+                                controller: phoneController,
+                                cursorColor: kMainColor,
+                                textFieldType: TextFieldType.PHONE,
+                                decoration: InputDecoration(
+                                  labelText: 'Phone',
+                                  errorText: passwordError,
+                                  border: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                                    borderSide: BorderSide(
+                                      color: kSecondaryColor,
+                                      width: 2.0,
+                                    ),
+                                  ),
+                                  labelStyle: const TextStyle(color: Color.fromARGB(255, 187, 187, 187)),
+                                  floatingLabelStyle: const TextStyle(color: kTitleColor),
+                                ),
+                              ),
+                              const SizedBox(height: 20.0),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 20.0),
+                                    child: Text(
+                                      'My Preferences',
+                                      style: kTextStyle.copyWith(
+                                        color: kTitleColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20.0,
+                                      ),
+                                    ),
+                                  ),
+                                  Gap(10.h),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                                          child: Align(
+                                            alignment: Alignment.topLeft,
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Wrap(
+                                                spacing: 12.0,
+                                                runSpacing: 4.0,
+                                                children: userPreferences
+                                                    .map(
+                                                      (pref) => PreferenceChipElement(
+                                                        pref: pref,
+                                                      ),
+                                                    )
+                                                    .toList(),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.add),
+                                        onPressed: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => const FoodPreferencePage(),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 60.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    showLocationOptions(context);
+                                  },
+                                  child: Material(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                    color: Colors.white,
+                                    elevation: 3.0,
+                                    child: Container(
+                                      height: 55.0,
+                                      width: 200.0,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30.0),
+                                        border: Border.all(
+                                          color: kMainColor,
+                                          width: 2.0,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          const Icon(Icons.location_on, color: kMainColor),
+                                          const SizedBox(width: 8.0),
+                                          isLoadingPosition
+                                              ? const LoadingWidget(
+                                                  color: kMainColor,
+                                                  size: 10.0,
+                                                  spacing: 10.0,
+                                                )
+                                              : Text(
+                                                  'Update Position',
+                                                  style: kTextStyle.copyWith(
+                                                    color: kMainColor,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18.0,
+                                                  ),
+                                                ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
       bottomNavigationBar: Container(
-        height: 80.0, // Adjusted height for the bottom navigation bar
+        height: 80.0,
         color: kSecondaryColor,
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -88,7 +396,6 @@ class _EditProfileState extends State<EditProfile> {
                       isLoading = true;
                     });
                     final userViewModel = Provider.of<UserViewModel>(context, listen: false);
-                     
                     bool success = await userService.updateUserProfile(
                       userViewModel.userId!,
                       firstNameController.text,
@@ -121,9 +428,10 @@ class _EditProfileState extends State<EditProfile> {
                           : Text(
                               'Update Profile',
                               style: kTextStyle.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18.0),
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                              ),
                             ),
                     ),
                   ),
@@ -133,298 +441,7 @@ class _EditProfileState extends State<EditProfile> {
           ),
         ),
       ),
-      body:  SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("images/hiaauthbgg.png"),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    const Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(20.0),
-                          child: Padding(
-                            padding:  EdgeInsets.only(top: 20.0),
-                            child: BackRow(title: ""),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 30.0),
-                    Container(
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30.0),
-                          topRight: Radius.circular(30.0),
-                        ),
-                        color: Colors.white,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Column(
-                          children: [
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Container(
-                                  width: 90.0, 
-                                  height: 90.0,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.transparent,
-                                  ),
-                                  child: ClipOval(
-                                    child: CachedNetworkImage(
-                                      imageUrl:  imageUrl ?? '',
-                                      placeholder: (context, url) => Shimmer.fromColors(
-                                        baseColor: Colors.grey[300]!,
-                                        highlightColor: Colors.grey[100]!,
-                                        child: Container(
-                                          height: 80.0,
-                                          width: 80.0,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      errorWidget: (context, url, error) => const Icon(Icons.error),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 0.0,
-                                  right: 0.0,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                        backgroundColor: kMainColor,
-                                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
-                                        context: context,
-                                        builder: (context) => const ProfileBottomSheet(),
-                                      );
-                                    },
-                                    child: Image.asset('images/editpicicon.png'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 20.0),
-                            AppTextField(
-                              controller: firstNameController,
-                              cursorColor: kMainColor,
-                              textFieldType: TextFieldType.NAME,
-                              decoration: InputDecoration(
-                                labelText: 'FirstName',
-                                hintText: 'FirstName',
-                                errorText: firstNameError,
-                                border: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                                ),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                                  borderSide: BorderSide(
-                                    color: kSecondaryColor,
-                                    width: 2.0,
-                                  ),
-                                ),
-                                labelStyle: const TextStyle(color: Color.fromARGB(255, 187, 187, 187)),
-                                floatingLabelStyle: const TextStyle(color: kMainColor),
-                              ),
-                            ),
-                            const SizedBox(height: 12.0),
-                            AppTextField(
-                              controller: lastNameController,
-                              cursorColor: kMainColor,
-                              textFieldType: TextFieldType.NAME,
-                              decoration: InputDecoration(
-                                labelText: 'LastName',
-                                hintText: 'LastName',
-                                errorText: lastNameError,
-                                border: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                                ),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                                  borderSide: BorderSide(
-                                    color: kSecondaryColor,
-                                    width: 2.0,
-                                  ),
-                                ),
-                                labelStyle: const TextStyle(color: Color.fromARGB(255, 187, 187, 187)),
-                                floatingLabelStyle: const TextStyle(color: kMainColor),
-                              ),
-                            ),
-                            const SizedBox(height: 12.0),
-                            AppTextField(
-                              controller: emailController,
-                              cursorColor: kMainColor,
-                              textFieldType: TextFieldType.EMAIL,
-                              decoration: InputDecoration(
-                                labelText: 'Email',
-                                hintText: 'Email',
-                                errorText: emailError,
-                                border: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                                ),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                                  borderSide: BorderSide(
-                                    color: kSecondaryColor,
-                                    width: 2.0,
-                                  ),
-                                ),
-                                labelStyle: const TextStyle(color: Color.fromARGB(255, 187, 187, 187)),
-                                floatingLabelStyle: const TextStyle(color: kMainColor),
-                              ),
-                            ),
-                            const SizedBox(height: 12.0),
-                            AppTextField(
-                              enabled: false,
-                              controller: phoneController,
-                              cursorColor: kMainColor,
-                              textFieldType: TextFieldType.PHONE,
-                              decoration: InputDecoration(
-                                labelText: 'Phone',
-                                errorText: passwordError,
-                                border: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                                ),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                                  borderSide: BorderSide(
-                                    color: kSecondaryColor,
-                                    width: 2.0,
-                                  ),
-                                ),
-                                labelStyle: const TextStyle(color: Color.fromARGB(255, 187, 187, 187)),
-                                floatingLabelStyle: const TextStyle(color: kTitleColor),
-                              ),
-                            ),
-                            const SizedBox(height: 20.0),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 20.0),
-                                  child: Text(
-                                    'My Preferences',
-                                    style: kTextStyle.copyWith(
-                                      color: kTitleColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20.0,
-                                    ),
-                                  ),
-                                ),
-                                 Gap(10.h),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                                        child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: SingleChildScrollView(
-                                            scrollDirection: Axis.horizontal,
-                                            child: Wrap(
-                                              spacing: 12.0,
-                                              runSpacing: 4.0,
-                                              children: userPreferences
-                                                  .map(
-                                                    (pref) => PreferenceChipElement(
-                                                        pref: pref,
-                                                      ),
-                                                  )
-                                                  .toList(),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.add),
-                                      onPressed: () {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => const FoodPreferencePage(),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Padding(
-                            padding: const EdgeInsets.only(
-                                left: 10.0, right: 10.0, top: 60.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                showLocationOptions(context);
-                              },
-                              child: Material(
-                                borderRadius: BorderRadius.circular(30.0),
-                                color: Colors.white,
-                                elevation: 3.0, // Adds shadow to the container
-                                child: Container(
-                                  height: 55.0,
-                                  width: 200.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    border: Border.all(
-                                        color: kMainColor,
-                                        width:
-                                            2.0), // Border with kMainColor and width 2.0
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(Icons.location_on,
-                                          color: kMainColor), // Location icon
-                                      const SizedBox(
-                                          width:
-                                              8.0), // Space between icon and text
-                                      isLoadingPosition
-                                          ? const LoadingWidget(
-                                              color: kMainColor,
-                                              size: 10.0,
-                                              spacing: 10.0,
-                                            )
-                                          : Text(
-                                              'Update Position',
-                                              style: kTextStyle.copyWith(
-                                                color: kMainColor,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18.0,
-                                              ),
-                                            ),
-                                    ],
-                                  ),
-                                  
-                                ),
-                              ),
-                            ),
-                          ),
-                         
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-            
-          ),
-        ),
-      
     );
-     }
+  }
 }
+

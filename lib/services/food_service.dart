@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:hia/app/style/app_constants.dart';
 import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:hia/models/food.model.dart';
@@ -7,7 +8,7 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class FoodService {
-  final String baseUrl = 'http://10.0.2.2:3030';
+  final String baseUrl = AppConstants.baseUrl;
   static const String cacheKey = 'foodCache';
 
   Future<List<Food>> fetchFoods({int page = 1, int batch = 10}) async {

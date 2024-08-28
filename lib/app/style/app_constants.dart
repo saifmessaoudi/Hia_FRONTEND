@@ -5,6 +5,9 @@ import 'package:hia/views/home/exports/export_homescreen.dart';
 class AppConstants {
   AppConstants._();
 
+  //$ Default api url
+  static const String baseUrl = 'https://hiabackend-production.up.railway.app';
+
   //$ Default Radius
   static double defaultRadius = 3.r;
 

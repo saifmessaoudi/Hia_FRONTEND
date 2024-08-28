@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
+import 'package:hia/app/style/app_constants.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/services/user_service.dart';
@@ -329,6 +330,67 @@ class _SignInState extends State<SignIn> {
       ),
     );
   }
+Future<void> signInWithFacebook() async {
+    String token;
+    String email = '';
+    final authViewModel = Provider.of<UserViewModel>(context, listen: false);
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final LoginResult result = await FacebookAuth.instance.login();
+
+      if (result.status == LoginStatus.success) {
+        final AccessToken accessToken = result.accessToken!;
+        final accesToken = accessToken.tokenString;
+
+        final response = await http.post(
+          Uri.parse ('${AppConstants.baseUrl}/auth/facebook'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(<String, String>{
+            'accessToken': accesToken,
+          }),
+        );
+
+        final Map<String, dynamic>? responseData = jsonDecode(response.body);
+
+        if (responseData != null && responseData.containsKey('token')) {
+          token = responseData['token'];
+          email = responseData['user']["email"];
+
+          await authViewModel.loginWithFacebook(token);
+          setState(() {
+            isLoading = false;
+          });
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LocationPermission(),
+            ),
+          );
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PhoneAuth(email: email),
+            ),
+          );
+        }
+      } else {
+        Debugger.red('Message: ${result.message}');
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      Debugger.red('Error during Facebook login: $e');
+    }
+  }
 
   Widget _buildOrDivider() {
     return Row(
@@ -436,65 +498,5 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Future<void> signInWithFacebook() async {
-    String token;
-    String email = '';
-    final authViewModel = Provider.of<UserViewModel>(context, listen: false);
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      final LoginResult result = await FacebookAuth.instance.login();
-
-      if (result.status == LoginStatus.success) {
-        final AccessToken accessToken = result.accessToken!;
-        final accesToken = accessToken.tokenString;
-
-        final response = await http.post(
-          Uri.parse('http://10.0.2.2:3030/user/facebook-login'),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode(<String, String>{
-            'accessToken': accesToken,
-          }),
-        );
-
-        final Map<String, dynamic>? responseData = jsonDecode(response.body);
-
-        if (responseData != null && responseData.containsKey('token')) {
-          token = responseData['token'];
-          email = responseData['user']["email"];
-
-          await authViewModel.loginWithFacebook(token);
-          setState(() {
-            isLoading = false;
-          });
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const LocationPermission(),
-            ),
-          );
-        } else {
-          setState(() {
-            isLoading = false;
-          });
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PhoneAuth(email: email),
-            ),
-          );
-        }
-      } else {
-        Debugger.red('Message: ${result.message}');
-        setState(() {
-          isLoading = false;
-        });
-      }
-    } catch (e) {
-      Debugger.red('Error during Facebook login: $e');
-    }
-  }
+  
 }

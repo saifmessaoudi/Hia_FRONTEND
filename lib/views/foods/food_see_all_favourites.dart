@@ -91,34 +91,46 @@ class _FoodScreenFavouritesState extends State<FoodScreenFavourites> {
                               ),
                             ],
                           );
-                        } else  {
-                          return CustomScrollView(
-                            slivers: [
-                              SliverGrid(
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 0.9,
+                        } else if (userviewmodel.hasError) {
+                          return const Center(child: Text('Failed to load favourite foods'));
+                        } else if (userviewmodel.favouritefood!.isEmpty) {
+                          return const Center(child: Text('You have no favourite foods'));
+                        } else {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: CustomScrollView(
+                              slivers: [
+                                SliverGrid(
+                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 0.9,
+                                   mainAxisSpacing: 10.0,
+                                  ),
+                                  delegate: SliverChildBuilderDelegate(
+                                    (BuildContext context, int index) {
+                                      return Center(
+                                        child: FoodCard(
+                                          food: userviewmodel.favouritefood![index],
+                                        ).onTap(() {
+                                          // Handle tap
+                                        }),
+                                      );
+                                    },
+                                    childCount: userviewmodel.favouritefood!.length,
+                                  ),
                                 ),
-                                delegate: SliverChildBuilderDelegate(
-                                  (BuildContext context, int index) {
-                                    return Center(
-                                      child: FoodCard(
-                                        food: userviewmodel.favouritefood![index],
-                                      ).onTap(() {
-                                        // Handle tap
-                                      }),
-                                    );
-                                  },
-                                  childCount: userviewmodel.favouritefood!.length,
+                                const SliverToBoxAdapter(
+                                  child:  SizedBox(height: 20.0),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           );
                         }
                       },
                     ),
                   ),
                 ),
+                
               ],
             ),
           ],

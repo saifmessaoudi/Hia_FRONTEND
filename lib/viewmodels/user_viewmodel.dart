@@ -41,9 +41,12 @@ class UserViewModel with ChangeNotifier {
   String? _passwordError;
   String? get passwordError => _passwordError;
 
+  bool _hasError = false;
+  bool get hasError => _hasError;
 
 
- Map<String, bool> _favouritesMap = {}; // Map to track favorite status
+
+ final Map<String, bool> _favouritesMap = {}; // Map to track favorite status
 
   bool getFavouriteStatus(String foodId) {
     return _favouritesMap[foodId] ?? false;
@@ -247,23 +250,23 @@ bool isAuthenticated() {
 
   
 
- Future<void> addFoodsToFavourites(String idFood, String userId) async {
+Future<void> addFoodsToFavourites(String idFood, String userId) async {
   _favouritesMap[idFood] = true;
   notifyListeners();
   try {
     // Ensure the food is fetched before adding to favourites
-     await getFoodById(idFood); 
+    await getFoodById(idFood);
 
     // Add food to the user's favourites
     await userService.addFoodsToFavourites(idFood, userId);
 
     // Check if the food is already in the favourites list
-    bool isAlreadyFavourite = _favouriteFood!.any((food) => food.id == idFood);
+    bool isAlreadyFavourite = _favouriteFood?.any((food) => food.id == idFood) ?? false;
 
     // Add food to the favourites list if it's not already there
     if (!isAlreadyFavourite && foodById != null) {
-      _favouriteFood!.add(foodById!); 
-      notifyListeners() ; 
+      _favouriteFood?.add(foodById!);
+      notifyListeners();
     }
 
   } catch (e) {
@@ -280,7 +283,7 @@ bool isAuthenticated() {
 
       await userService.removeFoodsFromFavourites(idFood, userId);
         // Check if the food is already in the favourites list
-    bool isAlreadyFavourite = _favouriteFood!.any((food) => food.id == idFood);
+    bool isAlreadyFavourite = _favouriteFood?.any((food) => food.id == idFood) ?? false;
 
     // Add food to the favourites list if it's not already there
     if (isAlreadyFavourite && foodById != null) {
@@ -294,23 +297,23 @@ bool isAuthenticated() {
     }
   }
 
-   Future<void> getFavouriteFood(String userId) async {
-    _isLoading = true;
-    notifyListeners();
-    try {
-      _favouriteFood = await userService.getFavouriteFoodsByUserId(userId);
-      _favouriteFood!.forEach((food) {
-        _favouritesMap[food.id] = true;
-      });
-       
+  Future<void> getFavouriteFood(String userId) async {
+      _isLoading = true;
+      _hasError = false;
       notifyListeners();
-    } catch (e) {
-      Debugger.red('Failed to load favourite foods: $e');
-    }finally {
-      _isLoading = false;
-      notifyListeners();
+      try {
+        _favouriteFood = await userService.getFavouriteFoodsByUserId(userId);
+        for (var food in _favouriteFood!) {
+          _favouritesMap[food.id] = true;
+        }
+      } catch (e) {
+        Debugger.red('Failed to load favourite foods: $e');
+        _hasError = true;
+      } finally {
+        _isLoading = false;
+        notifyListeners();
+      }
     }
-  }
 
    Future<void> getFoodById(String foodid) async {
     try {

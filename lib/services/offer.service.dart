@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:hia/app/style/app_constants.dart';
 import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/models/offer.model.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class OfferService {
-  final String baseUrl = 'http://10.0.2.2:3030';
+  final String baseUrl = AppConstants.baseUrl;
   static const String cacheKey = 'offerCache';
   late Box<Offer> _box;
 

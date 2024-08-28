@@ -50,14 +50,40 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> with SingleTick
         builder: (context, cartViewModel, child) {
           return Stack(
             children: [
-              SmartScaffold(
+              Scaffold(
                 backgroundColor: AppColors.background,
                 body: Column(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 3.w, top: 22.h),
-                      child: const BackRow(title: "Order History"),
+                    AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    leading: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.6),
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: Image.asset('images/left-arrow.png',
+                              width: 18.w, height: 18.w),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
                     ),
+                    title: Row(
+                      children: [
+                        Text(
+                          'Order History',
+                          style: AppStyles.interboldHeadline5
+                              .medium()
+                              .withColor(Colors.white.withOpacity(0.9)),
+                        ),
+                      ],
+                    ),
+                  ),
                     Gap(AppConstants.verticalSpacing),
                     TabBar(
                       controller: _tabController,
@@ -65,9 +91,9 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> with SingleTick
                         Tab(text: "Pending Orders"),
                         Tab(text: "Completed Orders"),
                       ],
-                      labelColor: AppColors.secondaryBackground,
-                      unselectedLabelColor: AppColors.grey,
-                      indicatorColor: AppColors.secondaryBackground,
+                      labelColor: AppColors.selectTabColor,
+                      unselectedLabelColor: AppColors.offWhite,
+                      indicatorColor: AppColors.selectTabColor,
                     ),
                     Expanded(
                       child: TabBarView(
@@ -201,7 +227,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> with SingleTick
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(3, (index) {
+                      children: List.generate(1, (index) {
                         return Container(
                           margin: EdgeInsets.only(bottom: 5.h),
                           width: 150.w,

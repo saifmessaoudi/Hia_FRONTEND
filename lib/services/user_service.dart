@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:hia/app/style/app_constants.dart';
 import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hia/models/user.model.dart';
 import 'package:http/http.dart' as http;
 
 class UserService extends ChangeNotifier {
-  final String baseUrl = 'http://10.0.2.2:3030';
+  final String baseUrl = AppConstants.baseUrl;
   
 
   Future<bool> verifyEmail(String email) async {
@@ -421,8 +422,14 @@ Future<List<Food>> getFavouriteFoodsByUserId(String userId) async {
       headers: {'Content-Type': 'application/json'},
     );
 
+    Debugger.green('Response: ${response.body}');
+
     if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(response.body);
+      final responseBody = jsonDecode(response.body);
+      if (responseBody is Map<String, dynamic> && responseBody['message'] == 'Favorite food list is empty') {
+        return [];
+      }
+      List<dynamic> data = responseBody;
       return data.map((item) => Food.fromJsonWithoutEstablishment(item)).toList();
     } else {
       throw Exception('Failed to load favourite foods');

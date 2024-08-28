@@ -102,14 +102,6 @@ class Food extends HiveObject {
       establishment: Establishment.empty(), // Correct key name
 
     );
-  }  static double _parseDouble(dynamic value) {
-    if (value is double) {
-      return value;
-    } else if (value is Map<String, dynamic> && value.containsKey('\$numberDecimal')) {
-      return double.parse(value['\$numberDecimal']);
-    } else {
-      return double.parse(value.toString());
-    }
   }
 
 
