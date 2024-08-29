@@ -16,7 +16,6 @@ export 'package:hia/widgets/homescreen/filter/filter_chip.dart';
 export 'package:hia/widgets/homescreen/filter/filter_data.dart';
 export 'package:hia/widgets/homescreen/food_card.dart';
 export 'package:hia/widgets/smart_scaffold.dart';
-export 'package:hia/views/home/BookTableCard.dart';
 export 'package:hia/views/home/establishment_details.dart';
 export 'package:hia/views/home/establishment_screen.dart';
 export 'package:hia/views/home/establishment_search_delegate.dart';

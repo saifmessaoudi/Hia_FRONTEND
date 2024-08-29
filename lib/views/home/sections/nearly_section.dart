@@ -1,3 +1,4 @@
+import 'package:hia/views/home/BookTableCard.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 
 class NearlySection extends StatelessWidget {
@@ -74,7 +75,7 @@ class NearlySection extends StatelessWidget {
                         itemCount: establishmentViewModel.establishments.length,
                         itemBuilder: (_, i) {
                           return BookTableCard(
-                            restaurantData: establishmentViewModel.establishments[i],
+                            establishment: establishmentViewModel.establishments[i],
                             index: i,
                           ).onTap(
                             () {

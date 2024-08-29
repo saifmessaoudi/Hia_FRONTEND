@@ -6,7 +6,10 @@ class AppConstants {
   AppConstants._();
 
   //$ Default api url
-  static const String baseUrl = 'https://hiabackend-production.up.railway.app'; 
+ // static const String baseUrl = 'https://hiabackend-production.up.railway.app'; 
+  static const String baseUrl = 'http://10.0.2.2:3030'; 
+
+
   static double defaultRadius = 3.r;
   //$ Default Elevation
   static double defaultElevation = 8.r;
