@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hia/app/style/app_constants.dart';
+import 'package:hia/app/style/app_style.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:shimmer/shimmer.dart';
@@ -42,7 +44,7 @@ class EstablishmentCard extends StatelessWidget {
                               color: Colors.white,
                             ),
                           ),
-                          errorWidget: (context, url, error) => Icon(Icons.error),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
                         // Gradient Overlay at the bottom of the image
                         Positioned(
@@ -76,21 +78,18 @@ class EstablishmentCard extends StatelessWidget {
                         children: [
                           Text(
                             establishment.name,
-                            style: kTextStyle.copyWith(
-                                color: kTitleColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
+                            style: AppStyles.interregularTitle.medium().withColor(kTitleColor).withSize(16.sp)
                           ),
                           RichText(
                             text: TextSpan(
                               children: [
-                                const WidgetSpan(
-                                  child: Icon(
-                                    Icons.location_on_outlined,
-                                    color: kGreyTextColor,
-                                    size: 15.0,
+                                 WidgetSpan(
+                                  child: Image.asset(
+                                    'images/location_icon.png',
+                                    width: 20.0,
+                                    height: 20.0,
                                   ),
-                                ),
+                                  ),                              
                                 TextSpan(
                                   text: establishment.city,
                                   style: kTextStyle.copyWith(
@@ -112,18 +111,18 @@ class EstablishmentCard extends StatelessWidget {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: establishment.averageRating.toString(),
+                                  text: '(${establishment.reviews!.length})',
                                   style: kTextStyle.copyWith(
                                       color: kGreyTextColor),
                                 ),
                                 const WidgetSpan(
                                   child: SizedBox(width: 2.0),
                                 ),
-                                const WidgetSpan(
-                                  child: Icon(
-                                    Icons.star_rate_rounded,
-                                    color: Colors.amber,
-                                    size: 15.0,
+                                 WidgetSpan(
+                                  child: Image.asset(
+                                    'images/icon_rate1.png',
+                                    width: 20.0,
+                                    height: 20.0,
                                   ),
                                 ),
                               ],
@@ -136,7 +135,7 @@ class EstablishmentCard extends StatelessWidget {
                             establishment.isOpened ? 'Opened' : 'Closed',
                             style: kTextStyle.copyWith(
                               color: establishment.isOpened
-                                  ? Colors.green
+                                  ? kMainColor
                                   : Colors.red,
                               fontWeight: FontWeight.bold,
                             ),

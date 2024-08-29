@@ -179,11 +179,14 @@ class Establishment extends HiveObject {
     };
   }
 
-  String? get city {
+    String? get city {
     if (address == null) return null;
 
-    // Example regex to extract the city part from an address string
-    final RegExp cityRegex = RegExp(r'\b(?:[A-Z][a-z.-]+[ ]?)+\b');
+    // Regex to extract the city part from an address string (both English and Arabic)
+    final RegExp cityRegex = RegExp(
+      r'(?:(?:\d+\s*)?[A-Za-z.-]+\s*)+|[\u0621-\u064A\u0660-\u0669 ]+',
+      unicode: true,
+    );
     final match = cityRegex.firstMatch(address!);
     return match?.group(0);
   }

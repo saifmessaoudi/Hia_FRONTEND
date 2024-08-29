@@ -1,3 +1,4 @@
+import "package:hia/views/foods/food_see_all_favourites.dart";
 import "package:hia/views/home/exports/export_homescreen.dart";
 
 class PopularDealsSection extends StatelessWidget {
@@ -41,23 +42,12 @@ class PopularDealsSection extends StatelessWidget {
           child: Consumer<FoodViewModel>(
             builder: (context, foodViewModel, child) {
               if (foodViewModel.isLoading && foodViewModel.foods.isEmpty) {
-                return Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: SizedBox(
-                    height: 150, // Specify a fixed height for the ListView
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 5,
-                      itemBuilder: (_, __) => Container(
-                        width: 200,
-                        margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                    ),
+                return SizedBox(
+                  height: 245,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 5,
+                    itemBuilder: (_, __) => const ShimmerFoodCard(),
                   ),
                 );
               } else if (foodViewModel.foods.isEmpty) {
@@ -85,18 +75,7 @@ class PopularDealsSection extends StatelessWidget {
                     itemCount: foodViewModel.foods.length + (foodViewModel.isLoading ? 1 : 0),
                     itemBuilder: (_, i) {
                       if (i == foodViewModel.foods.length) {
-                        return Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            width: 200,
-                            margin: const EdgeInsets.symmetric(horizontal: 10.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                          ),
-                        );
+                        return const ShimmerFoodCard();
                       }
                       return GestureDetector(
                         onTap: () {
@@ -121,3 +100,4 @@ class PopularDealsSection extends StatelessWidget {
     );
   }
 }
+

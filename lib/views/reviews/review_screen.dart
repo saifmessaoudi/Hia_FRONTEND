@@ -6,8 +6,6 @@ import 'package:hia/app/style/app_constants.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hia/viewmodels/review.viewmodel.dart';
 import 'package:hia/views/reviews/review.dart';
-import 'package:hia/widgets/back_row.dart';
-
 import 'package:hia/app/style/app_style.dart';
 import 'package:hia/app/style/font_size.dart';
 import 'package:hia/app/style/widget_modifier.dart';
@@ -16,8 +14,6 @@ import 'package:hia/widgets/custom_toast.dart';
 import 'package:hia/widgets/styled_button.dart';
 
 import '../../app/style/app_colors.dart';
-
-
 
 class ReviewScreen extends StatelessWidget {
   final Food food;
@@ -33,32 +29,41 @@ class ReviewScreen extends StatelessWidget {
             backgroundColor: AppColors.background,
             body: Column(
               children: [
+                AppBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  leading: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.6),
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: Image.asset('images/left-arrow.png',
+                            width: 18.w, height: 18.w),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                  ),
+                  title: Row(
+                    children: [
+                      Text(
+                        "Reviews",
+                        style: AppStyles.interboldHeadline5
+                            .medium()
+                            .withColor(Colors.white.withOpacity(0.9)),
+                      ),
+                    ],
+                  ),
+                ),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, top: 15.h),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const BackRow(title: ''),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 15.h),
-                              child: Text(
-                                "${food.name}",
-                                style: AppStyles.interSemiBoldTextButton
-                                    .withSize(FontSizes.headline6),
-                              ),
-                            ),
-                          ],
-                        ),
                         Gap(20.h),
                         controller.isLoading
                             ? _buildLoadingShimmer()
@@ -182,28 +187,27 @@ class ReviewScreen extends StatelessWidget {
 
   Widget _buildReviews(ReviewViewModel controller) {
     return Column(
-      children: 
-      controller.reviewsProduct.isEmpty ?
-      [
-        Text(
-          "No reviews yet",
-          style: AppStyles.interSemiBoldTextButton
-              .medium()
-              .withColor(AppColors.grey)
-              .withSize(FontSizes.headline6),
-        ),
-      ]
-      :
-      List.generate(
-        controller.reviewsProduct.length,
-        (index) => Reviewmodel(
-          review: controller.reviewsProduct[index],
-        ),
-      ),
+      children: controller.reviewsProduct.isEmpty
+          ? [
+              Text(
+                "No reviews yet",
+                style: AppStyles.interSemiBoldTextButton
+                    .medium()
+                    .withColor(AppColors.grey)
+                    .withSize(FontSizes.headline6),
+              ),
+            ]
+          : List.generate(
+              controller.reviewsProduct.length,
+              (index) => Reviewmodel(
+                review: controller.reviewsProduct[index],
+              ),
+            ),
     );
   }
 
-  Widget _buildAddReviewButton(BuildContext context, ReviewViewModel controller) {
+  Widget _buildAddReviewButton(
+      BuildContext context, ReviewViewModel controller) {
     return StyledButton(
       onPressed: () {
         showDialog(
@@ -271,8 +275,7 @@ class ReviewScreen extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: AppColors.secondaryBackground,
                                     border: Border.all(
-                                        color: AppColors.background,
-                                        width: 1),
+                                        color: AppColors.background, width: 1),
                                     borderRadius: BorderRadius.circular(30),
                                   ),
                                   child: TextField(
@@ -304,8 +307,9 @@ class ReviewScreen extends StatelessWidget {
                                   Navigator.pop(context);
                                   showCustomToast(
                                     context,
-                                    "Your review has been added successfully",);
-                                },  
+                                    "Your review has been added successfully",
+                                  );
+                                },
                                 style: ButtonStyles.primary,
                                 title: 'Submit',
                               ),
@@ -340,10 +344,3 @@ class ReviewScreen extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
