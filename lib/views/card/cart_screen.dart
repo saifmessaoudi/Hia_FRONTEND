@@ -4,8 +4,8 @@ import 'package:hia/views/card/empty_card.dart';
 import 'package:hia/views/card/loading_order.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/widgets/cart_item_widget.dart';
-import 'package:hia/widgets/custom_toast.dart';
 import 'package:hia/widgets/shimmer_cart_item.dart';
+import 'package:lottie/lottie.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -51,7 +51,7 @@ class CartScreen extends StatelessWidget {
         return SmartScaffold(
           bottomNavigationBar: Card(
             elevation: 1.0,
-            color: const Color(0xFFF5F5F5),
+            color: Colors.white,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30.0),
@@ -137,21 +137,19 @@ class CartScreen extends StatelessWidget {
                             direction: DismissDirection.endToStart,
                             background: Container(
                               color: Colors.transparent,
-                              child: const Align(
+                              child:  Align(
                                 alignment: Alignment.centerRight,
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                                  child: Icon(Icons.delete, color: Colors.red, size: 30.0),
+                                  padding:const  EdgeInsets.symmetric(horizontal: 20.0),
+                                  child:Lottie.asset('images/delete_icon.json', height: 70.0, width: 70.0 , repeat: false),
                                 ),
                               ),
                             ),
                             onDismissed: (direction) {
                               if (item.food != null) {
                                 viewModel.removeItem(item.food!);
-                                showCustomToast(context, "${item.food!.name} removed from cart");
                               } else if (item.offer != null) {
                                 viewModel.removeItem(null, offer: item.offer);
-                                showCustomToast(context, "${item.offer!.name} removed from cart");
                               }
                             },
                             child: CartItemWidget(

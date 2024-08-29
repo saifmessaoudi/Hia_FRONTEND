@@ -22,7 +22,7 @@ class AppColors {
   static const Color inputColor = Color(0xFF1B2D51);
   static const Color blackTitleButton = Color(0xFF1B232A);
 
-  static const Color red = Color.fromARGB(255, 255, 97, 86);
+  static const Color red = Color(0xFFFF6156);
   static const Color orange = Color(0xFFFF6D00);
   static const Color sea = Color(0xFF00FFC5);
 

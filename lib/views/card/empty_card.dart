@@ -1,8 +1,7 @@
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hia/app/style/app_style.dart';
 import 'package:hia/views/home/home.dart';
-
 import '../../app/style/app_colors.dart';
 
 class EmptyCard extends StatelessWidget {
@@ -11,46 +10,71 @@ class EmptyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
+      body: Stack(
+        children: [
+          Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("images/hiaauthbgg.png"),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+          ),
+          Column(
             children: [
-              const Spacer(flex: 2),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: SvgPicture.string(
-                    emptyCatyIllustration,
-                    fit: BoxFit.scaleDown,
+              const SizedBox(height: 50.0),
+              Expanded(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration:const BoxDecoration(
+                    color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30.0),
+                            topRight: Radius.circular(30.0),
+                          ),
+                   
+                  ),
+                  child: Column(
+                    children: [
+                      const Spacer(flex: 2),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: SvgPicture.string(
+                            emptyCatyIllustration,
+                            fit: BoxFit.scaleDown,
+                          ),
+                        ),
+                      ),
+                      const Spacer(flex: 2),
+                      ErrorInfo(
+                        title: "Empty Cart!",
+                        description:
+                            "It seems like you haven't added anything to your cart yet. Let's find some great deals to fill it up!",
+                        btnText: "Discover Products",
+                        press: () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Home(initialIndex: 0),
+                            ),
+                            (route) => false,
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),
-              const Spacer(flex: 2),
-              ErrorInfo(
-                title: "Empty Cart!",
-                description:
-                    "It seems like you haven't added anything to your cart yet. Let's find some great deals to fill it up!",
-                // button: you can pass your custom button,
-                btnText: "Discover Products",
-                press: () {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const Home(initialIndex: 0),
-                              ),
-                              (route) => false,
-                            );                },
-              ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
 }
+
 class ErrorInfo extends StatelessWidget {
   const ErrorInfo({
     super.key,
@@ -89,19 +113,24 @@ class ErrorInfo extends StatelessWidget {
               description,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16 * 2.5),
-            button ??
+            const SizedBox(height: 40),
+            button ?? 
                 ElevatedButton(
                   onPressed: press,
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 48),
-                      backgroundColor: AppColors.background,
-                      foregroundColor: Colors.white,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)))),
-                  child: Text(btnText ?? "Retry".toUpperCase(),style: 
-                   AppStyles.interSemiBoldTextButton.copyWith(color: Colors.white).medium()
-                  ,),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 48),
+                    backgroundColor: AppColors.background,
+                    foregroundColor: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                    ),
+                  ),
+                  child: Text(
+                    btnText ?? "Retry".toUpperCase(),
+                    style: AppStyles.interSemiBoldTextButton
+                        .copyWith(color: Colors.white)
+                        .medium(),
+                  ),
                 ),
             const SizedBox(height: 16),
           ],

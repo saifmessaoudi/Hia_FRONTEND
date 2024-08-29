@@ -17,7 +17,6 @@ class EstablishmentSearchDelegate extends SearchDelegate<Establishment> {
       IconButton(
         icon: const Icon(Icons.clear),
         onPressed: () {
-          //if query not empty query = '' else pop context 
           query.isEmpty ? close(context, Establishment(
             id: '',
             name: '',
@@ -30,7 +29,7 @@ class EstablishmentSearchDelegate extends SearchDelegate<Establishment> {
             averageRating: 0,
             foods: [],
             isOpened: true,
-            reviews: [],  // Provide an empty list for the required 'reviews' parameter
+            reviews: [],  
           )) : query = '';
         },
       ),

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hia/app/style/app_colors.dart';
 import 'package:hia/app/style/app_constants.dart';
 import 'package:hia/app/style/app_style.dart';
 import 'package:hia/constant.dart';
@@ -10,7 +11,7 @@ import 'package:shimmer/shimmer.dart';
 class EstablishmentCard extends StatelessWidget {
   final Establishment establishment;
 
-  EstablishmentCard({required this.establishment});
+  const EstablishmentCard({super.key, required this.establishment});
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +104,7 @@ class EstablishmentCard extends StatelessWidget {
                     ),
                     const Spacer(),
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(4.0),
@@ -119,7 +120,12 @@ class EstablishmentCard extends StatelessWidget {
                                   child: SizedBox(width: 2.0),
                                 ),
                                  WidgetSpan(
-                                  child: Image.asset(
+                                  child: establishment.reviews!.length > 10 ? Image.asset(
+                                    'images/icon_rate2.png',
+                                    width: 20.0,
+                                    height: 20.0,
+                                  ): 
+                                   Image.asset(
                                     'images/icon_rate1.png',
                                     width: 20.0,
                                     height: 20.0,
@@ -129,25 +135,76 @@ class EstablishmentCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Text(
-                            establishment.isOpened ? 'Opened' : 'Closed',
-                            style: kTextStyle.copyWith(
-                              color: establishment.isOpened
-                                  ? kMainColor
-                                  : Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                        const SizedBox(height: 3.0),
+                        StatusChipOpenedClosed(status: establishment.isOpened ? 'Opened' : 'Closed'),
                       ],
+                      
                     ),
+                    
                   ],
                 )
               ],
             ),
           ),
         );
+  }
+}
+
+
+
+class StatusChipOpenedClosed extends StatelessWidget {
+  final String status;
+
+  const StatusChipOpenedClosed({
+    super.key,
+    required this.status,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    String icon;
+    Color textColor;
+    Color iconColor;
+
+    switch (status) {
+      case 'Opened':
+        icon = "open_icon";
+        textColor = AppColors.background;
+        break;
+      case 'Closed':
+        icon = "closed_icon";
+        textColor = AppColors.red;
+        break;
+      default:
+        icon = "pending-64";
+        textColor = Colors.orange;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: textColor, width: 1.0),
+        borderRadius: BorderRadius.circular(18.0),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            'images/$icon.png',
+            width: 16.w,
+            height: 16.w,
+          ),
+          const SizedBox(width: 8.0), // Space between icon and text
+          Text(
+            status,
+            style: TextStyle(
+              color: textColor, // Dynamic text color based on status
+              fontWeight: FontWeight.bold,
+              fontSize: 12.sp,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
