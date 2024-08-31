@@ -102,7 +102,7 @@ class FoodSearchDelegateEstablishment extends SearchDelegate<Food> {
         ],
       ),
       leading: food.image.isNotEmpty
-          ? Image.asset(
+          ? Image.network(
               food.image,
               width: 70.0, 
               height: 70.0,

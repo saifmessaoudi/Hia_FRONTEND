@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
 import 'package:flutter/rendering.dart';
@@ -198,35 +199,61 @@ class _LoadingScreenDialogState extends State<LoadingScreenDialog> {
       );
     }
 
-  Future<void> _saveLocalImage() async {
-    final viewModel = Provider.of<ReservationViewModel>(context, listen: false);
-    viewModel.setLoadingScreenshot(true);
-    if (await Permission.storage.request().isGranted) {
-      try {
-        await Future.delayed(const Duration(milliseconds: 1000));
+ Future<void> _saveLocalImage() async {
+  final viewModel = Provider.of<ReservationViewModel>(context, listen: false);
+  viewModel.setLoadingScreenshot(true);
 
-        RenderRepaintBoundary boundary = _globalKey.currentContext!
-            .findRenderObject() as RenderRepaintBoundary;
-        double pixelRatio =
-            MediaQuery.of(_globalKey.currentContext!).devicePixelRatio;
-        ui.Image image = await boundary.toImage(pixelRatio: pixelRatio);
-        ByteData? byteData =
-            await (image.toByteData(format: ui.ImageByteFormat.png));
-        if (byteData != null) {
-          final result = await ImageGallerySaver.saveImage(
-            byteData.buffer.asUint8List(),
-            name: 'screenshot',
-            isReturnImagePathOfIOS: true,
-          );
-          print(result);
-        } else {
-          print('ByteData is null');
-        }
-      } catch (e) {
-        print('Error saving screenshot: $e');
+  // Check if running on Android 13 or higher
+  if (Platform.isAndroid && (await _checkStoragePermission())) {
+    try {
+      await Future.delayed(const Duration(milliseconds: 1000));
+
+      RenderRepaintBoundary boundary = _globalKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
+      double pixelRatio =
+          MediaQuery.of(_globalKey.currentContext!).devicePixelRatio;
+      ui.Image image = await boundary.toImage(pixelRatio: pixelRatio);
+      ByteData? byteData =
+          await (image.toByteData(format: ui.ImageByteFormat.png));
+      if (byteData != null) {
+        final result = await ImageGallerySaver.saveImage(
+          byteData.buffer.asUint8List(),
+          name: 'screenshot',
+          isReturnImagePathOfIOS: true,
+        );
+        print(result);
+      } else {
+        print('ByteData is null');
+      }
+    } catch (e) {
+      print('Error saving screenshot: $e');
+    }
+  }
+
+  viewModel.setLoadingScreenshot(false);
+  viewModel.clearAll();
+}
+
+// Function to check and request storage permission
+Future<bool> _checkStoragePermission() async {
+  if (Platform.isAndroid) {
+    // Check Android version
+    if (await Permission.storage.isGranted) {
+      return true;
+    } else {
+      // For Android 13 and above, request READ_MEDIA_IMAGES permission
+      if (await Permission.storage.request().isGranted ||
+          await Permission.photos.request().isGranted ||
+          await Permission.mediaLibrary.request().isGranted ||
+          await Permission.accessMediaLocation.request().isGranted) {
+        return true;
+      } else {
+        // If permission is denied
+        print('Storage permission denied.');
+        return false;
       }
     }
-    viewModel.setLoadingScreenshot(false);
-    viewModel.clearAll();
   }
+  return false;
+}
 }

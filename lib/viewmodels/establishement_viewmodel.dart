@@ -83,6 +83,7 @@ class EstablishmentViewModel extends ChangeNotifier {
     _userViewModel.addListener(updateRecommendedEstablishments);
     _foodPreferenceProvider.addListener(updateRecommendedEstablishments);
     fetchEstablishments();
+    sortByDistance() ; 
   }
 
   Future<void> fetchEstablishments() async {
@@ -226,6 +227,8 @@ Future<void> sortByDistance() async {
           _calculateDistance(userLat, userLon, b.latitude, b.longitude);
       return distanceA.compareTo(distanceB);
     });
+      notifyListeners();
+
   } catch (e) {
       Debugger.red('Error sorting by distance: $e');
     } finally {

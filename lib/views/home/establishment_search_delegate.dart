@@ -60,7 +60,7 @@ class EstablishmentSearchDelegate extends SearchDelegate<Establishment> {
 
   Widget _buildEstablishmentList() {
     
-    List<Establishment> filteredEstablishments = establishmentViewModel.establishments?.where((establishment) {
+    List<Establishment> filteredEstablishments = establishmentViewModel.recommendedEstablishments.where((establishment) {
       return establishment.name.toLowerCase().contains(query.toLowerCase());
     }).toList() ?? [];
 
@@ -70,6 +70,8 @@ class EstablishmentSearchDelegate extends SearchDelegate<Establishment> {
   itemBuilder: (context, index) {
     final establishment = filteredEstablishments[index];
     return ListTile(
+            tileColor: Colors.white,
+
       title: Text(
         establishment.name,
         style: const TextStyle(

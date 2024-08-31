@@ -12,14 +12,14 @@ import 'package:provider/provider.dart';
 import '../../constant.dart';
 import 'home_screen.dart';
 
-class ProductScreen extends StatefulWidget {
-  const ProductScreen({Key? key}) : super(key: key);
+class RecommendedProductScreen extends StatefulWidget {
+  const RecommendedProductScreen({Key? key}) : super(key: key);
 
   @override
-  _ProductScreenState createState() => _ProductScreenState();
+  _RecommendedProductScreenState createState() => _RecommendedProductScreenState();
 }
 
-class _ProductScreenState extends State<ProductScreen> {
+class _RecommendedProductScreenState extends State<RecommendedProductScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +52,11 @@ class _ProductScreenState extends State<ProductScreen> {
                         }),
                       ),
                       Text(
-                        'Nearly Establishments',
+                        'Recommended Estiablishments',
                         style: kTextStyle.copyWith(
-                            color: Colors.white, fontSize: 18.0),
+                            color: Colors.white, fontSize: 16.0),
                       ),
-                       const SizedBox(width: 100,),
+                       const SizedBox(width: 40,),
             IconButton(
               icon: const Icon(Icons.search,color: Colors.white,),
               onPressed: () async {
@@ -93,14 +93,14 @@ class _ProductScreenState extends State<ProductScreen> {
                           childAspectRatio: 0.85,
                           crossAxisCount: 2,
                           children: List.generate(
-                            establishmentViewModel.establishments!.length,
+                            establishmentViewModel.recommendedEstablishments.length,
                             (index) => Center(
                               child: BookTableCardGrid(
-                                restaurantData: establishmentViewModel.establishments![index],
+                                restaurantData: establishmentViewModel.recommendedEstablishments[index],
                                 index: index,
                                  isGrid: true,
                               ).onTap(() {
-                                EstablishmentDetailsScreen(establishment: establishmentViewModel.establishments![index])
+                                EstablishmentDetailsScreen(establishment: establishmentViewModel.recommendedEstablishments[index])
                                     .launch(context);
                               }),
                             ),

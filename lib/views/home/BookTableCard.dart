@@ -84,8 +84,8 @@ class BookTableCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        restaurantData.name.length > 12
-                            ? '${restaurantData.name.substring(0, 12)}...'
+                        restaurantData.name.length > 15
+                            ? '${restaurantData.name.substring(0, 15)}...'
                             : restaurantData.name.toUpperCase(),
                         style: kTextStyle.copyWith(
                           color: kTitleColor,

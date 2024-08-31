@@ -1,4 +1,5 @@
 
+import "package:hia/views/home/Recommended_See_All.dart";
 import "package:hia/views/home/exports/export_homescreen.dart";
 
 class RecommendedSection extends StatelessWidget {
@@ -24,7 +25,7 @@ class RecommendedSection extends StatelessWidget {
                       'See all',
                       style: kTextStyle.copyWith(color: kGreyTextColor),
                     ).onTap(() {
-                      //const ProductScreen().launch(context);
+                      const RecommendedProductScreen().launch(context);
                     }),
                   ],
                 ),
