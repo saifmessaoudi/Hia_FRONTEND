@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:hia/models/reservation.model.dart';
 import 'package:hia/app/style/app_colors.dart';
 import 'package:hia/app/style/app_style.dart';
 import 'package:hia/app/style/font_size.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:hia/viewmodels/cart_viewmodel.dart';
+import 'package:hia/views/markets/market_detail_screen.dart';
 import 'package:hia/widgets/loading_scren_cart_order.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
@@ -91,6 +93,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                 return FastCachedImage(
                                   url:  widget.order.items[index].offer != null 
                                     ? widget.order.items[index].offer!.image 
+                                    : widget.order.items[index].product != null 
+                                    ? widget.order.items[index].product!.image 
                                     : widget.order.items[index].food!.image,
                                   fit: BoxFit.cover,
                                   width: double.infinity,
@@ -155,7 +159,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    widget.order.establishment?.name ??
+                                    widget.order.establishment?.name ?? widget.order.market?.name ?? ''
                                         'Order Detail',
                                     style: AppStyles.interSemiBoldTextButton
                                         .black()
@@ -165,32 +169,43 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                   ),
                                   const Gap(15),
                                   GestureDetector(
-                                    onTap: () {
-                                      final establishment =
-                                          establishmentViewModel.establishments
-                                              .firstWhere(
-                                                  (element) =>
-                                                      element.id ==
-                                                      widget.order.establishment
-                                                          ?.id);
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              EstablishmentDetailsScreen(
-                                                  establishment: establishment),
-                                        ),
-                                      );
-                                    },
-                                    child: Text(
-                                      'See establishment >',
-                                      style: AppStyles.interSemiBoldTextButton
-                                          .light()
-                                          .withSize(FontSizes.headline6)
-                                          .withColor(AppColors.offWhite),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
+  onTap: () {
+    if (widget.order.establishment != null) {
+      final establishment = establishmentViewModel.establishments.firstWhere(
+        (element) => element.id == widget.order.establishment?.id,
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EstablishmentDetailsScreen(
+            establishment: establishment,
+          ),
+        ),
+      );
+    } else if (widget.order.market != null) {
+      final market = widget.order.market; 
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MarketDetailScreen(
+            box: market!, 
+          ),
+        ),
+      );
+    }
+  },
+  child: Text(
+    widget.order.establishment != null 
+      ? 'See establishment >' 
+      : 'See market >',
+    style: AppStyles.interSemiBoldTextButton
+        .light()
+        .withSize(FontSizes.headline6)
+        .withColor(AppColors.offWhite),
+    textAlign: TextAlign.center,
+  ),
+),
+
                                 ],
                               ),
                             ),
@@ -295,7 +310,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     .withSize(FontSizes.title),
                               ),
                               TextSpan(
-                                text: "${widget.order.establishment?.name}",
+                                text: "${widget.order.establishment?.name ?? widget.order.market?.name ?? ''}",
                                 style: AppStyles.interSemiBoldTextButton
                                     .medium()
                                     .withColor(Colors.blueGrey)
@@ -328,10 +343,22 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
                       cartViewModel.setReOrderLoading(true);
                       cartViewModel.clearCart();
-                      await cartViewModel.addItems(
-                          widget.order.items.map((item) => item.food!).toList());
-                      await cartViewModel.overrideEstablishmentId(
-                          widget.order.establishment!.id);
+                     if (widget.order.items.isNotEmpty && widget.order.items.any((item) => item.food != null)) {
+  await cartViewModel.addItems(
+    widget.order.items.map((item) => item.food!).toList()
+  );
+
+  await cartViewModel.overrideEstablishmentId(
+    widget.order.establishment?.id ?? widget.order.market?.id ?? '',
+  );
+} else if (widget.order.items.isNotEmpty && widget.order.items.any((item) => item.product != null)){
+   await cartViewModel.addItemsProducts(
+    widget.order.items.map((item) => item.product!).toList()
+  );
+
+}
+
+                      
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.background,
@@ -498,7 +525,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           .withSize(FontSizes.headline6),
                     ),
                     TextSpan(
-                      text: item.offer != null ? item.offer!.name : item.food!.name,
+                      text: item.offer != null  ? item.offer!.name  : item.product != null ? item.product!.name : item.food!.name,
+
                       style: AppStyles.interSemiBoldTextButton
                           .medium()
                           .withColor(Colors.black)

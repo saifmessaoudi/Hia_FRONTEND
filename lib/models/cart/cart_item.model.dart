@@ -1,5 +1,6 @@
 import 'package:hia/models/food.model.dart';
 import 'package:hia/models/offer.model.dart';
+import 'package:hia/models/product.model.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
@@ -17,16 +18,20 @@ class CartItem extends HiveObject {
   final Offer? offer;
 
   @HiveField(3)
+  final Product? product;
+
+  @HiveField(4)
    String type;
 
 
 
-  CartItem({this.food, this.offer, this.type = "food", required this.quantity});
+  CartItem({this.food, this.offer, this.type = "food",this.product, required this.quantity});
 
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
       food: json['food'] != null ? Food.fromJson(json['food']) : null,
       offer: json['offer'] != null ? Offer.fromJson(json['offer']) : null,
+      product: json['product'] != null ? Product.fromJson(json['product']) : null,
       quantity: json['quantity'],
       type: json['type'] ?? "food",
     );
@@ -36,6 +41,7 @@ class CartItem extends HiveObject {
     return CartItem(
       food: json['food'] != null ? Food.fromJsonWithoutEstablishment(json['food']) : null,
       offer: json['offer'] != null ? Offer.fromJsonWithoutEtablishment(json['offer']) : null,
+      product: json['product'] != null ? Product.fromJsonWithoutMarket(json['product']) : null,
       quantity: json['quantity'],
     );
   }
@@ -46,7 +52,10 @@ class CartItem extends HiveObject {
       return formatter.format(food!.price);
     } else if (offer != null) {
       return formatter.format(offer!.price);
-    } else {
+    } else if (product != null) {
+      return formatter.format(product!.price);
+    }
+     else {
       return '0.000';
     }
   }
@@ -55,12 +64,13 @@ class CartItem extends HiveObject {
     return {
       'food': food?.toJson(),
       'offer': offer?.toJson(),
+      'product':product?.toJson() ,
       'quantity': quantity,
       'type':type
     };
   }
 
   bool isValid() {
-    return (food != null || offer != null) && (food == null || offer == null);
+    return (food != null || offer != null || product != null) && (food == null || offer == null || product == null);
   }
 }

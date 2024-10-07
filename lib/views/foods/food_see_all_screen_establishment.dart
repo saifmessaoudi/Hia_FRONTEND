@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hia/models/establishement.model.dart';
+import 'package:hia/models/market.model.dart';
 import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:hia/viewmodels/food_viewmodel.dart';
 import 'package:hia/views/foods/food_search_delegate.dart';
@@ -11,7 +12,7 @@ import '../../constant.dart';
 class FoodSeeAllScreenEstablishment extends StatefulWidget {
   const FoodSeeAllScreenEstablishment({required this.product});
 
-    final Establishment product;
+    final Market product;
 
 
   @override

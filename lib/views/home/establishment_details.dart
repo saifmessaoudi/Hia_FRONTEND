@@ -339,11 +339,11 @@ Expanded(
                       'See all',
                       style: kTextStyle.copyWith(color: kGreyTextColor),
                     ).onTap(() {
-          Navigator.of(context).push(
+         /* Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => FoodSeeAllScreenEstablishment(product: widget.product),
             ),
-          );
+          );*/
                    }),
                   ],
                 ),

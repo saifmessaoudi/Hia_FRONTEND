@@ -7,7 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class EstablishmentService {
-  final String baseUrl = 'http://192.168.170.145:3030';
+  final String baseUrl = 'http://192.168.101.145:3030';
   static const String cacheKey = 'establishmentCache';
 
   Future<List<Establishment>> fetchEstablishments() async {
@@ -17,6 +17,7 @@ class EstablishmentService {
       List<Establishment> establishments = data.map((e) {
         return Establishment.fromJson(e as Map<String, dynamic>);
       }).toList();
+     
       await cacheData(establishments);
       Debugger.green('Establishments fetched successfully');
       return establishments;
@@ -59,6 +60,8 @@ Future <List<Establishment>> getAllEstablishments() async {
         List<Establishment> establishments = body
             .map((dynamic item) => Establishment.fromJson(item))
             .toList();
+             print("//////////////////////////////// ESTABLISHMENTS//////////////////////") ; 
+      print(establishments) ; 
         return establishments;
       } else {
         throw Exception('Failed to load establishments');

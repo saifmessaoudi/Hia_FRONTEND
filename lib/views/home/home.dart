@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/viewmodels/cart_viewmodel.dart';
 import 'package:hia/views/card/cart_screen.dart';
+import 'package:hia/views/markets/market_screen.dart';
 import 'package:hia/views/offers/fetch_offers.dart';
 import 'package:hia/views/profile/profile_screen.dart';
 import 'package:hia/widgets/smart_scaffold.dart';
@@ -28,7 +29,7 @@ class _HomeState extends State<Home> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    //FeaturedScreen() ,
+    MarketsScreen() ,
     CartScreen(),
     OffersScreen(),
     ProfileScreen(),
@@ -94,10 +95,10 @@ class _HomeState extends State<Home> {
                       icon: Icon(Icons.home_outlined),
                       label: 'Home',
                     ),
-                     /* const BottomNavigationBarItem(
+                      const BottomNavigationBarItem(
                       icon: Icon(FontAwesomeIcons.store),
-                      label: 'Local',
-                    ),*/
+                      label: 'Market',
+                    ),
                     BottomNavigationBarItem(
                       icon: Stack(
                         children: [

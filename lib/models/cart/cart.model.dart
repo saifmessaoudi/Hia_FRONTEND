@@ -2,6 +2,8 @@ import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/models/cart/cart_item.model.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hia/models/offer.model.dart';
+import 'package:hia/models/product.model.dart';
+import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hive/hive.dart';
 
 part 'cart.model.g.dart';
@@ -21,7 +23,7 @@ class Cart extends HiveObject {
       items: (json['items'] as List<dynamic>)
           .map((e) => CartItem.fromJson(e as Map<String, dynamic>))
           .toList(),
-      establishmentId: json['establishmentId'] as String?,
+      establishmentId: json['establishmentId'] as String? ,
     );
   }
 
@@ -37,10 +39,11 @@ class Cart extends HiveObject {
     save();
   }
 
- Future<bool> addItem(Food? food, int quantity, {Offer? offer}) async {
+ Future<bool> addItem(Food? food, int quantity, {Offer? offer , Product? product}) async {
+  Debugger.red(product?.market!.id);
   try {
-    if (food ==null && offer == null) {
-      Debugger.red('Cannot add item without food or offer');
+    if (food ==null && offer == null && product == null) {
+      Debugger.red('Cannot add item without food or offer or product');
       return false;
     }
     
@@ -70,7 +73,31 @@ class Cart extends HiveObject {
       Debugger.blue('Added new item: ${food.name}, quantity: $quantity');
     }
      }
-     else if (offer !=null){
+     else if (product !=null){
+      if (items.isEmpty) {
+      establishmentId = product.market!.id;
+      Debugger.blue('Market ID: $establishmentId');
+    }
+
+    if (establishmentId != product.market!.id) {
+      Debugger.red('Cannot add item from a different market');
+      return false;
+    }
+
+    // Find the index of the existing item
+    int existingIndex = items.indexWhere((item) => item.product!.id == product.id);
+
+    if (existingIndex != -1) {
+      // Update the quantity of the existing item
+      items[existingIndex].quantity += quantity;
+      Debugger.blue('Updated existing item quantity: ${items[existingIndex].quantity}');
+    }
+      
+      items.add(CartItem(food: null, quantity: quantity , offer: null , product: product));
+      Debugger.blue('Added new item: ${product.name}, quantity: $quantity');
+    
+     }
+      else if (offer !=null){
       if (items.isEmpty) {
       establishmentId = offer.etablishment.id;
       Debugger.blue('Establishment ID: $establishmentId');
@@ -84,6 +111,7 @@ class Cart extends HiveObject {
       items.add(CartItem(food: null, quantity: quantity , offer: offer));
       Debugger.blue('Added new item: ${offer.name}, quantity: $quantity');
      }
+           
     save(); // Save the updated cart
     return true;
   } catch (error) {
@@ -99,11 +127,12 @@ void clearCart() {
 }
 
 
-    void removeItem(Food? food, {Offer? offer}) {
-      if (food != null && offer != null) {
+    void removeItem(Food? food, {Offer? offer,Product? product}) {
+      if (food != null && offer != null && product != null) {
         items.removeWhere((item) => 
           (item.food != null && item.food!.id == food.id) || 
-          (item.offer != null && item.offer!.id == offer.id)
+          (item.offer != null && item.offer!.id == offer.id) ||
+          (item.product != null && item.product!.id == product.id)
         );
       } 
       else if (food != null) {
@@ -111,6 +140,9 @@ void clearCart() {
       } 
       else if (offer != null) {
         items.removeWhere((item) => item.offer != null && item.offer!.id == offer.id);
+      }
+      else if (product != null) {
+        items.removeWhere((item) => item.product != null && item.product!.id == product.id);
       }
     
       if (items.isEmpty) {
@@ -120,7 +152,7 @@ void clearCart() {
       save();
     }
 
-  void updateItemQuantity(Food? food, int quantity , {Offer? offer}) {
+  void updateItemQuantity(Food? food, int quantity , {Offer? offer,Product? product}) {
     if (food != null){
       int index = items.indexWhere((item) => item.food!.id == food.id);
     if (index != -1) {
@@ -129,6 +161,13 @@ void clearCart() {
     }
     }else if (offer != null){
       int index = items.indexWhere((item) => item.offer!.id == offer.id);
+    if (index != -1) {
+      items[index].quantity = quantity;
+      save();
+    }
+    }
+    else if (product != null){
+      int index = items.indexWhere((item) => item.product!.id == product.id);
     if (index != -1) {
       items[index].quantity = quantity;
       save();
@@ -145,6 +184,9 @@ void clearCart() {
         return total + (item.food!.price * item.quantity);
       } else if (item.offer != null) {
         return total + (item.offer!.price * item.quantity);
+      }
+      else if (item.product != null) {
+        return total + (item.product!.price * item.quantity);
       }
       return total;
     });

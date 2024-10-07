@@ -127,10 +127,10 @@ class CartScreen extends StatelessWidget {
                         itemCount: cart.items.length,
                         itemBuilder: (context, index) {
                           var item = cart.items[index];
-                          var key = item.food?.id ?? item.offer?.id ?? '';
-                          var name = item.food?.name ?? item.offer?.name ?? '';
-                          var imageUrl = item.food?.image ?? item.offer?.image ?? '';
-                          var price = item.food?.price ?? item.offer?.price ?? 0.0;
+                          var key = item.food?.id ?? item.offer?.id ?? item.product?.id ?? '';
+                          var name = item.food?.name ?? item.offer?.name ?? item.product?.name ?? '';
+                          var imageUrl = item.food?.image ?? item.offer?.image ?? item.product?.image ?? '';
+                          var price = item.food?.price ?? item.offer?.price ?? item.product?.price ?? 0.0;
 
                           return Dismissible(
                             key: Key(key),
@@ -153,6 +153,10 @@ class CartScreen extends StatelessWidget {
                                 viewModel.removeItem(null, offer: item.offer);
                                 showCustomToast(context, "${item.offer!.name} removed from cart");
                               }
+                              else if (item.product != null) {
+                                viewModel.removeItem(null, offer : null , product: item.product);
+                                showCustomToast(context, "${item.product!.name} removed from cart");
+                              }
                             },
                             child: CartItemWidget(
                               imageUrl: imageUrl,
@@ -161,16 +165,22 @@ class CartScreen extends StatelessWidget {
                               quantity: item.quantity,
                               onIncrease: () {
                                 if (item.food != null) {
-                                  viewModel.updateItemQuantity(item.food!, item.quantity + 1);
+                                  viewModel.updateItemQuantity(item.food!, item.quantity + 1,offer: null,product: null);
                                 } else if (item.offer != null) {
                                   viewModel.updateItemQuantity(null, item.quantity + 1, offer: item.offer!);
+                                }
+                                else if (item.product != null) {
+                                  viewModel.updateItemQuantity(null, item.quantity + 1, offer: null,product: item.product);
                                 }
                               },
                               onDecrease: () {
                                 if (item.food != null) {
-                                  viewModel.updateItemQuantity(item.food!, item.quantity - 1);
+                                  viewModel.updateItemQuantity(item.food!, item.quantity - 1,offer: null,product: null);
                                 } else if (item.offer != null) {
-                                  viewModel.updateItemQuantity(null, item.quantity - 1, offer: item.offer!);
+                                  viewModel.updateItemQuantity(null, item.quantity - 1, offer: item.offer!,product: null);
+                                }
+                                 else if (item.product != null) {
+                                  viewModel.updateItemQuantity(null, item.quantity - 1, offer: null,product: item.product);
                                 }
                               },
                             ),

@@ -208,7 +208,7 @@ class _HistoryItem extends StatelessWidget {
                       color: Colors.white,
                     ),
                     child: FastCachedImage(
-                      url: order.establishment?.image ?? "",
+                     url: order.establishment?.image ?? order.market?.image ?? "",
                       fit: BoxFit.cover,
                       width: 40.w,
                       height: 40.h,
@@ -318,8 +318,20 @@ class _HistoryItem extends StatelessWidget {
                       final cartViewModel = Provider.of<CartViewModel>(context, listen: false);
                       cartViewModel.setReOrderLoading(true);
                       cartViewModel.clearCart();
-                      await cartViewModel.addItems(order.items.map((item) => item.food!).toList());
-                      await cartViewModel.overrideEstablishmentId(order.establishment!.id);
+                       if (order.items.isNotEmpty && order.items.any((item) => item.food != null)) {
+  await cartViewModel.addItems(
+    order.items.map((item) => item.food!).toList()
+  );
+
+  await cartViewModel.overrideEstablishmentId(
+    order.establishment?.id ?? order.market?.id ?? '',
+  );
+} else if (order.items.isNotEmpty && order.items.any((item) => item.product != null)){
+   await cartViewModel.addItemsProducts(
+    order.items.map((item) => item.product!).toList()
+  );
+
+}
                       Future.delayed(const Duration(seconds: 2), () {
                         cartViewModel.setReOrderLoading(false);
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const CartScreen()));

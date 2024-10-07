@@ -36,7 +36,7 @@ class _LoadingScreenDialogState extends State<LoadingScreenDialog> {
   void _addReservation() async {
     final cartViewModel = Provider.of<CartViewModel>(context, listen: false);
     final cartItems = cartViewModel.cart?.items ?? [];
-    final establishmentId = cartViewModel.cart?.establishmentId;
+    final establishmentId = cartViewModel.cart?.establishmentId ?? '';
     final userId =
         Provider.of<UserViewModel>(context, listen: false).userData!.id;
 
@@ -46,12 +46,16 @@ class _LoadingScreenDialogState extends State<LoadingScreenDialog> {
     } else if (item.offer != null) {
       item.type = 'offer';
     }
+    else if (item.product != null) {
+      item.type = 'product';
+    }
+    
     return item;
   }).toList();
 
     // Create the reservation data
     final reservationData = Reservation(
-      etablishmentId: establishmentId!,
+      etablishmentId: establishmentId ?? '',
       userId: userId,
       items: updatedItems,
     );

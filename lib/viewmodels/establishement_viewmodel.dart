@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:hia/viewmodels/market_viewmodel.dart';
+import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:latlong2/latlong.dart' as latLng;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +19,10 @@ class EstablishmentViewModel extends ChangeNotifier {
   final EstablishmentService _service = EstablishmentService();
   List<Establishment> _establishments = [];
   List<Establishment> get establishments => _establishments;
+  
 
 
+ UserViewModel _userViewModel = UserViewModel();
    List<MapMarker> _markers = [];
   List<MapMarker> get markers => _markers;
 
@@ -27,7 +31,7 @@ class EstablishmentViewModel extends ChangeNotifier {
   bool _isSorting = false;
     bool _isCalculating = false;
     // ignore: prefer_final_fields
-    UserViewModel _userViewModel = UserViewModel();
+   
   final FoodPreferenceProvider _foodPreferenceProvider;
 
   String? _address;
@@ -66,7 +70,7 @@ class EstablishmentViewModel extends ChangeNotifier {
       updateMarkers(_establishments) ; 
       updateRecommendedEstablishments();
       calculateAllDistances();
-      await sortByDistance();
+       await sortByDistance();
     } catch (e) {
       Debugger.red('Error fetching establishments: $e');
       // Handle error appropriately here (e.g., show a message to the user)

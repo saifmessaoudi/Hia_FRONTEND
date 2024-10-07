@@ -1,20 +1,29 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hia/models/cart/cart.model.dart';
 import 'package:hia/models/cart/cart_item.model.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:hia/models/food.model.dart';
+import 'package:hia/models/market.model.dart';
+import 'package:hia/models/market.model.g.dart';
 import 'package:hia/models/offer.model.dart';
+import 'package:hia/models/product.model.dart';
+import 'package:hia/models/product.model.g.dart';
 import 'package:hia/models/user.model.dart';
+import 'package:hia/services/notification_service.dart';
+import 'package:hia/services/websocket_service.dart';
 import 'package:hia/utils/connectivity_manager.dart';
 import 'package:hia/utils/navigation_service.dart';
 import 'package:hia/viewmodels/cart_viewmodel.dart';
 import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:hia/viewmodels/food_viewmodel.dart';
 import 'package:hia/viewmodels/home/navigation_provider.dart';
+import 'package:hia/viewmodels/market_viewmodel.dart';
 import 'package:hia/viewmodels/offer.viewmodel.dart';
+import 'package:hia/viewmodels/product_viewmodel.dart';
 import 'package:hia/viewmodels/reservation_viewmodel.dart';
 import 'package:hia/viewmodels/review.viewmodel.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
@@ -42,17 +51,30 @@ void main() async {
   Hive.registerAdapter(CartAdapter());
   Hive.registerAdapter(ReviewAdapter());
   Hive.registerAdapter(UserAdapter());
+  Hive.registerAdapter(MarketAdapter()) ; 
+  Hive.registerAdapter(ProductAdapter()) ; 
 
   await Hive.openBox<Food>('foodBox');
   await Hive.openBox<Establishment>('establishmentsBox');
   await Hive.openBox<Offer>('offerBox');
   await Hive.openBox<Cart>('cartBox');
   await Hive.openBox<CartItem>('cartItemBox');
+  await Hive.openBox<Market>('marketsBox') ; 
+  await Hive.openBox<Product>('productBox') ; 
   
  
 
-  
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+       
 
+await NotificationService().requestNotificationPermission();
+
+     
+  final webSocketService = WebSocketService();
+  webSocketService.connect(); // Connect to WebSocket when the app starts
   runApp(
     MultiProvider(
       providers: [
@@ -64,6 +86,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => QuantityProvider()),
 
         ChangeNotifierProvider(create: (_) => UserViewModel()),
+        ChangeNotifierProvider(create: (_) => ProductViewModel()),
         ChangeNotifierProvider(
           create: (context) => SplashViewModel(Provider.of<UserViewModel>(context, listen: false)),
         ),
@@ -73,6 +96,11 @@ void main() async {
         ),
         ChangeNotifierProvider(create: (context) => EstablishmentViewModel( Provider.of<UserViewModel>(context, listen: false), Provider.of<FoodPreferenceProvider>(context, listen: false))),
         ChangeNotifierProvider(create: (context) => FoodViewModel(Provider.of<UserViewModel>(context, listen: false))),
+        ChangeNotifierProvider(
+          create: (context) => MarketViewModel(
+            Provider.of<UserViewModel>(context, listen: false),  // Passing the UserViewModel dependency
+          ),
+        ),
         ChangeNotifierProvider(create: (context) => OfferViewModel()),
         ChangeNotifierProxyProvider<UserViewModel, FoodPreferenceProvider>(
           create: (context) => FoodPreferenceProvider(context.read<UserViewModel>()),

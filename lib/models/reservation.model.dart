@@ -1,5 +1,6 @@
 import 'package:hia/models/cart/cart_item.model.dart';
 import 'package:hia/models/establishement.model.dart';
+import 'package:hia/models/market.model.dart';
 import 'package:intl/intl.dart';
 
 class Reservation {
@@ -10,12 +11,15 @@ class Reservation {
   final String? id;
   final DateTime? date;
   final Establishment? establishment;
+  final Market? market;
+
   final String? status;
   final double? totalPrice;
 
   Reservation({
     required this.userId,
     this.etablishmentId,
+    this.market, 
     required this.items,
     this.codeReservation,
     this.id,
@@ -28,7 +32,7 @@ class Reservation {
   Map<String, dynamic> toJson() {
     return {
       'userId': userId,
-      'etablishmentId': etablishmentId,
+      'etablishmentId': etablishmentId ?? market!.id,
       'items': items.map((item) => item.toJson()).toList(),
     };
   }
@@ -45,6 +49,10 @@ class Reservation {
       establishment: json['etablishment'] != null &&
               json['etablishment'] is Map<String, dynamic>
           ? Establishment.fromJsonWithoutFoods(json['etablishment'])
+          : null,
+      market: json['market'] != null &&
+              json['market'] is Map<String, dynamic>
+          ? Market.fromJsonWithoutProducts(json['market'])
           : null,
       status: json['status'],
       totalPrice: json['totalPrice'] != null

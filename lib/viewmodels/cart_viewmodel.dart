@@ -3,6 +3,7 @@ import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/models/cart/cart.model.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hia/models/offer.model.dart';
+import 'package:hia/models/product.model.dart';
 import 'package:hive/hive.dart';
 
 class CartViewModel extends ChangeNotifier {
@@ -36,9 +37,9 @@ class CartViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> addItem(Food? food, int quantity, {Offer? offer})async {
+  Future<bool> addItem(Food? food, int quantity, {Offer? offer , Product? product} )async {
     try {
-        bool isAdded = await _cart?.addItem(food, quantity, offer: offer) ?? false;
+        bool isAdded = await _cart?.addItem(food, quantity, offer: offer,product: product) ?? false;
         return isAdded;
     }catch (e){
       Debugger.red('Error adding item to cart: $e');
@@ -46,14 +47,26 @@ class CartViewModel extends ChangeNotifier {
     }
   }
   
- void removeItem(Food? food , {Offer? offer}) {
-    _cart?.removeItem(food, offer: offer);
+ void removeItem(Food? food , {Offer? offer,Product? product}) {
+    _cart?.removeItem(food, offer: offer,product: product
+    );
     notifyListeners();
  }
 
  //update the quantity of the item
-  void updateItemQuantity(Food? food, int quantity, {Offer? offer}) {
-    _cart?.updateItemQuantity(food, quantity);
+  void updateItemQuantity(Food? food, int quantity, {Offer? offer,Product? product}) {
+    if(food != null){
+    _cart?.updateItemQuantity(food, quantity,offer: null,product: null);
+    }
+    else if(offer != null){
+    _cart?.updateItemQuantity(null, quantity,offer: offer,product: null);
+
+    }
+    else if(product != null){
+    _cart?.updateItemQuantity(null, quantity,offer: null,product: product);
+
+    }
+
     notifyListeners();
   }
 
@@ -66,11 +79,23 @@ class CartViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future <void> addItems (List<Food> foods) async {
+  Future <void> addItems (List<Food> foods , {Offer? offer}) async {
+      print (foods);
+      print(offer);
+      foods.forEach((food) {
+        _cart?.addItem(food, 1, offer: offer);
+      });
+      notifyListeners();
+  }
+
+  Future <void> addItemsProducts (List<Product> products) async {
       
-    for (var food in foods) {
-      await addItem(food, 1);
-    }
+      
+    for (var product in products) {
+      await addItem(null, 1,offer: null,product: product) ;
+    
+      }
+      
   }
 
   Future<void> overrideEstablishmentId(String id) async {

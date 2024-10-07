@@ -1,5 +1,6 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hia/viewmodels/market_viewmodel.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/views/home/sections/nearly_section.dart';
 import 'package:hia/views/location/map_screen.dart';
@@ -24,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Provider.of<EstablishmentViewModel>(context, listen: false)
               .refreshEstablishments();
           Provider.of<OfferViewModel>(context, listen: false).refreshOffers();
+          Provider.of<MarketViewModel>(context, listen: false).refreshMarkets() ; 
         },
         child: SingleChildScrollView(
           child: Column(

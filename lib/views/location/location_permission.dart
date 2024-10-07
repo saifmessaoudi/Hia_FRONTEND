@@ -170,7 +170,7 @@ Future<void> requestLocationPermission() async {
                         Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Text(
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nec enim pellentesque aliquam auctor fringilla risus. ',
+                            'Enter your location or manually select a location to find nearby establishments ',
                             textAlign: TextAlign.center,
                             style: kTextStyle.copyWith(
                               color: kGreyTextColor,

@@ -134,7 +134,7 @@ class Food extends HiveObject {
         reviews: (json['reviews'] as List<dynamic>?)
             ?.map((e) => Review.fromJsonWithoutUser(e as Map<String, dynamic>))
             .toList(),
-        establishment: Establishment.fromJsonWithoutFoods(json['etablishment']),
+        establishment: Establishment.fromJson(json['etablishment']),
       );
     }
 

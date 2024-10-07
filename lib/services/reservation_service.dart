@@ -4,7 +4,7 @@ import 'package:hia/models/reservation.model.dart';
 import 'package:http/http.dart' as http;
 
 class ReservationService {
-  final String baseUrl = 'http://192.168.170.145:3030';
+  final String baseUrl = 'http://192.168.101.145:3030';
 
   Future<String> addReservation(Reservation reservation) async {
     final response = await http.post(

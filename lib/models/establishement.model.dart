@@ -134,32 +134,46 @@ class Establishment extends HiveObject {
       preferences: (json['preferences'] as List<dynamic>?)?.map((e) => e as String).toList(),
       reviews: (json['reviews'] as List<dynamic>?)
           ?.map((e) => Review.fromJson(e as Map<String, dynamic>))
-          .toList(),
+          .toList() ?? [],
     );
   }
 
   factory Establishment.fromJson(Map<String, dynamic> json) {
-    return Establishment(
-      id: json['_id'] as String,
-      name: json['name'] as String,
-      description: json['description'] as String?,
-      image: json['image'] as String?,
-      latitude: (json['latitude'] as num).toDouble(),
-      longitude: (json['langitude'] as num).toDouble(),
-      address: json['address'] as String?,
-      averageRating: (json['averageRating'] as num?)?.toInt(),
-      phone: json['phone'] as String?,
-      isOpened: json['isOpened'] as bool,
-      preferences: (json['preferences'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      // Assuming Food.fromJson is correctly implemented
-      foods: (json['foods'] as List<dynamic>?)
-          ?.map((e) => Food.fromJsonWithoutEstablishment(e as Map<String, dynamic>))
-          .toList(),
-      reviews: (json['reviews'] as List<dynamic>?)
-          ?.map((e) => Review.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-  }
+  return Establishment(
+    id: json['_id'] as String,
+    name: json['name'] as String,
+    description: json['description'] as String?,
+    image: json['image'] as String?,
+    latitude: (json['latitude'] as num).toDouble(),
+    longitude: (json['langitude'] as num).toDouble(),
+    address: json['address'] as String?,
+    averageRating: (json['averageRating'] as num?)?.toInt(),
+    phone: json['phone'] as String?,
+    isOpened: json['isOpened'] as bool,
+    
+    preferences: (json['preferences'] as List<dynamic>?)
+        ?.map((e) => e as String).toList(),
+
+    foods: (json['foods'] is List)
+        ? (json['foods'] as List<dynamic>)
+            .map((e) => e is Map<String, dynamic> 
+              ? Food.fromJson(e as Map<String, dynamic>) 
+              : null) // Handle potential invalid structure
+            .whereType<Food>() // Filter out any null values
+            .toList()
+        : [],
+
+    reviews: (json['reviews'] is List)
+        ? (json['reviews'] as List<dynamic>)
+            .map((e) => e is Map<String, dynamic> 
+              ? Review.fromJson(e as Map<String, dynamic>) 
+              : null) // Handle potential invalid structure
+            .whereType<Review>() // Filter out any null values
+            .toList()
+        : [],
+  );
+}
+
 
   Map<String, dynamic> toJson() {
     return {

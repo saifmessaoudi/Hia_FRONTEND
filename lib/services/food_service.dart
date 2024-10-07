@@ -7,7 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class FoodService {
-  final String baseUrl = 'http://192.168.170.145:3030';
+  final String baseUrl = 'http://192.168.101.145:3030';
   static const String cacheKey = 'foodCache';
 
   Future<List<Food>> fetchFoods({int page = 1, int batch = 10}) async {
