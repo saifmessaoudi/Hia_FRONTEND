@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import '../../constant.dart';
 
 class MarketsScreen extends StatefulWidget {
-  const MarketsScreen({Key? key}) : super(key: key);
+  const MarketsScreen({super.key});
 
   @override
   _MarketsScreenState createState() => _MarketsScreenState();
@@ -40,8 +40,8 @@ class _MarketsScreenState extends State<MarketsScreen> {
                   Row(
                     children: [
                      const  Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: const Icon(
+                        padding: EdgeInsets.all(20.0),
+                        child: Icon(
                           Icons.arrow_back,
                           color: Colors.white,
                         )
@@ -73,7 +73,7 @@ class _MarketsScreenState extends State<MarketsScreen> {
   padding: const EdgeInsets.all(0.0),
   child: Consumer<MarketViewModel>(
     builder: (context, marketViewModel, child) {
-      return MarketGrid();
+      return const MarketGrid();
     },
   ),
 )

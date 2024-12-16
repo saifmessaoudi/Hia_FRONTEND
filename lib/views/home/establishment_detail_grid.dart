@@ -1,16 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 import 'package:hia/app/style/app_colors.dart';
 import 'package:hia/app/style/app_constants.dart';
 import 'package:hia/app/style/app_style.dart';
-import 'package:hia/constant.dart';
 import 'package:hia/models/establishement.model.dart';
-import 'package:hia/models/offer.model.dart';
-import 'package:hia/viewmodels/establishement_viewmodel.dart';
-import 'package:hia/views/details/box_details_screen.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 
 class BookTableCardGrid  extends StatelessWidget {

@@ -24,7 +24,7 @@ class Marketcardgrid  extends StatelessWidget {
 String _formatText(String text) {
   const int maxChars = 20; // Maximum number of characters allowed
   if (text.length > maxChars) {
-    return text.substring(0, maxChars) + "...";
+    return "${text.substring(0, maxChars)}...";
   }
   return text;
 }
@@ -33,7 +33,7 @@ String _formatText(String text) {
   Widget build(BuildContext context) {
     final establishmentViewModel = Provider.of<EstablishmentViewModel>(context);
     return SizedBox(
-      width: isGrid ? 180.w : 280.w, // Adjust width for grid
+      width: isGrid ? 180.w : 320.w, // Adjust width for grid
       height: isGrid ? 190.h : 248.h, // Adjust height for grid
      
         child: Container(

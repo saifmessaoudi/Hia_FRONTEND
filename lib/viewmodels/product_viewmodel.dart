@@ -19,9 +19,9 @@ class ProductViewModel extends ChangeNotifier {
   
 
   final int _batchSize = 10;
-  int _currentPage = 1;
+  final int _currentPage = 1;
   bool hasMoreData = true;
-  bool _firstPageFetched = false;
+  final bool _firstPageFetched = false;
 
 
 

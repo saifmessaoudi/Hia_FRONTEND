@@ -16,7 +16,7 @@ class MapPickerBottomSheet extends StatefulWidget {
   
   final latLng.LatLng initialLocation;
 
-  MapPickerBottomSheet({
+  const MapPickerBottomSheet({super.key, 
     required this.onLocationPicked,
     required this.initialLocation,
   });
@@ -42,7 +42,7 @@ class _MapPickerBottomSheetState extends State<MapPickerBottomSheet> {
   Widget build(BuildContext context) {
           final userViewModel = Provider.of<UserViewModel>(context, listen: false);
 final UserService userService = UserService();
-    return Container(
+    return SizedBox(
       height: 400,
       child: Stack(
         children: [
@@ -62,7 +62,7 @@ final UserService userService = UserService();
             children: [
               TileLayer(
                 urlTemplate: "https://api.mapbox.com/styles/v1/boogeyy/clyg8q8e500uv01qv8bb8bftb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYm9vZ2V5eSIsImEiOiJjbHlnNmpoYmEwN3k1MmlwbzB0NHZvdXg4In0.puEqRDXeCxmqCQkCEOUEUg",
-                additionalOptions: {
+                additionalOptions: const {
                   'accessToken': "pk.eyJ1IjoiYm9vZ2V5eSIsImEiOiJjbHlnNmpoYmEwN3k1MmlwbzB0NHZvdXg4In0.puEqRDXeCxmqCQkCEOUEUg",
                 },
               ),
@@ -127,11 +127,10 @@ final UserService userService = UserService();
         MaterialPageRoute(builder: (context) => const FoodPreferencePage()),
       );
 
-   ;
      
                 },
                 child: Container(
-                  padding: EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
                   decoration: const BoxDecoration(
                     color: kMainColor,
                     shape: BoxShape.circle,

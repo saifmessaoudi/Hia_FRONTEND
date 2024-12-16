@@ -14,10 +14,10 @@ class MapPicker extends StatefulWidget {
   LatLng? value;
 
   MapPicker({
-    Key? key,
+    super.key,
     this.initZoom = DEFAULT_ZOOM,
     this.initCoordinates = KINSHASA_LOCATION,
-  }) : super(key: key);
+  });
 
   @override
   State<MapPicker> createState() => _MapPickerState();

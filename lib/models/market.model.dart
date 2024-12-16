@@ -1,6 +1,7 @@
 import 'package:hia/models/product.model.dart';
 import 'package:hive/hive.dart';
 
+
 @HiveType(typeId: 7)
 class Market extends HiveObject {
   @HiveField(0)
@@ -16,7 +17,7 @@ class Market extends HiveObject {
   double langitude;
 
   @HiveField(4)
-  double latitude;  // Ensure this matches the backend `langitude`
+  double latitude;
 
   @HiveField(5)
   String? address;
@@ -24,15 +25,16 @@ class Market extends HiveObject {
   @HiveField(6)
   String? phone;
 
- 
-
   @HiveField(7)
   List<Product>? products;
 
-
-   @HiveField(8)
+  @HiveField(8)
   bool isOpened;
 
+  @HiveField(9)
+  List<String>? categories; // Liste von Strings
+
+  /// Standardkonstruktor
   Market.empty()
       : id = '',
         name = '',
@@ -42,8 +44,10 @@ class Market extends HiveObject {
         address = '',
         phone = '',
         isOpened = true,
-        products = [];
+        products = [],
+        categories = [];
 
+  /// Hauptkonstruktor
   Market({
     required this.id,
     required this.name,
@@ -54,41 +58,53 @@ class Market extends HiveObject {
     this.phone,
     required this.isOpened,
     this.products,
+    this.categories,
   });
 
-
- factory Market.fromJsonWithoutProducts(Map<String, dynamic> json) {
+  /// Factory zum Parsen von JSON ohne Produkte
+  factory Market.fromJsonWithoutProducts(Map<String, dynamic> json) {
     return Market(
       id: json['_id'] as String? ?? '',
       name: json['name'] as String? ?? '',
       image: json['image'] as String? ?? '',
-      latitude: (json['latitude'] as num).toDouble() ?? 0.0,
-      langitude: (json['langitude'] as num).toDouble() ?? 0.0,
+      latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0,
+      langitude: (json['langitude'] as num?)?.toDouble() ?? 0.0,
       address: json['address'] as String? ?? '',
       phone: json['phone'] as String? ?? '',
-      isOpened: json['isOpened'] as bool ?? false,
-     
+      isOpened: json['isOpened'] as bool? ?? false,
+      categories: (json['category'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ?? [],
     );
   }
 
-factory Market.fromJson(Map<String, dynamic> json) {
-  return Market(
-    id: json['_id'] as String? ?? '',  // Default to empty string if null
-    name: json['name'] as String? ?? '',  // Default to empty string if null
-    image: json['image'] as String? ?? '',  // Handle null values for image
-    langitude: (json['langitude'] as num?)?.toDouble() ?? 0.0,  // Handle null safely
-    latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0,  // Handle null safely
-    address: json['address'] as String? ?? '',  // Default to empty string if null
-    phone: json['phone'] as String? ?? '',  // Handle null for phone
-    isOpened: json['isOpened'] as bool? ?? false,  // Default to false if null
-    products: (json['products'] as List<dynamic>?)
-        ?.map((e) => Product.fromJson(e as Map<String, dynamic>))
-        .toList() ?? [],  // Default to empty list if null
-  );
-}
+  /// Factory zum Parsen des vollständigen JSON
+  factory Market.fromJson(Map<String, dynamic> json) {
+    return Market(
+      id: json['_id'] as String? ?? '',
+      name: json['name'] as String? ?? '',
+      image: json['image'] as String? ?? '',
+      langitude: (json['langitude'] as num?)?.toDouble() ?? 0.0,
+      latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0,
+      address: json['address'] as String? ?? '',
+      phone: json['phone'] as String? ?? '',
+      isOpened: json['isOpened'] as bool? ?? false,
+      products: (json['products'] is List)
+          ? (json['products'] as List<dynamic>)
+              .map((e) => e is Map<String, dynamic>
+                  ? Product.fromJson(e)
+                  : null)
+              .whereType<Product>()
+              .toList()
+          : [],
+      categories: (json['category'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
+    );
+  }
 
-
-
+  /// Methode zum Konvertieren des Market-Objekts zurück zu JSON
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
@@ -99,7 +115,8 @@ factory Market.fromJson(Map<String, dynamic> json) {
       'address': address,
       'phone': phone,
       'isOpened': isOpened,
-      'products': products,
+      'products': products?.map((product) => product.toJson()).toList(),
+      'category': categories,
     };
   }
 }

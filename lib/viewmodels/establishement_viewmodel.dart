@@ -22,7 +22,7 @@ class EstablishmentViewModel extends ChangeNotifier {
   
 
 
- UserViewModel _userViewModel = UserViewModel();
+  UserViewModel _userViewModel = UserViewModel();
    List<MapMarker> _markers = [];
   List<MapMarker> get markers => _markers;
 

@@ -12,14 +12,14 @@ class CartItemWidget extends StatelessWidget {
   final VoidCallback onDecrease;
 
   const CartItemWidget({
-    Key? key,
+    super.key,
     required this.imageUrl,
     required this.name,
     required this.price,
     required this.quantity,
     required this.onIncrease,
     required this.onDecrease,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class CartItemWidget extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
                   ),
                 ),
             

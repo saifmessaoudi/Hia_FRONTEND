@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class MarketGrid extends StatelessWidget {
-  const MarketGrid({Key? key}) : super(key: key);
+  const MarketGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +81,7 @@ class MarketGrid extends StatelessWidget {
                                       .fetchMarketsByName(
                                           marketViewModel
                                               .markets[index].name);
+                                              
 
                                   Navigator.push(
                                     context,

@@ -158,7 +158,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             Padding(
                                 padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                                 child: IconButton(
-                                  icon: Icon(Icons.phone_in_talk_sharp, color: const Color.fromARGB(255, 0, 26, 48)),
+                                  icon: const Icon(Icons.phone_in_talk_sharp, color: Color.fromARGB(255, 0, 26, 48)),
                                   onPressed: () async {
                                     String phoneNumber = 'tel:${widget.product.phone}';
                                     if (await canLaunch(phoneNumber)) {
@@ -225,7 +225,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
         ),
         TextSpan(
-          text: "${establishmentViewModel.distances![widget.index].toStringAsFixed(1)} km", 
+          text: "${establishmentViewModel.distances[widget.index].toStringAsFixed(1)} km", 
           style: kTextStyle.copyWith(
             fontWeight: FontWeight.bold,
             color: kTitleColor,
@@ -408,8 +408,8 @@ Expanded(
         fit: BoxFit.cover,
         width: double.infinity,
         height: double.infinity,
-        fadeInDuration: Duration(milliseconds: 300),
-        fadeOutDuration: Duration(milliseconds: 300),
+        fadeInDuration: const Duration(milliseconds: 300),
+        fadeOutDuration: const Duration(milliseconds: 300),
         imageErrorBuilder: (context, error, stackTrace) {
           return Image.asset(
             'images/error_image.png', // Fallback image in case of error

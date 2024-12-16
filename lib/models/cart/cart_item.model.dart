@@ -41,7 +41,7 @@ class CartItem extends HiveObject {
     return CartItem(
       food: json['food'] != null ? Food.fromJsonWithoutEstablishment(json['food']) : null,
       offer: json['offer'] != null ? Offer.fromJsonWithoutEtablishment(json['offer']) : null,
-      product: json['product'] != null ? Product.fromJsonWithoutMarket(json['product']) : null,
+      product: json['product'] != null ? Product.fromJson(json['product']) : null,
       quantity: json['quantity'],
     );
   }

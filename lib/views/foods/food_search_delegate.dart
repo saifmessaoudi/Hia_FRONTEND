@@ -3,7 +3,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hia/models/establishement.model.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hia/viewmodels/establishement_viewmodel.dart';
-import 'package:hia/viewmodels/food_viewmodel.dart';
 
 
 class FoodSearchDelegate extends SearchDelegate<Food> {

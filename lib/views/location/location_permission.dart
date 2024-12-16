@@ -7,12 +7,10 @@ import 'package:hia/views/foodPreference/food_preferences_screen.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/views/location/bottom_location_sheet.dart';
-import 'package:hia/views/location/map_picker_bottom_sheet.dart';
 import 'package:hia/widgets/custom_toast.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:latlong2/latlong.dart' as latLng;
 
 
 class LocationPermission extends StatefulWidget {

@@ -82,7 +82,7 @@ class _OffersScreenState extends State<OffersScreen> {
                       color: Colors.white,
                     ),
                     child: offers.isEmpty
-                        ? Center(
+                        ? const Center(
                             child: Text(
                               'No offers available',
                               style: TextStyle(

@@ -3,7 +3,6 @@ import 'package:hia/models/cart/cart_item.model.dart';
 import 'package:hia/models/food.model.dart';
 import 'package:hia/models/offer.model.dart';
 import 'package:hia/models/product.model.dart';
-import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hive/hive.dart';
 
 part 'cart.model.g.dart';
@@ -40,7 +39,7 @@ class Cart extends HiveObject {
   }
 
  Future<bool> addItem(Food? food, int quantity, {Offer? offer , Product? product}) async {
-  Debugger.red(product?.market!.id);
+  Debugger.red(product?.market);
   try {
     if (food ==null && offer == null && product == null) {
       Debugger.red('Cannot add item without food or offer or product');
@@ -75,11 +74,11 @@ class Cart extends HiveObject {
      }
      else if (product !=null){
       if (items.isEmpty) {
-      establishmentId = product.market!.id;
+      establishmentId = product.market;
       Debugger.blue('Market ID: $establishmentId');
     }
 
-    if (establishmentId != product.market!.id) {
+    if (establishmentId != product.market) {
       Debugger.red('Cannot add item from a different market');
       return false;
     }

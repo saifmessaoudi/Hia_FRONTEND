@@ -12,10 +12,10 @@ class ProductList extends StatelessWidget {
   final Market box ; 
 
   const ProductList({
-    Key? key,
+    super.key,
     required this.productViewModel,
     required this.box
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

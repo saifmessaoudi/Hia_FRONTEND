@@ -70,7 +70,7 @@ extension WidgetModifier on Widget {
         onTap: onTap,
         borderRadius: BorderRadius.all(
             Radius.circular(radius ?? 40.r)),
-        overlayColor: MaterialStateProperty.all(overlayColor),
+        overlayColor: WidgetStateProperty.all(overlayColor),
         child: Padding(padding: padding, child: this),
       );
 

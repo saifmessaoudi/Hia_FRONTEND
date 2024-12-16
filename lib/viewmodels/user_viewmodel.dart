@@ -43,7 +43,7 @@ class UserViewModel with ChangeNotifier {
 
 
 
- Map<String, bool> _favouritesMap = {}; // Map to track favorite status
+ final Map<String, bool> _favouritesMap = {}; // Map to track favorite status
 
   bool getFavouriteStatus(String foodId) {
     return _favouritesMap[foodId] ?? false;

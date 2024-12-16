@@ -157,7 +157,7 @@ class Establishment extends HiveObject {
     foods: (json['foods'] is List)
         ? (json['foods'] as List<dynamic>)
             .map((e) => e is Map<String, dynamic> 
-              ? Food.fromJson(e as Map<String, dynamic>) 
+              ? Food.fromJson(e) 
               : null) // Handle potential invalid structure
             .whereType<Food>() // Filter out any null values
             .toList()
@@ -166,7 +166,7 @@ class Establishment extends HiveObject {
     reviews: (json['reviews'] is List)
         ? (json['reviews'] as List<dynamic>)
             .map((e) => e is Map<String, dynamic> 
-              ? Review.fromJson(e as Map<String, dynamic>) 
+              ? Review.fromJson(e) 
               : null) // Handle potential invalid structure
             .whereType<Review>() // Filter out any null values
             .toList()

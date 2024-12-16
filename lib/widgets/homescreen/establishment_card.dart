@@ -8,7 +8,7 @@ import 'package:shimmer/shimmer.dart';
 class EstablishmentCard extends StatelessWidget {
   final Establishment establishment;
 
-  EstablishmentCard({required this.establishment});
+  const EstablishmentCard({super.key, required this.establishment});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class EstablishmentCard extends StatelessWidget {
                               color: Colors.white,
                             ),
                           ),
-                          errorWidget: (context, url, error) => Icon(Icons.error),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
                         // Gradient Overlay at the bottom of the image
                         Positioned(

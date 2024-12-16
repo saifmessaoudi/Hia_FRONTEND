@@ -94,7 +94,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                   url:  widget.order.items[index].offer != null 
                                     ? widget.order.items[index].offer!.image 
                                     : widget.order.items[index].product != null 
-                                    ? widget.order.items[index].product!.image 
+                                    ? widget.order.items[index].product!.image! 
                                     : widget.order.items[index].food!.image,
                                   fit: BoxFit.cover,
                                   width: double.infinity,
@@ -310,7 +310,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     .withSize(FontSizes.title),
                               ),
                               TextSpan(
-                                text: "${widget.order.establishment?.name ?? widget.order.market?.name ?? ''}",
+                                text: widget.order.establishment?.name ?? widget.order.market?.name ?? '',
                                 style: AppStyles.interSemiBoldTextButton
                                     .medium()
                                     .withColor(Colors.blueGrey)

@@ -10,9 +10,9 @@ class MarketHorizontal extends StatelessWidget {
   final MarketViewModel marketViewModel;
   
   const MarketHorizontal({
-    Key? key,
+    super.key,
     required this.marketViewModel,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

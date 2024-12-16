@@ -9,7 +9,7 @@ import 'package:hia/viewmodels/user_viewmodel.dart';
 
 class FoodViewModel extends ChangeNotifier {
   final FoodService _service = FoodService();
-  List<Food> _foods = [];
+  final List<Food> _foods = [];
   List<Food> _filteredFoods = [];
   List<String> _selectedFilters = [];
   List<String> get selectedFilters => _selectedFilters;

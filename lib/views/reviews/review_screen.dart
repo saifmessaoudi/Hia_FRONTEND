@@ -52,7 +52,7 @@ class ReviewScreen extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(top: 15.h),
                               child: Text(
-                                "${food.name}",
+                                food.name,
                                 style: AppStyles.interSemiBoldTextButton
                                     .withSize(FontSizes.headline6),
                               ),

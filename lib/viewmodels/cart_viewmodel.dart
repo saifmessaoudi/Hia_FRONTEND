@@ -82,9 +82,9 @@ class CartViewModel extends ChangeNotifier {
   Future <void> addItems (List<Food> foods , {Offer? offer}) async {
       print (foods);
       print(offer);
-      foods.forEach((food) {
+      for (var food in foods) {
         _cart?.addItem(food, 1, offer: offer);
-      });
+      }
       notifyListeners();
   }
 

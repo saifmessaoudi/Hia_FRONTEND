@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import '../../constant.dart';
 
 class FoodSeeAllScreenEstablishment extends StatefulWidget {
-  const FoodSeeAllScreenEstablishment({required this.product});
+  const FoodSeeAllScreenEstablishment({super.key, required this.product});
 
     final Market product;
 

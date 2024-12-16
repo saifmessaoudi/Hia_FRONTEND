@@ -135,7 +135,7 @@ Future<void> showLocationOptions(BuildContext context) async {
                         style: ElevatedButton.styleFrom(
                           foregroundColor: kMainColor,
                         ),
-                        child: Text('Validate'),
+                        child: const Text('Validate'),
                       ),
               ],
             ),

@@ -3,7 +3,7 @@ import 'package:hia/constant.dart';
 import 'package:hia/views/global_components/category_data.dart';
 
 class CatCard extends StatelessWidget {
-  const CatCard({Key? key, required this.catList}) : super(key: key);
+  const CatCard({super.key, required this.catList});
   final CategoryData catList;
 
   @override

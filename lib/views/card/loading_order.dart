@@ -25,7 +25,7 @@ class LoadingScreenDialog extends StatefulWidget {
 
 class _LoadingScreenDialogState extends State<LoadingScreenDialog> {
   final ScreenshotController screenshotController = ScreenshotController();
-  GlobalKey _globalKey = GlobalKey();
+  final GlobalKey _globalKey = GlobalKey();
 
   @override
   void initState() {

@@ -13,7 +13,7 @@ import '../../constant.dart';
 import 'home_screen.dart';
 
 class RecommendedProductScreen extends StatefulWidget {
-  const RecommendedProductScreen({Key? key}) : super(key: key);
+  const RecommendedProductScreen({super.key});
 
   @override
   _RecommendedProductScreenState createState() => _RecommendedProductScreenState();

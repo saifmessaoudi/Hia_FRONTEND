@@ -7,14 +7,12 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class MarketService {
-  final String baseUrl = 'http://192.168.101.145:3030';
+  final String baseUrl = 'http://192.168.0.65:3030';
   static const String cacheKey = 'marketCache';
 
   Future<List<Market>> fetchMarkets() async {
     final response = await http.get(Uri.parse('$baseUrl/market/getAllMarkets'));
-    print('Fetch markets function response 1 : ${response.body}');
-    print('Response headers: ${response.headers}');
-    print('Response status code: ${response.statusCode}');
+   
 
 
     if (response.statusCode == 200) {

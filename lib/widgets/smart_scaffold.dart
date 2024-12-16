@@ -11,7 +11,7 @@ import 'connectivity_alert.dart'; // Import the new widget
 
 class SmartScaffold extends StatefulWidget {
   const SmartScaffold({
-    Key? key,
+    super.key,
     required this.body,
     this.floatingActionButton,
     this.floatingActionButtonLocation = FloatingActionButtonLocation.centerDocked,
@@ -37,7 +37,7 @@ class SmartScaffold extends StatefulWidget {
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.start,
     this.formKey,
-  }) : super(key: key);
+  });
 
   final Widget body;
   final bool extendBody;

@@ -8,7 +8,7 @@ import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapPage extends StatefulWidget {
-  const MapPage({Key? key}) : super(key: key);
+  const MapPage({super.key});
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -52,7 +52,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
             children: [
              TileLayer(
                     urlTemplate: "https://api.mapbox.com/styles/v1/boogeyy/clyg8q8e500uv01qv8bb8bftb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYm9vZ2V5eSIsImEiOiJjbHlnNmpoYmEwN3k1MmlwbzB0NHZvdXg4In0.puEqRDXeCxmqCQkCEOUEUg",
-                    additionalOptions: {
+                    additionalOptions: const {
                       'accessToken': "pk.eyJ1IjoiYm9vZ2V5eSIsImEiOiJjbHlnNmpoYmEwN3k1MmlwbzB0NHZvdXg4In0.puEqRDXeCxmqCQkCEOUEUg",
                       'id': 'mapbox.mapbox-streets-v8',
                     },

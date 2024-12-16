@@ -25,7 +25,7 @@ final OfferService _service = OfferService();
       offers = await _service.getCachedData();
       Debugger.green('Fetched offers from cache: ${offers.length}');
       await _service.cacheData(offers);  // Cache the fetched data
-      bool internetAvailable = await _retryInternetCheck(retries: 3, delay: Duration(seconds: 2));
+      bool internetAvailable = await _retryInternetCheck(retries: 3, delay: const Duration(seconds: 2));
       if (internetAvailable) {
         final fetchedOffers = await _service.fetchOffers();
         offers = fetchedOffers;

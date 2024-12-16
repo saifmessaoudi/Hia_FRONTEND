@@ -34,14 +34,12 @@ class FoodPreferenceProvider with ChangeNotifier {
     final userViewModel = _userViewModel;
     if (userViewModel.userData != null) {
       final userPrefs = userViewModel.userData!.foodPreference;
-      if (userPrefs != null) {
-        for (var pref in userPrefs) {
-          if (_selectedPreferences.containsKey(pref)) {
-            _selectedPreferences[pref] = true;
-          }
+      for (var pref in userPrefs) {
+        if (_selectedPreferences.containsKey(pref)) {
+          _selectedPreferences[pref] = true;
         }
       }
-    }
+        }
     notifyListeners();
   }
 

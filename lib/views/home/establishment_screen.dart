@@ -13,7 +13,7 @@ import '../../constant.dart';
 import 'home_screen.dart';
 
 class ProductScreen extends StatefulWidget {
-  const ProductScreen({Key? key}) : super(key: key);
+  const ProductScreen({super.key});
 
   @override
   _ProductScreenState createState() => _ProductScreenState();
@@ -93,14 +93,14 @@ class _ProductScreenState extends State<ProductScreen> {
                           childAspectRatio: 0.85,
                           crossAxisCount: 2,
                           children: List.generate(
-                            establishmentViewModel.establishments!.length,
+                            establishmentViewModel.establishments.length,
                             (index) => Center(
                               child: BookTableCardGrid(
-                                restaurantData: establishmentViewModel.establishments![index],
+                                restaurantData: establishmentViewModel.establishments[index],
                                 index: index,
                                  isGrid: true,
                               ).onTap(() {
-                                EstablishmentDetailsScreen(establishment: establishmentViewModel.establishments![index])
+                                EstablishmentDetailsScreen(establishment: establishmentViewModel.establishments[index])
                                     .launch(context);
                               }),
                             ),

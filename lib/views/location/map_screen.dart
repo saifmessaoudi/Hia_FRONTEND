@@ -5,7 +5,7 @@ import 'package:hia/views/home/exports/export_homescreen.dart';
 class CustomMapScreen extends StatefulWidget {
   final LatLng initialPosition;
 
-  const CustomMapScreen({Key? key, required this.initialPosition}) : super(key: key);
+  const CustomMapScreen({super.key, required this.initialPosition});
 
   @override
   _CustomMapScreenState createState() => _CustomMapScreenState();

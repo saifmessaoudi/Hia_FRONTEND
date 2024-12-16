@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
+import 'package:get/get.dart';
 import 'package:hia/app/style/app_colors.dart';
 import 'package:hia/app/style/app_style.dart';
 import 'package:hia/app/style/font_size.dart';
@@ -17,6 +18,8 @@ import 'package:hia/views/markets/MarketCardGrid.dart';
 import 'package:hia/views/markets/Market_Horizontal.dart';
 import 'package:hia/views/markets/marget_grid_list.dart';
 import 'package:hia/views/markets/product_card.dart';
+import 'package:hia/views/markets/product_detail_screen.dart';
+import 'package:hia/views/markets/products_grid_list.dart';
 import 'package:hia/views/markets/products_list.dart';
 import 'package:hia/widgets/homescreen/food_card.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -38,6 +41,8 @@ class _MarketDetailScreenState extends State<MarketDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+        final marketViewModel = Provider.of<MarketViewModel>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
@@ -166,8 +171,99 @@ class _MarketDetailScreenState extends State<MarketDetailScreen> {
                 padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                 child: Row(
                   children: [
+                   Text(
+  'Our Products: ${widget.box.categories!.length+1}',
+  style: kTextStyle.copyWith(
+    color: kTitleColor,
+    fontSize: 18.0,
+  ),
+),
+
+                    const Spacer(),
                     Text(
-                      'Our Products :',
+                      'See all',
+                      style: kTextStyle.copyWith(color: kGreyTextColor),
+                    ).onTap(() {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ProductsGridList(box: widget.box),
+            ),
+          );
+                   }),
+                  ],
+                ),
+              ),
+                                
+SizedBox(
+  height: MediaQuery.of(context).size.height * 0.25, // Adjust height for one line
+  child: widget.box.products != null && widget.box.products!.isNotEmpty
+      ? ListView.builder(
+          scrollDirection: Axis.horizontal, // Horizontal scrolling
+          itemCount: widget.box.products!.length,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+               /* showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      height: 200,
+                      width: MediaQuery.of(context).size.width,
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.box.products![index].name,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text('Price: \$${widget.box.products![index].price}'),
+                          const SizedBox(height: 10),
+                          Text(widget.box.products![index].description ?? 'No description available'),
+                        ],
+                      ),
+                    );
+                  },
+                );*/
+                 Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ProductDetailScreen(
+                                        product : widget.box.products![index],
+                                      ),
+                                    ),
+                                  );
+              },
+              child: SizedBox(
+                width: 150, // Adjust width for each item
+                child: ProductCard(
+                  product: widget.box.products![index],
+                ),
+              ),
+            );
+          },
+        )
+      : const Center(
+          child: Text(
+            'No available data',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey,
+            ),
+          ),
+        ),
+),
+Padding(
+                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                child: Row(
+                  children: [
+                    Text(
+                      'Others :',
                       style: kTextStyle.copyWith(
                         color: kTitleColor,
                         fontSize: 18.0,
@@ -188,22 +284,21 @@ class _MarketDetailScreenState extends State<MarketDetailScreen> {
                 ),
               ),
                                 
-
-        SizedBox(
-  height: 200.0,
-  child: widget.box.products != null && widget.box.products!.isNotEmpty
+SizedBox(
+  height: MediaQuery.of(context).size.height * 0.25, // Adjust height for one line
+  child: marketViewModel.markets.isNotEmpty
       ? ListView.builder(
-          itemCount: widget.box.products!.length,
-          scrollDirection: Axis.horizontal,
+          scrollDirection: Axis.horizontal, // Horizontal scrolling
+          itemCount: marketViewModel.markets.length,
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
-                showModalBottomSheet(
+                /*showModalBottomSheet(
                   context: context,
                   builder: (BuildContext context) {
                     return Container(
                       height: 200,
-                      width: context.width(),
+                      width: MediaQuery.of(context).size.width,
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,15 +314,20 @@ class _MarketDetailScreenState extends State<MarketDetailScreen> {
                           Text('Price: \$${widget.box.products![index].price}'),
                           const SizedBox(height: 10),
                           Text(widget.box.products![index].description ?? 'No description available'),
-                          // Add more product details here as needed
                         ],
                       ),
                     );
                   },
-                );
+                );*/
               },
-              child: ProductCard(
-                product: widget.box.products![index],
+              child: SizedBox(
+                // Adjust width for each item
+                child: Marketcardgrid(
+                                  restaurantData:
+                                      marketViewModel.markets[index],
+                                  index: index,
+                                  isGrid: true,
+                                )
               ),
             );
           },
@@ -243,10 +343,33 @@ class _MarketDetailScreenState extends State<MarketDetailScreen> {
         ),
 ),
 
- 
 
-                  const Gap(30),
+const SizedBox(height: 60),
                   Padding(
+  padding: const EdgeInsets.only(right: 8.0, bottom: 8.0), // Increase external padding if needed
+  child: Container(
+    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 70.0), // Increase internal padding
+    decoration: BoxDecoration(
+      color: kMainColor,
+      borderRadius: BorderRadius.circular(25.0), // Adjust radius for larger button aesthetics
+    ),
+    child: Text(
+      'Checkout',
+      style: kTextStyle.copyWith(
+        fontSize: 18, // Increase font size
+        color: Colors.white,
+        fontWeight: FontWeight.bold, // Make text more prominent
+      ),
+    ),
+  ).onTap(() {
+    marketViewModel.launchMaps(
+        widget.box.latitude, widget.box.langitude);
+  }),
+),
+
+
+  const SizedBox(height: 80,),
+                  /*Padding(
                 padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                 child: Row(
                   children: [
@@ -271,13 +394,13 @@ class _MarketDetailScreenState extends State<MarketDetailScreen> {
                   ],
                 ),
                 
-              ),
-               Consumer<MarketViewModel>(
+              ),*/
+              /* Consumer<MarketViewModel>(
     builder: (context, marketViewModel, child) {
       return MarketHorizontal(marketViewModel : marketViewModel);
     },
-  ),
-  SizedBox(height: 20,),
+  ),*/
+ // SizedBox(height: 20,),
                   /*Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

@@ -32,7 +32,7 @@ class _ProductCardState extends State<ProductCard> {
   String _formatText(String text) {
   const int maxChars = 20; // Maximum number of characters allowed
   if (text.length > maxChars) {
-    return text.substring(0, maxChars) + "...";
+    return "${text.substring(0, maxChars)}...";
   }
   return text;
 }
@@ -45,7 +45,7 @@ class _ProductCardState extends State<ProductCard> {
       
       children: [
         SizedBox(
-          width: 140.0,
+          width: 120.0,
           child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15.0),
@@ -74,7 +74,7 @@ class _ProductCardState extends State<ProductCard> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
                           child: CachedNetworkImage(
-                            width: 130.0,
+                            width: 120.0,
                             height: 100.0,
                             imageUrl: widget.product.image!,
                             fit: BoxFit.cover,
@@ -91,18 +91,18 @@ class _ProductCardState extends State<ProductCard> {
                               ),
                             ),
                             errorWidget: (context, url, error) =>
-                                Image.asset('images/placeholder.png' , width: 100.0, height: 100.0),
+                                Image.asset('images/placeholder.png' , width: 80.0, height: 80.0),
                           ),
                         ),
                       ),
                     ),
-                    SizedBox( height: 5,),
+                    const SizedBox( height: 5,),
                     Row(
                       children: [
                         Expanded(
                            child : Text(
   _formatText(widget.product.name), // Format text to ensure ellipsis after 20 characters
-  style: AppStyles.interboldHeadline1.withSize(16)
+  style: AppStyles.interboldHeadline1.withSize(12)
        // Adjust font size for grid
       .withColor(AppColors.background),
    // Allow text to span across two lines
@@ -117,7 +117,7 @@ class _ProductCardState extends State<ProductCard> {
       widget.product.isAvailable ? 'In Stock' : 'Out of Stock',
       style: kTextStyle.copyWith(
         color: widget.product.isAvailable ? Colors.green : Colors.red,
-        fontWeight: FontWeight.bold,fontSize: 9
+        fontWeight: FontWeight.bold,fontSize: 7
       ),
     ),
   ],

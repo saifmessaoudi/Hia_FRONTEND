@@ -5,7 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class OfferService {
-  final String baseUrl = 'http://192.168.101.145:3030';
+  final String baseUrl = 'http://192.168.0.65:3030';
   static const String cacheKey = 'offerCache';
   late Box<Offer> _box;
 
