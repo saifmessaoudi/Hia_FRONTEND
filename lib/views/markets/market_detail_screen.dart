@@ -195,10 +195,10 @@ class _MarketDetailScreenState extends State<MarketDetailScreen> {
               ),
                                 
 SizedBox(
-  height: MediaQuery.of(context).size.height * 0.25, // Adjust height for one line
+  height: MediaQuery.of(context).size.height * 0.25, 
   child: widget.box.products != null && widget.box.products!.isNotEmpty
       ? ListView.builder(
-          scrollDirection: Axis.horizontal, // Horizontal scrolling
+          scrollDirection: Axis.horizontal, 
           itemCount: widget.box.products!.length,
           itemBuilder: (context, index) {
             return GestureDetector(
@@ -369,100 +369,7 @@ const SizedBox(height: 60),
 
 
   const SizedBox(height: 80,),
-                  /*Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                child: Row(
-                  children: [
-                    Text(
-                      'Others ${widget.box.name} :',
-                      style: kTextStyle.copyWith(
-                        color: kTitleColor,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      'See all',
-                      style: kTextStyle.copyWith(color: kGreyTextColor),
-                    ).onTap(() {
-         /* Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => FoodSeeAllScreenEstablishment(product: widget.product),
-            ),
-          );*/
-                   }),
-                  ],
-                ),
-                
-              ),*/
-              /* Consumer<MarketViewModel>(
-    builder: (context, marketViewModel, child) {
-      return MarketHorizontal(marketViewModel : marketViewModel);
-    },
-  ),*/
- // SizedBox(height: 20,),
-                  /*Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '${widget.box.price} TND',
-                        style: AppStyles.interSemiBoldTextButton
-                            .bold()
-                            .withSize(FontSizes.headline4).withColor(AppColors.offBlack),
-                      ),
-                    ],
-                  ),*/
-                  const Gap(20),
-                 /* Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            // Handle order action
-                            final cartViewModel = Provider.of<CartViewModel>(
-                              context,
-                              listen: false,
-                            );
-                            bool success = await cartViewModel.addItem(
-                              null,
-                              quantity,
-                             // offer:widget.box,
-                            );
-                            if (success) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Item added to cart'),
-                                ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Failed to add item to cart'),
-                                ),
-                              );
-                            }
-
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.background,
-                            padding: const EdgeInsets.symmetric(vertical: 11.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(35.0),
-                            ),
-                          ),
-                          child: Text(
-                            'Add to cart',
-                            style: AppStyles.interSemiBoldTextButton
-                                .withColor(AppColors.offWhite)
-                                .withSize(FontSizes.headline5),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),*/
+                 
                 ],
               ),
             ),
@@ -538,70 +445,4 @@ class StatusChip extends StatelessWidget {
   }
 }
 
-/*class QuantityProvider with ChangeNotifier {
-  int _quantity = 1;
 
-  int get quantity => _quantity;
-
-  void increment() {
-    _quantity++;
-    notifyListeners();
-  }
-
-  void decrement() {
-    if (_quantity > 1) {
-      _quantity--;
-      notifyListeners();
-    }
-  }
-
-  void setQuantity(int newQuantity) {
-    _quantity = newQuantity;
-    notifyListeners();
-  }
-}
-
-class QuantityControl extends StatelessWidget {
-  const QuantityControl({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final quantityProvider = Provider.of<QuantityProvider>(context);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: .0),
-      decoration: BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.circular(18.0),
-        border: Border.all(color: Colors.grey, width: 1.0),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            icon: Icon(
-              Icons.remove,
-              color: Colors.white.withOpacity(0.5),
-            ),
-            onPressed: quantityProvider.decrement,
-          ),
-          Text(
-            '${quantityProvider.quantity}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16.0,
-            ),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.add,
-              color: Colors.white.withOpacity(0.5),
-            ),
-            onPressed: quantityProvider.increment,
-          ),
-        ],
-      ),
-    );
-  }
-}*/

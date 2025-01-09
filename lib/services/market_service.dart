@@ -165,5 +165,56 @@ Future <List<Market>> getAllMarkets() async {
     }
   }
 
- 
+  Future<dynamic> getProductsByMarketIDAndCategory({
+    required String marketId,
+    String? category,
+    int page = 1,
+    int batch = 10,
+  }) async {
+    final queryParameters = {
+      'id': marketId,
+      if (category != null) 'category': category,
+      'page': page.toString(),
+      'batch': batch.toString(),
+    };
+
+    final url = Uri.parse('$baseUrl/market/getProductsByMarketIDAndCategory')
+        .replace(queryParameters: queryParameters);
+
+    Debugger.red('Sending request to $url');
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final dynamic responseJson = json.decode(response.body);
+        
+        // If category is not provided, response will be a map of categories to product lists
+        if (category == null) {
+          Map<String, List<Product>> groupedProducts = {};
+          (responseJson as Map<String, dynamic>).forEach((category, products) {
+            groupedProducts[category] = (products as List)
+                .map((json) => Product.fromJson(json as Map<String, dynamic>))
+                .toList();
+          });
+          return groupedProducts;
+        }
+        
+        // If category is provided, response will be a list of products
+        return (responseJson as List)
+            .map((json) => Product.fromJson(json as Map<String, dynamic>))
+            .toList();
+      } else {
+        Debugger.red('Failed response: ${response.body}');
+        throw Exception('Failed to load products');
+      }
+    } catch (e) {
+      Debugger.red('Error fetching products: $e');
+      throw Exception('Failed to load products: $e');
+    }
+  }
+
 }
