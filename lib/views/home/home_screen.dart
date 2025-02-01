@@ -223,13 +223,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                 }).toList(),
                               ),
                               Gap(5.h),
-                              const Divider(), // Divider
+                              const Divider(),
                               Gap(5.h),
                             ],
                           ),
                         ),
                       if (hasFilters) const PopularDealsSection(),
-                      const OffersSection(),
+                      Consumer<OfferViewModel>(
+                        builder: (context, offerViewModel, child) {
+                          return offerViewModel.offers.isNotEmpty
+                              ? const OffersSection()
+                              : const SizedBox.shrink();
+                        },
+                      ),
                       const NearlySection(),
                       const RecommendedSection(),
                       if (!hasFilters) const PopularDealsSection(),

@@ -29,6 +29,7 @@ import 'package:hia/viewmodels/review.viewmodel.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_pref_provider.dart';
 import 'package:hia/views/home/home.dart';
+import 'package:hia/views/markets/market_detail_screen.dart';
 import 'package:hia/views/splash/on_board_screen.dart';
 import 'package:hia/views/splash/splash_screen.dart';
 import 'package:hia/views/splash/splash_view.dart';
@@ -157,6 +158,19 @@ class MyApp extends StatelessWidget {
             '/': (context) => const SplashScreen(),
             '/onboard': (context) => const OnBoard(),
             '/home': (context) => const Home(),
+            '/market-detail': (context) {
+              return MarketDetailScreen();
+            },
+          },
+          onGenerateRoute: (settings) {
+            if (settings.name == '/market-detail') {
+              return MaterialPageRoute(
+                builder: (context) => MarketDetailScreen(),
+                settings: settings,
+              );
+            }
+            // Handle other routes
+            return null;
           },
         );
       },

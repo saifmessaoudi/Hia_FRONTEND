@@ -1,92 +1,110 @@
 import 'package:flutter/material.dart';
-import 'package:hia/app/style/widget_modifier.dart';
-import 'package:hia/constant.dart';
+import 'package:hia/models/market.model.dart';
 import 'package:hia/viewmodels/market_viewmodel.dart';
-import 'package:hia/views/markets/MarketCardGrid.dart';
-import 'package:hia/views/markets/market_detail_screen.dart';
-import 'package:shimmer/shimmer.dart';
+
 
 class MarketHorizontal extends StatelessWidget {
+  final Market market;
   final MarketViewModel marketViewModel;
-  
-  const MarketHorizontal({
-    super.key,
-    required this.marketViewModel,
-  });
 
-  @override
-  Widget build(BuildContext context) {
-    if (marketViewModel.marketsByName.isEmpty) {
-      return const Center(
-        child: Text(
-          'There is no available data',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey,
-          ),
-        ),
+  const MarketHorizontal({
+    Key? key,
+    required this.market,
+    required this.marketViewModel,
+  }) : super(key: key);
+
+  void _onMarketTap(BuildContext context) async {
+    // Show loading indicator
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+    // Prepare market data
+    final success = await marketViewModel.prepareMarketData(market);
+    
+    // Hide loading indicator
+    Navigator.pop(context);
+
+    if (success) {
+      // Navigate to detail screen
+      Navigator.pushNamed(
+        context,
+        '/market-detail',
+        arguments: market,
       );
     } else {
-      return Container(
-        width: MediaQuery.of(context).size.width,
-        height: 300,  // Adjust height for horizontal list
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
-          ),
-          color: Colors.white,
-        ),
-        child: Column(
-          children: [
-            const SizedBox(height: 20.0),
-            marketViewModel.isFiltering
-                ? Expanded(
-                    child: Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: kMainColor,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 4,  // Placeholder items for loading
-                        itemBuilder: (context, index) => Container(
-                          margin: const EdgeInsets.all(10.0),
-                          width: 150,  // Adjust width for horizontal list
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                : Expanded(
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,  // Set the direction to horizontal
-                      itemCount: marketViewModel.marketsByName.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Marketcardgrid(
-                            restaurantData: marketViewModel.marketsByName[index],
-                            index: index,
-                            isGrid: false,  // It's now horizontal, not grid
-                          ).onTap(() async {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MarketDetailScreen(
-                                  box: marketViewModel.marketsByName[index],
-                                ),
-                              ),
-                            );
-                          }),
-                        );
-                      },
-                    ),
-                  ),
-          ],
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(marketViewModel.error ?? 'Failed to load market data'),
         ),
       );
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _onMarketTap(context),
+      child: Container(
+        width: 200, // Adjust width as needed
+        margin: const EdgeInsets.only(right: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              child: Image.network(
+                market.image ?? '',
+                height: 120,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    market.name,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    market.address ?? '',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.grey[600],
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

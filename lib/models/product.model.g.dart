@@ -21,8 +21,8 @@ class ProductAdapter extends TypeAdapter<Product> {
       isAvailable: (fields[5] as bool?) ?? false,
       remise: (fields[6] as double?) ?? 0.0,
       remiseDeadline: fields[7] as DateTime? ?? DateTime.now(),
-      market: fields[8] as String? ?? '',
-      category: fields[9] as String? ?? '',
+      marketId: fields[8] as String? ?? '',
+      categoryId: fields[9] as String? ?? '',
     );
   }
 
@@ -47,9 +47,9 @@ class ProductAdapter extends TypeAdapter<Product> {
       ..writeByte(7)
       ..write(obj.remiseDeadline)
       ..writeByte(8)
-      ..write(obj.market)
+      ..write(obj.marketId)
       ..writeByte(9)
-      ..write(obj.category);
+      ..write(obj.categoryId);
   }
 
   @override

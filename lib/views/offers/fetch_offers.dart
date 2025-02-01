@@ -92,43 +92,43 @@ class _OffersScreenState extends State<OffersScreen> {
                               ),
                             ),
                           )
-                        : Column(
-                            children: [
-                              const SizedBox(
-                                height: 20.0,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                child: GridView.count(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  childAspectRatio: 0.75,
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: 10.0,
-                                  crossAxisSpacing: 5.0,
-                                  children: List.generate(
-                                    offers.length,
-                                    (index) => Center(
-                                      child: SurpriseBoxCard(
-                                        offer: offers[index],
-                                         isGrid: true,
-                                      ).onTap(() {
-                                        // Handle offer selection 
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => BoxDetailsScreen(box: offers[index]),
-                                          ),
-                                        );
-                                      }),
+                        : SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 80.0),
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 20.0),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                    child: GridView.count(
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      childAspectRatio: 0.75,
+                                      crossAxisCount: 2,
+                                      mainAxisSpacing: 10.0,
+                                      crossAxisSpacing: 5.0,
+                                      children: List.generate(
+                                        offers.length,
+                                        (index) => Center(
+                                          child: SurpriseBoxCard(
+                                            offer: offers[index],
+                                            isGrid: true,
+                                          ).onTap(() {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => BoxDetailsScreen(box: offers[index]),
+                                              ),
+                                            );
+                                          }),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                  const SizedBox(height: 20.0),
+                                ],
                               ),
-                              const SizedBox(
-                                height: 20.0,
-                              ),
-                            ],
+                            ),
                           ),
                   ),
                 ],

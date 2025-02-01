@@ -1,14 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:hia/app/style/widget_modifier.dart';
 import 'package:hia/constant.dart';
+import 'package:hia/models/market.model.dart';
 import 'package:hia/viewmodels/market_viewmodel.dart';
 import 'package:hia/views/markets/MarketCardGrid.dart';
 import 'package:hia/views/markets/market_detail_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
-class MarketGrid extends StatelessWidget {
+class MarketGrid extends StatefulWidget {
   const MarketGrid({super.key});
+
+  @override
+  State<MarketGrid> createState() => _MarketGridState();
+}
+
+class _MarketGridState extends State<MarketGrid> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100) {
+        final marketViewModel = Provider.of<MarketViewModel>(context, listen: false);
+        if (!marketViewModel.isLoading) {
+          marketViewModel.fetchMarkets();
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onMarketTap(BuildContext context, Market market) async {
+    final marketViewModel = Provider.of<MarketViewModel>(context, listen: false);
+
+    // Show loading indicator
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+    // Prepare market data
+    final success = await marketViewModel.prepareMarketData(market);
+
+    // Hide loading indicator
+    Navigator.pop(context);
+
+    if (success) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MarketDetailScreen(),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(marketViewModel.error ?? 'Failed to load market data'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,35 +84,14 @@ class MarketGrid extends StatelessWidget {
               topLeft: Radius.circular(30.0),
               topRight: Radius.circular(30.0),
             ),
-            color: Colors.white, 
+            color: Colors.white,
           ),
           child: Column(
             children: [
               const SizedBox(height: 20.0),
               Expanded(
-                child: marketViewModel.isLoading || marketViewModel.isSorting
-                    ? Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: kMainColor,
-                        child: GridView.count(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          childAspectRatio: 0.75,
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 10.0,
-                          crossAxisSpacing: 2.0,
-                          children: List.generate(
-                            4,
-                            (index) => Container(
-                              margin: const EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
+                child: marketViewModel.isLoading && marketViewModel.markets.isEmpty
+                    ? _buildShimmerEffect()
                     : marketViewModel.markets.isEmpty
                         ? const Center(
                             child: Text(
@@ -61,47 +102,104 @@ class MarketGrid extends StatelessWidget {
                               ),
                             ),
                           )
-                        : GridView.count(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            childAspectRatio: 0.75,
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 10.0,
-                            crossAxisSpacing: 2.0,
-                            children: List.generate(
-                              marketViewModel.markets.length,
-                              (index) => Center(
-                                child: Marketcardgrid(
-                                  restaurantData:
-                                      marketViewModel.markets[index],
-                                  index: index,
-                                  isGrid: true,
-                                ).onTap(() async {
-                                  await marketViewModel
-                                      .fetchMarketsByName(
-                                          marketViewModel
-                                              .markets[index].name);
-                                              
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          MarketDetailScreen(
-                                        box: marketViewModel
-                                            .markets[index],
-                                      ),
-                                    ),
-                                  );
-                                }),
-                              ),
-                            ),
-                          ),
+                        : _buildMarketGrid(marketViewModel),
               ),
+              if (marketViewModel.isLoading)
+                const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: CircularProgressIndicator(),
+                ),
             ],
           ),
         );
       },
+    );
+  }
+
+  /// Builds the shimmer effect when data is loading
+  Widget _buildShimmerEffect() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: kMainColor,
+      child: GridView.count(
+        controller: _scrollController,
+        childAspectRatio: 0.75,
+        crossAxisCount: 2,
+        mainAxisSpacing: 10.0,
+        crossAxisSpacing: 2.0,
+        children: List.generate(
+          4,
+          (index) => Container(
+            margin: const EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Builds the GridView with market cards
+  Widget _buildMarketGrid(MarketViewModel marketViewModel) {
+    // Safety check for empty or mismatched data
+    if (marketViewModel.markets.isEmpty || 
+        marketViewModel.distances.isEmpty ||
+        marketViewModel.markets.length != marketViewModel.distances.length) {
+      return const Center(
+        child: Text(
+          'Loading markets...',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey,
+          ),
+        ),
+      );
+    }
+
+    final List<int> sortedIndices = List.generate(marketViewModel.markets.length, (i) => i)
+      ..sort((a, b) => marketViewModel.distances[a].compareTo(marketViewModel.distances[b]));
+
+    return SingleChildScrollView(
+      controller: _scrollController,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 160.0),
+        child: GridView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: marketViewModel.markets.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 0.75,
+            mainAxisSpacing: 10.0,
+            crossAxisSpacing: 2.0,
+          ),
+          itemBuilder: (context, index) {
+            // Additional safety check for index bounds
+            if (index >= sortedIndices.length) {
+              return const SizedBox();
+            }
+            
+            final sortedIndex = sortedIndices[index];
+            
+            if (sortedIndex >= marketViewModel.markets.length || 
+                sortedIndex >= marketViewModel.distances.length) {
+              return const SizedBox();
+            }
+
+            return Center(
+              child: Marketcardgrid(
+                restaurantData: marketViewModel.markets[sortedIndex],
+                index: sortedIndex,
+                isGrid: true,
+              ).onTap(() async {
+                _onMarketTap(context, marketViewModel.markets[sortedIndex]);
+              }),
+            );
+          },
+        ),
+      ),
     );
   }
 }

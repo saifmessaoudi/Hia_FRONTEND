@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:hia/models/reservation.model.dart';
 import 'package:hia/app/style/app_colors.dart';
 import 'package:hia/app/style/app_style.dart';
 import 'package:hia/app/style/font_size.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:hia/viewmodels/cart_viewmodel.dart';
+import 'package:hia/viewmodels/market_viewmodel.dart';
 import 'package:hia/views/markets/market_detail_screen.dart';
 import 'package:hia/widgets/loading_scren_cart_order.dart';
 import 'package:provider/provider.dart';
@@ -169,7 +169,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                   ),
                                   const Gap(15),
                                   GestureDetector(
-  onTap: () {
+  onTap: () async {
     if (widget.order.establishment != null) {
       final establishment = establishmentViewModel.establishments.firstWhere(
         (element) => element.id == widget.order.establishment?.id,
@@ -183,15 +183,41 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         ),
       );
     } else if (widget.order.market != null) {
-      final market = widget.order.market; 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MarketDetailScreen(
-            box: market!, 
+      final market = widget.order.market;
+      if (market != null) {
+        final marketViewModel = Provider.of<MarketViewModel>(context, listen: false);
+        
+        // Show loading indicator
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const Center(
+            child: CircularProgressIndicator(),
           ),
-        ),
-      );
+        );
+
+        // Prepare market data
+        final success = await marketViewModel.prepareMarketData(market);
+        
+        // Hide loading indicator
+        Navigator.pop(context);
+
+        if (success) {
+          // Navigate to detail screen
+          Navigator.pushNamed(
+            context,
+            '/market-detail',
+            arguments: market,
+          );
+        } else {
+          // Show error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(marketViewModel.error ?? 'Failed to load market data'),
+            ),
+          );
+        }
+      }
     }
   },
   child: Text(

@@ -37,11 +37,10 @@ class Cart extends HiveObject {
     establishmentId = id;
     save();
   }
-
  Future<bool> addItem(Food? food, int quantity, {Offer? offer , Product? product}) async {
-  Debugger.red(product?.market);
+  Debugger.red(product?.marketId); // Changed market to marketId since that's the property available on Product
   try {
-    if (food ==null && offer == null && product == null) {
+    if (food == null && offer == null && product == null) {
       Debugger.red('Cannot add item without food or offer or product');
       return false;
     }
@@ -74,11 +73,11 @@ class Cart extends HiveObject {
      }
      else if (product !=null){
       if (items.isEmpty) {
-      establishmentId = product.market;
+      establishmentId = product.marketId;
       Debugger.blue('Market ID: $establishmentId');
     }
 
-    if (establishmentId != product.market) {
+    if (establishmentId != product.marketId) {
       Debugger.red('Cannot add item from a different market');
       return false;
     }

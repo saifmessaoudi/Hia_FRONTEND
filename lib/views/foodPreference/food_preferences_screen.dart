@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hia/viewmodels/establishement_viewmodel.dart';
+import 'package:hia/viewmodels/market_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_pref_provider.dart';
 import 'package:hia/views/global_components/button_global.dart';
 import 'package:hia/constant.dart';
@@ -185,7 +186,9 @@ class _FoodPreferencePageState extends State<FoodPreferencePage> {
                                     buttonDecoration: kButtonDecoration.copyWith(color: foodPreferenceProvider.isLoading ? gray : kMainColor),
                                     onPressed: () {
                                       final establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
-                                      foodPreferenceProvider.savePreferences().then((_) {
+                                      final marketViewModel = Provider.of<MarketViewModel>(context, listen: false);
+
+                                      foodPreferenceProvider.savePreferences().then((_) async {
                                         establishmentViewModel.updateRecommendedEstablishments();
                                         if (!foodPreferenceProvider.isLoading) {
                                           showCustomToast(context, 'Preferences saved successfully');
@@ -194,6 +197,8 @@ class _FoodPreferencePageState extends State<FoodPreferencePage> {
                                             (Route<dynamic> route) => false,
                                           );
                                         }
+                                                          await marketViewModel.refreshMarkets() ; 
+
                                       });
                                     },
                                   ),

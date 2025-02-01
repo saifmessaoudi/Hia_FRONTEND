@@ -7,7 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class MarketService {
-  final String baseUrl = 'http://192.168.0.65:3030';
+  final String baseUrl = 'http://10.0.2.2:3030';
   static const String cacheKey = 'marketCache';
 
   Future<List<Market>> fetchMarkets() async {
@@ -165,55 +165,134 @@ Future <List<Market>> getAllMarkets() async {
     }
   }
 
-  Future<dynamic> getProductsByMarketIDAndCategory({
-    required String marketId,
-    String? category,
-    int page = 1,
-    int batch = 10,
-  }) async {
-    final queryParameters = {
-      'id': marketId,
+  Future<dynamic> getProductsByMarketIDAndCategory({ required String marketId,String? category,int page = 1,int batch = 5,}) async {
+    final queryParameters = {'id': marketId,
       if (category != null) 'category': category,
       'page': page.toString(),
       'batch': batch.toString(),
     };
 
-    final url = Uri.parse('$baseUrl/market/getProductsByMarketIDAndCategory')
-        .replace(queryParameters: queryParameters);
-
-    Debugger.red('Sending request to $url');
+    final url = Uri.parse('$baseUrl/market/getProductsByMarketIDAndCategory').replace(queryParameters: queryParameters);
 
     try {
+      Debugger.red('Sending request to $url');
+
+      final response = await http.get(url,headers: {'Content-Type': 'application/json'},
+      );
+
+      Debugger.green('Response status code: ${response.statusCode}');
+      Debugger.green('Raw response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final dynamic responseJson = json.decode(response.body);
+        Debugger.green('Decoded JSON type: ${responseJson.runtimeType}');
+        
+        if (category == null) {
+          // Handle case when no category is specified
+          
+          
+          if (responseJson is Map) {
+            Debugger.green('Response is a Map, parsing grouped products');
+            Map<String, List<Product>> groupedProducts = {};
+            
+            try {
+              responseJson.forEach((key, value) {
+                if (value is List) {
+                  Debugger.green('Parsing products for category: $key');
+                  final products = value
+                      .map((item) => Product.fromJson(item as Map<String, dynamic>))
+                      .toList();
+                  groupedProducts[key.toString()] = products;
+                  Debugger.green('Added ${products.length} products for category $key');
+                }
+              });
+              
+              if (groupedProducts.isEmpty) {
+                Debugger.red('No products found in any category');
+                throw Exception('No products found');
+              }
+
+              
+              return groupedProducts;
+            } catch (e) {
+              Debugger.red('Error parsing grouped products: $e');
+              throw Exception('Error parsing products: $e');
+            }
+          }
+          
+          Debugger.red('Invalid response type: ${responseJson.runtimeType}');
+          throw Exception('Invalid response format');
+        } else {
+          // Handle case when category is specified
+         
+          
+          try {
+            final products = responseJson
+                .map((json) => Product.fromJson(json as Map<String, dynamic>))
+                .toList();
+                print("Successssssssssssssss $products") ; 
+            
+            Debugger.green('Successfully parsed ${products.length} products for category $category');
+            return products;
+          } catch (e) {
+            Debugger.red('Error parsing products for category $category: $e');
+            throw Exception('Error parsing products: $e');
+          }
+        }
+      } else {
+        Debugger.red('Failed response: ${response.statusCode} - ${response.body}');
+        throw Exception('Failed to load products: ${response.statusCode}');
+      }
+    } catch (e, stackTrace) {
+      Debugger.red('Error in getProductsByMarketIDAndCategory: $e');
+      Debugger.red('Stack trace: $stackTrace');
+      throw Exception('Failed to load products: $e');
+    }
+  }
+
+  Future<List<String>> getMarketCategories(String marketId) async {
+    final url = Uri.parse('$baseUrl/market/getMarketCategories')
+        .replace(queryParameters: {'marketId': marketId});
+
+    try {
+      Debugger.red('Sending request to $url');
+      
       final response = await http.get(
         url,
         headers: {'Content-Type': 'application/json'},
       );
 
+      Debugger.green('Response status code: ${response.statusCode}');
+      Debugger.green('Response body: ${response.body}');
+
       if (response.statusCode == 200) {
-        final dynamic responseJson = json.decode(response.body);
+        final Map<String, dynamic> responseJson = json.decode(response.body);
         
-        // If category is not provided, response will be a map of categories to product lists
-        if (category == null) {
-          Map<String, List<Product>> groupedProducts = {};
-          (responseJson as Map<String, dynamic>).forEach((category, products) {
-            groupedProducts[category] = (products as List)
-                .map((json) => Product.fromJson(json as Map<String, dynamic>))
-                .toList();
-          });
-          return groupedProducts;
+        if (!responseJson.containsKey('categories')) {
+          Debugger.red('Response does not contain categories key');
+          throw Exception('Invalid response format');
         }
+
+        final List<dynamic> categories = responseJson['categories'];
+        Debugger.green('Categories response: $categories');
         
-        // If category is provided, response will be a list of products
-        return (responseJson as List)
-            .map((json) => Product.fromJson(json as Map<String, dynamic>))
-            .toList();
+        final List<String> result = categories.map((category) {
+          if (category is Map<String, dynamic>) {
+            return category['name']?.toString() ?? '';
+          }
+          return category.toString();
+        }).where((name) => name.isNotEmpty).toList();
+
+        Debugger.green('Parsed categories: $result');
+        return result;
       } else {
-        Debugger.red('Failed response: ${response.body}');
-        throw Exception('Failed to load products');
+        Debugger.red('Failed to fetch market categories: ${response.body}');
+        throw Exception('Failed to fetch market categories');
       }
-    } catch (e) {
-      Debugger.red('Error fetching products: $e');
-      throw Exception('Failed to load products: $e');
+    } catch (e, stackTrace) {
+      Debugger.red('Error fetching market categories: $e');
+      Debugger.red('Stack trace: $stackTrace');
+      throw Exception('Failed to fetch market categories: $e');
     }
   }
 

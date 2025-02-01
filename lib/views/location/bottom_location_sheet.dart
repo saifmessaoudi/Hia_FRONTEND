@@ -4,6 +4,7 @@ import 'package:hia/app/style/font_size.dart';
 import 'package:hia/app/style/widget_modifier.dart';
 import 'package:hia/services/user_service.dart';
 import 'package:hia/utils/loading_widget.dart';
+import 'package:hia/viewmodels/market_viewmodel.dart';
 import 'package:hia/views/foodPreference/food_preferences_screen.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:hia/views/location/map_picker_bottom_sheet.dart';
@@ -46,6 +47,7 @@ Future<void> showLocationOptions(BuildContext context) async {
                 MaterialPageRoute(builder: (context) => const FoodPreferencePage()),
               );
               showCustomToast(context, 'Location updated successfully');
+
             } catch (e) {
               setState(() {
                 isLoadingPosition = false;

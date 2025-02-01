@@ -72,50 +72,66 @@ bool isAuthenticated() {
 
 
   Future<void> login(String email, String password) async {
-    _isLoading = true;
-    notifyListeners();
-     _emailError = email.isEmpty
-        ? 'Please enter your email'
-        : !RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
-                .hasMatch(email)
-            ? 'Please enter a valid email'
-            : null;
-    _passwordError = password.isEmpty
-        ? 'Please enter your password'
-        : password.length < 6
-            ? 'Password must be at least 6 characters long'
-            : null;
-    if (_emailError == null && _passwordError == null) {
-      final response = await userService.login(email, password);
-      
-      if (response['token'] != null) {
-        _token = response['token'];
+  _isLoading = true;
+  notifyListeners();
 
-        // Extract user ID from the token
-        final parts = _token!.split('.');
-        final payload =
-            json.decode(utf8.decode(base64.decode(base64.normalize(parts[1]))));
-        _userId = payload['userId'];
+  // Validate email
+  _emailError = email.isEmpty
+      ? 'Please enter your email'
+      : !RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$').hasMatch(email)
+          ? 'Please enter a valid email'
+          : null;
 
-        // Save token and user ID to shared preferences
-        await _saveSession();
-        notifyListeners();
-        await fetchUserById(userId!);
+  // Validate password
+  _passwordError = password.isEmpty
+      ? 'Please enter your password'
+      : password.length < 6
+          ? 'Password must be at least 6 characters long'
+          : null;
 
-      } else {
-         _emailError = response['message'] == 'Invalid email'
-            ? 'Invalid email'
-            : null;
-        _passwordError = response['message'] == 'Invalid password'
-            ? 'Invalid password'
-            : null;
-      }
+  if (_emailError == null && _passwordError == null) {
+    final stopwatch = Stopwatch()..start(); // Start measuring time
+
+    final response = await userService.login(email, password);
+
+    stopwatch.stop(); // Stop measuring time
+
+    if (stopwatch.elapsedMilliseconds > 10000) { // If request took more than 10 sec
+      _isLoading = false;
+      notifyListeners(); // Notify UI about the loading state change
     }
 
+    if (response['token'] != null) {
+      _token = response['token'];
+
+      // Extract user ID from the token
+      final parts = _token!.split('.');
+      final payload =
+          json.decode(utf8.decode(base64.decode(base64.normalize(parts[1]))));
+      _userId = payload['userId'];
+
+      // Save token and user ID to shared preferences
+      await _saveSession();
+      await fetchUserById(userId!);
+    } else {
+      _emailError = response['message'] == 'Invalid email'
+          ? 'Invalid email'
+          : null;
+      _passwordError = response['message'] == 'Invalid password'
+          ? 'Invalid password'
+          : null;
+           _isLoading = false;
+      notifyListeners(); 
+    }
+  }
+
+  // Ensure _isLoading is turned off at the end
+  if (_isLoading) { // Prevent overriding if already set to false
     _isLoading = false;
     notifyListeners();
-    
   }
+}
+
 
   Future<void> logout() async {
     await _clearSession();

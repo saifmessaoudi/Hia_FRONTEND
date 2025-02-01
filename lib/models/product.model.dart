@@ -1,5 +1,7 @@
+import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hive/hive.dart';
-
+import 'package:hia/models/market.model.dart';
+import 'package:hia/models/category.model.dart';
 
 @HiveType(typeId: 8)
 class Product extends HiveObject {
@@ -25,59 +27,73 @@ class Product extends HiveObject {
   double remise;
 
   @HiveField(7)
-  DateTime remiseDeadline;
+  DateTime? remiseDeadline;
 
   @HiveField(8)
-  String market;
+  String marketId; 
 
   @HiveField(9)
-  String category; // Hier als String definiert
+  String categoryId; 
 
-  // Standardkonstruktor
-  Product.empty()
-      : id = '',
-        name = '',
-        description = '',
-        price = 0.0,
-        image = '',
-        isAvailable = false,
-        remise = 0.0,
-        remiseDeadline = DateTime.now(),
-        market = '',
-        category = '';
-
-  // Hauptkonstruktor
   Product({
     required this.id,
     required this.name,
-     this.description,
+    this.description,
     required this.price,
     required this.image,
     required this.isAvailable,
     required this.remise,
-    required this.remiseDeadline,
-    required this.market,
-    required this.category,
+    this.remiseDeadline,
+    required this.marketId,
+    required this.categoryId,
   });
 
-  // Factory-Konstruktor zum Parsen von JSON
   factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
-      id: json['_id'] as String? ?? '',
-      name: json['name'] as String? ?? '',
-      description: json['description'] as String? ?? '',
-      price: (json['price'] as num?)?.toDouble() ?? 0.0,
-      image: json['image'] as String? ?? '',
-      isAvailable: json['isAvailable'] as bool? ?? false,
-      remise: (json['remise'] as num?)?.toDouble() ?? 0.0,
-      remiseDeadline: DateTime.parse(
-          json['remiseDeadline'] as String? ?? '1970-01-01T00:00:00Z'),
-      market: json['market'] as String? ?? '',
-      category: json['category'] as String? ?? '',
-    );
+    try {
+      print('Parsing product JSON: $json');
+      
+      // Handle category ID extraction
+      String categoryId = '';
+      if (json['category'] != null) {
+        if (json['category'] is String) {
+          categoryId = json['category'];
+        } else if (json['category'] is Map) {
+          categoryId = json['category']['_id'] ?? '';
+        }
+      }
+
+      // Handle market ID extraction
+      String marketId = '';
+      if (json['market'] != null) {
+        if (json['market'] is String) {
+          marketId = json['market'];
+        } else if (json['market'] is Map) {
+          marketId = json['market']['_id'] ?? '';
+        }
+      }
+
+      return Product(
+        id: json['_id'] as String? ?? json['id'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        description: json['description'] as String?,
+        price: (json['price'] as num?)?.toDouble() ?? 0.0,
+        image: json['image'] as String? ?? '',
+        isAvailable: json['isAvailable'] as bool? ?? false,
+        remise: (json['remise'] as num?)?.toDouble() ?? 0.0,
+        remiseDeadline: json['remiseDeadline'] != null 
+            ? DateTime.parse(json['remiseDeadline'] as String)
+            : null,
+        categoryId: categoryId,
+        marketId: marketId,
+      );
+    } catch (e, stackTrace) {
+      Debugger.red('Error parsing Product from JSON: $e');
+      Debugger.red('Problematic JSON: $json');
+      Debugger.red('Stack trace: $stackTrace');
+      throw Exception('Failed to parse Product: $e');
+    }
   }
 
-  // Methode zum Konvertieren des Product-Objekts zurück zu JSON
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
@@ -87,9 +103,9 @@ class Product extends HiveObject {
       'image': image,
       'isAvailable': isAvailable,
       'remise': remise,
-      'remiseDeadline': remiseDeadline.toIso8601String(),
-      'market': market,
-      'category': category,
+      'remiseDeadline': remiseDeadline?.toIso8601String(),
+      'market': marketId,
+      'category': categoryId,
     };
   }
 }

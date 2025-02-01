@@ -5,7 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class OfferService {
-  final String baseUrl = 'http://192.168.0.65:3030';
+  final String baseUrl = 'http://10.0.2.2:3030';
   static const String cacheKey = 'offerCache';
   late Box<Offer> _box;
 
@@ -35,6 +35,27 @@ class OfferService {
       throw Exception('Failed to load establishments');
     }
   }
+   Future<void> deleteOfferById(String offerId) async {
+  try {
+    final url = Uri.parse('$baseUrl/offer/deleteOfferById/$offerId');
+    final response = await http.delete(url);
+
+    if (response.statusCode == 200) {
+      return;
+    } else if (response.statusCode == 404) {
+      throw Exception('Offer not found (status code 404).');
+    } else {
+      throw Exception(
+        'Failed to delete offer. '
+        'Status code: ${response.statusCode} - ${response.reasonPhrase}',
+      );
+    }
+  } catch (e) {
+    print("Error in deleteOfferById: $e");
+    rethrow;
+  }
+}
+
 
   Future<void> cacheData(List<Offer> data) async {
     await _box.clear();  // Clear old cached data
