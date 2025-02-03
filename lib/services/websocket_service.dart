@@ -6,7 +6,7 @@ class WebSocketService {
   final String marketId = '66f1cfbf43d0b72bb5359970'; 
   
   void connect() {
-    socket = IO.io('http://10.0.2.2:3030', <String, dynamic>{
+    socket = IO.io('http://192.168.255.145:3030', <String, dynamic>{
       'transports': ['websocket'],
       
       'autoConnect': true,

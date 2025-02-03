@@ -2,13 +2,12 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:hia/helpers/debugging_printer.dart';
 import 'package:hia/models/category.model.dart';
-import 'package:hia/models/establishement.model.dart';
-import 'package:hia/models/food.model.dart';
+
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class CategoryService {
-  final String baseUrl = 'http://10.0.2.2:3030';
+  final String baseUrl = 'http://192.168.255.145:3030';
   static const String cacheKey = 'CategoryCache';
 
   Future<List<Category>> fetchCategories() async {

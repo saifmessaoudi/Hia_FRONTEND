@@ -7,7 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class MarketService {
-  final String baseUrl = 'http://10.0.2.2:3030';
+  final String baseUrl = 'http://192.168.255.145:3030';
   static const String cacheKey = 'marketCache';
 
   Future<List<Market>> fetchMarkets() async {

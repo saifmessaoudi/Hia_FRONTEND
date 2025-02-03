@@ -28,6 +28,38 @@ class OfferViewModel extends ChangeNotifier {
   Future<void> refreshOffers() async {
     await fetchOffers();
   }
+  Future<bool> decrementOfferQuantity(String offerId) async {
+    try {
+      // Call the service method
+      await service.decrementOfferQuantity(offerId);
+       await fetchOffers();
+        notifyListeners();
+      // Update local state
+      final offerIndex = _offers.indexWhere((offer) => offer.id == offerId);
+      if (offerIndex != -1) {
+        final offer = _offers[offerIndex];
+        offer.quantity--; // Decrement first
+        
+        Debugger.green('Current quantity for offer ${offer.id}: ${offer.quantity}');
+        
+        // Notify listeners immediately after quantity change
+        notifyListeners();
+        
+        // Force check if quantity is 0 or less
+        if (offer.quantity <= 0) {
+          Debugger.yellow('Offer quantity is zero or less, triggering deletion...');
+          await forceDeleteOffer(offerId);
+          await service.deleteOfferById(offerId); 
+          await fetchOffers();
+         }
+      }
+      
+      return true;
+    } catch (e) {
+      Debugger.red('Error decrementing offer quantity: $e');
+      return false;
+    }
+  }
 
   Future<void> fetchOffers() async {
     isLoading = true;
@@ -196,5 +228,45 @@ class OfferViewModel extends ChangeNotifier {
         _processBatchDeletion();
       }
     });
+  }
+
+  // Helper method to force delete an offer
+  Future<bool> forceDeleteOffer(String offerId) async {
+    try {
+      // Remove from database
+      await service.deleteOfferById(offerId);
+      
+      // Remove locally
+      final offerIndex = _offers.indexWhere((offer) => offer.id == offerId);
+      if (offerIndex != -1) {
+        _offers.removeAt(offerIndex);
+        notifyListeners();
+      }
+      
+      Debugger.green('Offer force deleted successfully');
+      return true;
+    } catch (e) {
+      Debugger.red('Error force deleting offer: $e');
+      return false;
+    }
+  }
+
+  // Method to check and clean zero quantity offers
+  Future<void> cleanZeroQuantityOffers() async {
+    try {
+      final zeroQuantityOffers = _offers.where((offer) => offer.quantity <= 0).toList();
+      
+      for (var offer in zeroQuantityOffers) {
+        Debugger.yellow('Cleaning zero quantity offer: ${offer.id}');
+        await forceDeleteOffer(offer.id);
+      }
+    } catch (e) {
+      Debugger.red('Error cleaning zero quantity offers: $e');
+    }
+  }
+
+  // Call this method periodically or after certain operations
+  void checkAndCleanOffers() {
+    cleanZeroQuantityOffers();
   }
 }

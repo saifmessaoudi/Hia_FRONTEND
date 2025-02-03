@@ -114,7 +114,11 @@ await NotificationService().requestNotificationPermission();
             return establishmentViewModel;
           },
         ),
-        ChangeNotifierProvider(create: (context) => CartViewModel()),
+        ChangeNotifierProvider(
+          create: (context) => CartViewModel(
+            offerViewModel: Provider.of<OfferViewModel>(context, listen: false),
+          ),
+        ),
                 ChangeNotifierProvider(create: (context) => ReservationViewModel()),
 
         ChangeNotifierProvider(create:  (context) => ReviewViewModel("")),

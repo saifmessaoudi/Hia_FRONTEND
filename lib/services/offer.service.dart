@@ -5,7 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class OfferService {
-  final String baseUrl = 'http://10.0.2.2:3030';
+  final String baseUrl = 'http://192.168.255.145:3030';
   static const String cacheKey = 'offerCache';
   late Box<Offer> _box;
 
@@ -87,6 +87,32 @@ class OfferService {
       return offers;
     } else {
       throw Exception('Failed to load offers');
+    }
+  }
+
+  Future<void> decrementOfferQuantity(String offerId) async {
+    try {
+      final url = Uri.parse('$baseUrl/offer/decrementQuantityOfferById/$offerId');
+      final response = await http.put(url);
+
+      if (response.statusCode == 404) {
+        throw Exception('Offer not found');
+      }
+
+      if (response.statusCode == 400) {
+        throw Exception('Quantity is already at zero');
+      }
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to update offer quantity: ${response.statusCode}');
+      }
+
+      final responseData = json.decode(response.body);
+      Debugger.green('Offer quantity decremented successfully: ${responseData['message']}');
+      
+    } catch (e) {
+      Debugger.red('Error decrementing offer quantity: $e');
+      rethrow;
     }
   }
 }

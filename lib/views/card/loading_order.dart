@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hia/app/style/app_colors.dart';
 import 'package:hia/utils/loading_widget.dart';
 import 'package:hia/viewmodels/cart_viewmodel.dart';
+import 'package:hia/viewmodels/offer.viewmodel.dart';
 import 'package:hia/viewmodels/reservation_viewmodel.dart';
 import 'package:hia/viewmodels/user_viewmodel.dart';
 import 'package:hia/widgets/custom_toast.dart';
@@ -35,20 +36,30 @@ class _LoadingScreenDialogState extends State<LoadingScreenDialog> {
 
   void _addReservation() async {
     final cartViewModel = Provider.of<CartViewModel>(context, listen: false);
+    final offerViewModel = Provider.of<OfferViewModel>(context, listen: false);
     final cartItems = cartViewModel.cart?.items ?? [];
     final establishmentId = cartViewModel.cart?.establishmentId ?? '';
     final userId =
         Provider.of<UserViewModel>(context, listen: false).userData!.id;
 
-    final updatedItems = cartItems.map((item) {
+    final updatedItems = cartItems.map((item) async {
     if (item.food != null) {
       item.type = 'food';
     } else if (item.offer != null) {
       item.type = 'offer';
+      await offerViewModel.decrementOfferQuantity(item.offer!.id);
     }
     else if (item.product != null) {
       item.type = 'product';
     }
+    else if (item.offer!.quantity == 1) {
+      await offerViewModel.decrementOfferQuantity(item.offer!.id);
+
+      await offerViewModel.removeOfferLocally(item.offer!.id);
+      await offerViewModel.deleteOffer(item.offer!.id);
+           
+    }
+
     
     return item;
   }).toList();
@@ -57,7 +68,7 @@ class _LoadingScreenDialogState extends State<LoadingScreenDialog> {
     final reservationData = Reservation(
       etablishmentId: establishmentId ?? '',
       userId: userId,
-      items: updatedItems,
+      items: await Future.wait(updatedItems),
     );
 
     final viewModel = Provider.of<ReservationViewModel>(context, listen: false);

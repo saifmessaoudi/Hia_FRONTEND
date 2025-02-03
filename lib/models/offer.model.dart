@@ -35,7 +35,7 @@ class Offer extends HiveObject {
   final bool isAvailable;
 
   @HiveField(9)
-  final int quantity;
+  late final int quantity;
 
   @HiveField(10)
   final String id;

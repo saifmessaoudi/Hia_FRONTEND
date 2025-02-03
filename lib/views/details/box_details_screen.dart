@@ -245,31 +245,7 @@ class _BoxDetailsScreenState extends State<BoxDetailsScreen> {
                       child: SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () async {
-                            // Handle order action
-                            final cartViewModel = Provider.of<CartViewModel>(
-                              context,
-                              listen: false,
-                            );
-                            bool success = await cartViewModel.addItem(
-                              null,
-                              quantity,
-                              offer: widget.box,
-                            );
-                            if (success) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Item added to cart'),
-                                ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Failed to add item to cart'),
-                                ),
-                              );
-                            }
-                          },
+                          onPressed: _handleAddToCart,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.background,
                             padding: const EdgeInsets.symmetric(vertical: 11.0),
@@ -294,6 +270,44 @@ class _BoxDetailsScreenState extends State<BoxDetailsScreen> {
         ],
       ),
     );
+  }
+
+  void _handleAddToCart() async {
+    try {
+      final cartViewModel = Provider.of<CartViewModel>(context, listen: false);
+      
+      bool success = await cartViewModel.addItem(
+        null,
+        quantity,
+        offer: widget.box,
+      );
+
+      if (!mounted) return;
+
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Box ajoutée au panier avec succès'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Erreur lors de l\'ajout au panier'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erreur: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
 
