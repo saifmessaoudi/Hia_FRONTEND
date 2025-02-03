@@ -6,8 +6,8 @@ import 'package:hia/app/style/app_colors.dart';
 import 'package:hia/app/style/app_style.dart';
 import 'package:hia/app/style/font_size.dart';
 import 'package:hia/constant.dart';
-import 'package:hia/models/product.model.dart';
 import 'package:hia/viewmodels/market_viewmodel.dart';
+import 'package:hia/views/markets/category_products_screen.dart';
 import 'package:hia/views/markets/product_card.dart';
 import 'package:hia/views/markets/product_detail_screen.dart';
 import 'package:provider/provider.dart';
@@ -140,88 +140,110 @@ class _MarketDetailScreenState extends State<MarketDetailScreen> {
 
                   // Categories and Products
                   SliverPadding(
-  padding: EdgeInsets.only(bottom: 80.h),
-  sliver: SliverList(
-    delegate: SliverChildBuilderDelegate(
-      (context, index) {
-        final categoryId = marketViewModel.categories[index];
-        final products = marketViewModel.categoryProducts[categoryId] ?? [];
+                    padding: EdgeInsets.only(bottom: 80.h),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final categoryId = marketViewModel.categories[index];
+                          final products = marketViewModel.categoryProducts[categoryId] ?? [];
 
-        // Skip rendering if the product list is empty
-        if (products.isEmpty) {
-          return const SizedBox.shrink();
-        }
+                          // Skip rendering if the product list is empty
+                          if (products.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (index == 0) // Only show the phone button for the first category
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0), // Adjust top padding
-                child: Center(
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.phone_in_talk_sharp,
-                      color: Color.fromARGB(255, 4, 58, 9),
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (index == 0) // Only show the phone button for the first category
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 16.0), // Adjust top padding
+                                  child: Center(
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.phone_in_talk_sharp,
+                                        color: Color.fromARGB(255, 4, 58, 9),
+                                      ),
+                                      onPressed: () async {
+                                        final phoneNumber = 'tel:${market.phone}';
+                                        if (await canLaunchUrlString(phoneNumber)) {
+                                          await launchUrlString(phoneNumber);
+                                        } else {
+                                          throw 'Could not launch $phoneNumber';
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '$categoryId :',
+                                      style: AppStyles.interSemiBoldTextButton
+                                          .withColor(const Color.fromARGB(255, 0, 0, 0))
+                                          .withSize(FontSizes.headline5),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => CategoryProductsScreen(
+                                              categoryName: categoryId,
+                                              products: products,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        'Tout',
+                                        style: AppStyles.interSemiBoldTextButton
+                                            .withColor(kMainColor)
+                                            .withSize(FontSizes.subtitle),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 200.h,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                  itemCount: products.length,
+                                  itemBuilder: (context, productIndex) {
+                                    final product = products[productIndex];
+
+                                    return GestureDetector(
+                                      onTap: () {
+                                        // Navigate to ProductDetailScreen and pass the selected product
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ProductDetailScreen(product: product),
+                                          ),
+                                        );
+                                      },
+                                      child: ProductCard(product: product),
+                                    );
+                                  },
+                                ),
+                              ),
+                              const Gap(16),
+                            ],
+                          );
+                        },
+                        // Only include categories with at least one product
+                        childCount: marketViewModel.categories.where((categoryId) {
+                          final products = marketViewModel.categoryProducts[categoryId] ?? [];
+                          return products.isNotEmpty;
+                        }).length,
+                      ),
                     ),
-                    onPressed: () async {
-                      final phoneNumber = 'tel:${market.phone}';
-                      if (await canLaunchUrlString(phoneNumber)) {
-                        await launchUrlString(phoneNumber);
-                      } else {
-                        throw 'Could not launch $phoneNumber';
-                      }
-                    },
                   ),
-                ),
-              ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                '$categoryId :',
-                style: AppStyles.interSemiBoldTextButton
-                    .withColor(const Color.fromARGB(255, 0, 0, 0))
-                    .withSize(FontSizes.headline5),
-              ),
-            ),
-           SizedBox(
-  height: 200.h,
-  child: ListView.builder(
-    scrollDirection: Axis.horizontal,
-    padding: EdgeInsets.symmetric(horizontal: 16.w),
-    itemCount: products.length,
-    itemBuilder: (context, productIndex) {
-      final product = products[productIndex];
-
-      return GestureDetector(
-        onTap: () {
-          // Navigate to ProductDetailScreen and pass the selected product
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ProductDetailScreen(product: product),
-            ),
-          );
-        },
-        child: ProductCard(product: product),
-      );
-    },
-  ),
-),
-
-            const Gap(16),
-          ],
-        );
-      },
-      // Only include categories with at least one product
-      childCount: marketViewModel.categories.where((categoryId) {
-        final products = marketViewModel.categoryProducts[categoryId] ?? [];
-        return products.isNotEmpty;
-      }).length,
-    ),
-  ),
-)
-
                 ],
               ),
 

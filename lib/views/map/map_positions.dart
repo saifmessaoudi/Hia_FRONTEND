@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hia/map_box_constants.dart';
-import 'package:hia/models/map_marker.dart';
 import 'package:hia/viewmodels/establishement_viewmodel.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:latlong2/latlong.dart';

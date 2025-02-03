@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:hia/models/market.model.dart';
 import 'package:hia/models/user.model.dart';
 import 'package:hia/services/market_service.dart';

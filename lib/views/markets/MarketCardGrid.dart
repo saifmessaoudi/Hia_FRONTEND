@@ -7,11 +7,10 @@ import 'package:hia/app/style/app_constants.dart';
 import 'package:hia/app/style/app_style.dart';
 import 'package:hia/constant.dart';
 import 'package:hia/models/market.model.dart';
-import 'package:hia/viewmodels/establishement_viewmodel.dart';
+import 'package:hia/viewmodels/market_viewmodel.dart';
 import 'package:hia/views/home/exports/export_homescreen.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'dart:math';
 
 class Marketcardgrid extends StatelessWidget {
   const Marketcardgrid({
@@ -42,7 +41,7 @@ class Marketcardgrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final establishmentViewModel = Provider.of<EstablishmentViewModel>(context);
+    final marketViewModel = Provider.of<MarketViewModel>(context);
     return SizedBox(
       width: isGrid ? 180.w : 320.w, // Adjust width for grid
       height: isGrid ? 190.h : 248.h, // Adjust height for grid
@@ -159,8 +158,12 @@ class Marketcardgrid extends StatelessWidget {
                         children: [
                           const Gap(4),
                           const SizedBox(height: 6),
-                          establishmentViewModel.isCalculating
-                              ? const SizedBox(height: 10)
+                          marketViewModel.isCalculating
+                              ? const SizedBox(
+                                  height: 10,
+                                  width: 10,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                )
                               : RichText(
                                   text: TextSpan(
                                     children: [
@@ -172,15 +175,15 @@ class Marketcardgrid extends StatelessWidget {
                                         ),
                                       ),
                                       TextSpan(
-                                        text: index < establishmentViewModel.distances.length 
-                                            ? "${establishmentViewModel.distances[index].toStringAsFixed(1).length > 4 
-                                                ? establishmentViewModel.distances[index].toStringAsFixed(1).substring(0, 4) + '..'
-                                                : establishmentViewModel.distances[index].toStringAsFixed(1)} km"
-                                            : "",
-                                        style: kTextStyle.copyWith(
-                                          color: kGreyTextColor,
-                                        ),
-                                      ),
+  text: index < marketViewModel.distances.length 
+      ? "${marketViewModel.distances[index].toStringAsFixed(1).length > 4 
+          ? marketViewModel.distances[index].toStringAsFixed(1).substring(0, 4) + '..'
+          : marketViewModel.distances[index].toStringAsFixed(1)} km"
+      : "N/A",
+  style: kTextStyle.copyWith(
+    color: kGreyTextColor,
+  ),
+),
                                     ],
                                   ),
                                 ),
@@ -199,7 +202,7 @@ class Marketcardgrid extends StatelessWidget {
                             style: kTextStyle.copyWith(color: Colors.white),
                           ),
                         ).onTap(() {
-                          establishmentViewModel.launchMaps(
+                          marketViewModel.launchMaps(
                               restaurantData.latitude, restaurantData.langitude);
                         }),
                       ),
